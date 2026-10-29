@@ -1,0 +1,25 @@
+* text=auto eol=lf
+/src/Generated/* linguist-generated=true
+/src/EnumValues.php linguist-generated=true
+/src/Model/* linguist-generated=true
+/src/Service/*Service.php linguist-generated=true
+/src/Service/AbstractService.php linguist-generated=false
+/src/Service/SimulationsService.php linguist-generated=false
+/docs/reference.md linguist-generated=true
+/contracts/openapi.json -text linguist-generated=true
+
+# Keep GitHub source distributions aligned with Composer archives.
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.github export-ignore
+/.tmp export-ignore
+/.env export-ignore
+/.env.* export-ignore
+/*.log export-ignore
+/AGENTS.md export-ignore
+/TODO.md export-ignore
+/composer.lock export-ignore
+/contracts export-ignore
+/scripts export-ignore
+/vendor export-ignore

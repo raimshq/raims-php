@@ -1,0 +1,35 @@
+{
+    "name": "raims/raims-php",
+    "description": "PHP SDK for the Raims public API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["raims", "payments", "pix", "sdk"],
+    "homepage": "https://github.com/raimshq/raims-php",
+    "support": {
+        "issues": "https://github.com/raimshq/raims-php/issues",
+        "docs": "https://docs.raims.com/br/api"
+    },
+    "require": {
+        "php": ">=8.2",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-hash": "*"
+    },
+    "autoload": {
+        "psr-4": {"Raims\\": "src/"}
+    },
+    "scripts": {
+        "check": "@php scripts/check.php",
+        "check-compatibility": "@php scripts/check-compatibility.php --check",
+        "snapshot-api": "@php scripts/check-compatibility.php",
+        "generate": "@php scripts/generate.php",
+        "check-generated": "@php scripts/generate.php --check"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": false
+    },
+    "archive": {
+        "exclude": ["/vendor", "/composer.lock", "/.tmp", "/.env", "/.env.*", "/*.log", "/contracts", "/scripts", "/AGENTS.md", "/TODO.md", "/.github", "/.gitignore", "/.gitattributes", "/.editorconfig"]
+    }
+}

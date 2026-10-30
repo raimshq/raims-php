@@ -4,10 +4,31 @@ O SDK requer PHP 8.2 ou superior em 64 bits, Composer 2 e as extensões `curl`,
 `json` e `hash`. Verifique o ambiente com `php -v`, `php -m` e
 `composer check-platform-reqs` após instalar as dependências.
 
-## Instalar os fontes do GitHub
+## Instalar com Composer
 
-No projeto que consumirá o SDK, adicione o repositório público como fonte VCS
-do Composer e instale a branch de desenvolvimento:
+No diretório da aplicação que consumirá o SDK:
+
+```text
+composer require raims/raims-php:^0.1.0
+```
+
+O pacote `raims/raims-php` é distribuído pelo
+[Packagist](https://packagist.org/packages/raims/raims-php). A restrição
+`^0.1.0` aceita atualizações da série `0.1`; mantenha o `composer.lock` da
+aplicação para repetir a instalação da mesma versão.
+
+Antes de atualizar, confira as
+[releases](https://github.com/raimshq/raims-php/releases) e teste os fluxos da
+sua integração. Para buscar uma versão admitida pela restrição da aplicação:
+
+```text
+composer update raims/raims-php
+```
+
+## Acompanhar a branch de desenvolvimento
+
+Para contribuir com o SDK ou avaliar alterações antes de uma release, adicione
+o repositório público como fonte VCS do Composer:
 
 Se o projeto ainda não tiver `composer.json`, crie-o com `composer init` antes
 dos comandos abaixo.
@@ -17,10 +38,8 @@ composer config repositories.raims-php vcs https://github.com/raimshq/raims-php
 composer require raims/raims-php:dev-main
 ```
 
-`dev-main` acompanha a branch `main`. Mantenha o `composer.lock` da sua aplicação
-para repetir a instalação da mesma revisão. Atualizações do SDK ficam sob o
-controle do projeto consumidor. Ainda não há release estável nem pacote no
-Packagist.
+`dev-main` acompanha a branch `main` e pode incluir alterações posteriores à
+última release. O `composer.lock` da aplicação fixa a revisão instalada.
 
 ## Usar um checkout local
 
@@ -69,8 +88,9 @@ Uma chave Sandbox usa a mesma URL-base da chave de Produção. Não há opção 
 ambiente no SDK. As simulações exigem uma chave Sandbox; entregas de e-mail e
 webhooks ainda podem alcançar destinos externos nesse ambiente.
 
-## Distribuição
+## Versões
 
-Este checkout não instala workflows de publicação, não cria releases e não
-publica no Packagist. A versão `0.1.0-dev` identifica o desenvolvimento do cliente;
-ela é independente da versão HTTP `/v1` e da versão do contrato fixado.
+A versão do pacote é independente da versão HTTP `/v1` e da versão do contrato
+fixado. Novas versões publicadas nas releases do repositório são disponibilizadas
+no Packagist pelo fluxo de distribuição do SDK. A aplicação decide quando
+atualizar sua dependência.

@@ -8,9 +8,15 @@ Os objetos aninhados e os itens dos iteradores mantêm seus tipos no editor.
 O transporte reutiliza conexões e oferece diagnósticos opcionais de cada
 tentativa HTTP, incluindo a decisão de retry, sem parâmetros, corpos ou credenciais.
 
-Esta é uma versão de desenvolvimento, sem release ou pacote no Packagist.
-Para instalar os fontes do GitHub com Composer ou usar um checkout local,
-siga a [instalação](docs/installation.md).
+Instale o pacote pelo Composer:
+
+```text
+composer require raims/raims-php:^0.1.0
+```
+
+O pacote está no [Packagist](https://packagist.org/packages/raims/raims-php).
+Consulte a [instalação](docs/installation.md) para requisitos, atualizações
+e uso de um checkout local.
 
 ## Requisitos
 

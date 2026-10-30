@@ -86,8 +86,16 @@ SHA, com todos os jobs esperados concluídos. Promova esse commit sem alterar
 seu conteúdo. Uma execução cancelada, incompleta ou de outro commit não serve
 como aprovação.
 
-A validação não publica uma release nem um pacote no Packagist. Não acrescente
-um runner pessoal ou hospedado pelo GitHub para contornar os checks.
+A validação não publica uma release. Depois da aprovação dos cinco jobs para
+o mesmo commit e da autorização de distribuição, a publicação de uma release
+no GitHub aciona `packagist-release.yml`, que atualiza o pacote no Packagist.
+Pushes e tags sem release não substituem essa etapa. Confira a versão no
+Packagist e uma instalação limpa pelo Composer antes de declarar a distribuição
+concluída. O procedimento está no
+[guia de manutenção](docs/maintenance.md#publicar-uma-versão).
+
+Não acrescente um runner pessoal ou hospedado pelo GitHub para contornar os
+checks. Credenciais de publicação não pertencem aos fontes, exemplos ou logs.
 
 ## Compatibilidade
 

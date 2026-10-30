@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: 26de7253dff702b6db97766e7932eca8fdc1862b
+  RAIMS_PHP_TOOLKIT_REF: c2385a4db9f85f49844bdaa3e0c83195cbd1b683
 
 jobs:
   validatePhp:

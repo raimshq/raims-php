@@ -1,0 +1,157 @@
+name: Publish PHP SDK
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: raims-php-packagist-release
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  RAIMS_PHP_TOOLKIT_REF: c2385a4db9f85f49844bdaa3e0c83195cbd1b683
+
+jobs:
+  validateRelease:
+    if: github.repository == 'raimshq/raims-php' && github.event.action == 'published' && !github.event.release.draft
+    runs-on:
+      - codebuild-raims-github-actions-${{ github.run_id }}-${{ github.run_attempt }}
+      - php-sdk-release-check
+    timeout-minutes: 30
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout the release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          path: Raims-PHP
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12.14'
+
+      - name: Verify release and prior PHP validation
+        id: context
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python Raims-PHP/scripts/release.py context --source Raims-PHP
+
+      - name: Prepare PHP tool selection
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import PurePosixPath
+          paths = [path for path in os.environ['PATH'].split(':') if not (PurePosixPath(path).name in {'shims','bin'} and PurePosixPath(path).parent.name == '.phpenv')]
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as environment:
+              environment.write('PATH=' + ':'.join(paths) + '\n')
+          PY
+
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.2.35'
+          extensions: curl, hash, json
+          tools: composer:2.11.0
+          coverage: none
+
+      - name: Create a read-only validation source token
+        id: sources
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          client-id: ${{ vars.RAIMS_CI_SOURCE_READER_CLIENT_ID }}
+          private-key: ${{ secrets.RAIMS_CI_SOURCE_READER_PRIVATE_KEY }}
+          owner: raimshq
+          repositories: Raims-Developer-Toolkit
+          permission-contents: read
+
+      - name: Checkout the reviewed validation tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: raimshq/Raims-Developer-Toolkit
+          ref: ${{ steps.context.outputs.toolkitRevision }}
+          path: Developer-Toolkit
+          token: ${{ steps.sources.outputs.token }}
+          persist-credentials: false
+
+      - name: Run canonical PHP and public archive checks
+        run: |
+          set -euo pipefail
+          cp Raims-PHP/AGENTS.md AGENTS.md
+          python Developer-Toolkit/scripts/release-preflight/php_sdk.py --source "$GITHUB_WORKSPACE/Raims-PHP" --workspace "$GITHUB_WORKSPACE" --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --expected-php-version '8.2.35' --prepare-tools
+
+      - name: Bind public source files to the approved release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python Raims-PHP/scripts/release.py bundle --source Raims-PHP --report "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/report.json" --artifact "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/packagist-upload" --validation-run-id '${{ steps.context.outputs.validationRunId }}' --validation-run-attempt '${{ steps.context.outputs.validationRunAttempt }}'
+
+      - name: Upload the approved public source manifest
+        id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: raims-packagist-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/raims-php-sdk/packagist-upload/release-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+  publishPackagist:
+    needs: validateRelease
+    if: github.repository == 'raimshq/raims-php' && github.event.action == 'published' && !github.event.release.draft
+    environment: release
+    runs-on:
+      - codebuild-raims-github-actions-${{ github.run_id }}-${{ github.run_attempt }}
+      - php-sdk-packagist-publish
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout the release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          path: Raims-PHP
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12.14'
+
+      - name: Download the source manifest from this validation job
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ needs.validateRelease.outputs.artifact_id }}
+          path: .tmp/raims-php-sdk/packagist-upload
+          merge-multiple: true
+          digest-mismatch: error
+
+      - name: Verify source and prior CI before using a registry credential
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python Raims-PHP/scripts/release.py verify --source Raims-PHP --artifact .tmp/raims-php-sdk/packagist-upload
+
+      - name: Refresh the existing Packagist package
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PACKAGIST_USERNAME: ${{ vars.PACKAGIST_USERNAME }}
+          PACKAGIST_SAFE_TOKEN: ${{ secrets.PACKAGIST_SAFE_TOKEN }}
+        run: python Raims-PHP/scripts/release.py publish --source Raims-PHP --artifact .tmp/raims-php-sdk/packagist-upload
+
+      - name: Confirm the indexed version and public distribution
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python Raims-PHP/scripts/release.py confirm --source Raims-PHP --artifact .tmp/raims-php-sdk/packagist-upload

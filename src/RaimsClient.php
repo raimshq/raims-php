@@ -25,7 +25,7 @@ use Raims\Service\WithdrawalsService;
  */
 final class RaimsClient
 {
-    public const VERSION = '0.1.0-dev';
+    public const VERSION = '0.1.0';
     public const API_BASE = 'https://api.raims.com';
 
     public readonly AccountsService $accounts;

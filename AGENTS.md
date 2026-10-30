@@ -45,4 +45,9 @@ O SDK é um consumidor do contrato público. Não importa código dos hosts Raim
   Repositório público, commit/push, release/Packagist e deploy são etapas distintas.
 - O CI de validação usa os runners CodeBuild autorizados, em pushes do próprio
   repositório e execuções manuais. Não executar código de forks com acesso ao
-  Toolkit privado. Este repositório não publica no Packagist nem cria infraestrutura.
+  Toolkit privado. Não criar infraestrutura como parte da validação.
+- O workflow `packagist-release.yml` atualiza o pacote no Packagist após uma
+  release publicada no GitHub. Exige o mesmo commit aprovado nos cinco jobs
+  esperados do CI na AWS: quatro versões PHP e análise de segurança. Push,
+  tag ou validação isolados não autorizam uma release. Confira tag, versão,
+  SHA e disponibilidade no destino; não exponha credenciais nos logs.

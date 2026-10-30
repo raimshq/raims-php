@@ -103,24 +103,49 @@ O SDK expõe exceções de conexão, HTTP e protocolo para essa finalidade. Ele 
 envia telemetria nem notificações externas. Uma recuperação deve se basear em
 novas respostas válidas, sem repetir automaticamente uma escrita anterior.
 
-## Preparação da primeira versão estável
+## Publicar uma versão
 
-Os fontes estão disponíveis por VCS na branch de desenvolvimento. Para a
-primeira versão estável, ainda é necessário:
+O pacote `raims/raims-php` usa as versões das releases do repositório. O workflow
+`packagist-release.yml` reage à publicação de uma release no GitHub e atualiza
+o pacote no Packagist após conferir a identidade e a aprovação do commit.
+Pushes e tags sem release não iniciam a distribuição.
 
-- Revisar os consumidores, conferir a validação do mesmo commit nos runners
-  CodeBuild autorizados e publicar a release e o pacote no Packagist.
-  Os fontes no GitHub, por si só,
-  não representam uma versão estável distribuída pelo Composer.
-- Incluir o SDK nas fontes aprovadas do atendimento em `raims-developer-docs` e
-  `Raims-Chat/docs/knowledge-sources.md`. A orientação deve explicar finalidade,
-  quando sugerir o SDK, instalação, requisitos, uso no servidor, obtenção da chave,
-  permissões, ambiente, disponibilidade, paginação, idempotência, respostas
-  pendentes e validação de webhooks. Conferir os caminhos atuais, atualizar a
-  fonte responsável, regenerar os catálogos e validar as respostas da IA.
-  O SDK atual não exige uma nova ferramenta de consulta nem alteração no
-  contrato de contexto do chat.
-- Publicar a nota no changelog de `raims-developer-docs` na data efetiva da
-  primeira distribuição, com instalação e compatibilidade confirmadas.
+1. Atualize a versão do cliente e revise as alterações públicas e os guias.
+   A versão da biblioteca é independente da versão HTTP `/v1`.
+2. Valide o commit candidato nos cinco jobs esperados de `Validate PHP SDK`:
+   PHP 8.2, 8.3, 8.4, 8.5 e análise de segurança, todos nos runners AWS
+   CodeBuild autorizados. Resultados de outro SHA ou execução incompleta
+   não aprovam a distribuição.
+3. Promova o mesmo commit para `main`, conforme o preflight, e publique a release
+   autorizada com tag `v<versão>`, por exemplo `v0.1.0`. A tag, o código e os
+   metadados devem representar a mesma versão.
+4. Confira a execução de `packagist-release.yml` e a versão no
+   [Packagist](https://packagist.org/packages/raims/raims-php). Não trate o
+   aceite da atualização como comprovação de que a versão já está disponível.
+5. Faça uma instalação limpa com Composer, confira a versão e a revisão
+   resolvidas e valide o consumidor pelas verificações canônicas. Não chame
+   a API real para conferir a instalação. Preserve os arquivos e dependências
+   de validação em `.tmp`.
 
-CI, release, Packagist e publicação dos guias seguem suas autorizações próprias.
+O workflow de distribuição não cria uma release nem substitui os checks
+anteriores. Guarde a credencial de publicação na configuração protegida do
+workflow; nunca a inclua em comandos registrados, arquivos ou exemplos.
+Uma falha na distribuição deve permanecer visível até a conferência no destino.
+
+## Guias e conhecimento do atendimento
+
+O guia BR/EN `integracoes/sdk-php` em `raims-developer-docs` é a fonte pública
+para instalação, requisitos, uso no backend, chave, permissões, ambiente,
+paginação, idempotência, respostas pendentes e webhooks. A primeira distribuição
+também exige uma nota no changelog com a data efetiva de disponibilização.
+
+Depois de confirmar o pacote, publique os guias pelo ciclo autorizado do Docs,
+regenere os catálogos e valide a recuperação dos procedimentos em português e
+inglês pela bateria canônica do atendimento. Confira a versão do catálogo no
+consumidor implantado. O SDK usa a fonte `raims-developer-docs` já permitida;
+não exige outra ferramenta de consulta financeira ou alteração no contrato de
+contexto. `Raims-Chat/docs/knowledge-sources.md` registra essa responsabilidade.
+
+Mantenha a pendência correspondente no TODO até confirmar pacote, fontes
+publicadas, catálogo regenerado e orientação validada. CI, release, Packagist
+e publicação dos guias seguem suas autorizações próprias.

@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: ac988d048bba24a6e4cec10859c4f2343a9edfbe
+  RAIMS_PHP_TOOLKIT_REF: 9261b85dae92ead7922d0a463917ee5f5d29aafe
 
 jobs:
   validatePhp:
@@ -59,7 +59,7 @@ jobs:
         with:
           php-version: ${{ matrix.php_version }}
           extensions: curl, hash, json
-          tools: composer:2.8.8
+          tools: composer:2.11.0
           coverage: none
 
       - name: Create a read-only validation source token
@@ -85,7 +85,9 @@ jobs:
         run: |
           set -euo pipefail
           cp Raims-PHP/AGENTS.md AGENTS.md
-          test "$(php -r 'echo PHP_VERSION;')" = '${{ matrix.php_version }}'
+          actual_php_version="$(php -r 'echo PHP_VERSION;')"
+          printf 'PHP runtime: %s; expected: %s\n' "$actual_php_version" '${{ matrix.php_version }}'
+          test "$actual_php_version" = '${{ matrix.php_version }}'
           python Developer-Toolkit/scripts/release-preflight/php_sdk.py \
             --source "$GITHUB_WORKSPACE/Raims-PHP" \
             --workspace "$GITHUB_WORKSPACE" \

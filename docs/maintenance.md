@@ -108,8 +108,9 @@ novas respostas válidas, sem repetir automaticamente uma escrita anterior.
 Os fontes estão disponíveis por VCS na branch de desenvolvimento. Para a
 primeira versão estável, ainda é necessário:
 
-- Revisar os consumidores, preparar o CI nos runners CodeBuild autorizados e
-  publicar a release e o pacote no Packagist. Os fontes no GitHub, por si só,
+- Revisar os consumidores, conferir a validação do mesmo commit nos runners
+  CodeBuild autorizados e publicar a release e o pacote no Packagist.
+  Os fontes no GitHub, por si só,
   não representam uma versão estável distribuída pelo Composer.
 - Incluir o SDK nas fontes aprovadas do atendimento em `raims-developer-docs` e
   `Raims-Chat/docs/knowledge-sources.md`. A orientação deve explicar finalidade,

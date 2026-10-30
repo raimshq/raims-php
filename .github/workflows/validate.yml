@@ -1,0 +1,147 @@
+name: Validate PHP SDK
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: raims-php-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  RAIMS_PHP_TOOLKIT_REF: ac988d048bba24a6e4cec10859c4f2343a9edfbe
+
+jobs:
+  validatePhp:
+    name: validatePhp (${{ matrix.php }})
+    if: github.repository == 'raimshq/raims-php'
+    runs-on:
+      - codebuild-raims-github-actions-${{ github.run_id }}-${{ github.run_attempt }}
+      - php-sdk-check-${{ matrix.php }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+        include:
+          - php: '8.2'
+            php_version: '8.2.35'
+          - php: '8.3'
+            php_version: '8.3.36'
+          - php: '8.4'
+            php_version: '8.4.27'
+          - php: '8.5'
+            php_version: '8.5.12'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout the candidate commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          path: Raims-PHP
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12.14'
+
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php_version }}
+          extensions: curl, hash, json
+          tools: composer:2.8.8
+          coverage: none
+
+      - name: Create a read-only validation source token
+        id: sources
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          client-id: ${{ vars.RAIMS_CI_SOURCE_READER_CLIENT_ID }}
+          private-key: ${{ secrets.RAIMS_CI_SOURCE_READER_PRIVATE_KEY }}
+          owner: raimshq
+          repositories: Raims-Developer-Toolkit
+          permission-contents: read
+
+      - name: Checkout the reviewed validation tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: raimshq/Raims-Developer-Toolkit
+          ref: ${{ env.RAIMS_PHP_TOOLKIT_REF }}
+          path: Developer-Toolkit
+          token: ${{ steps.sources.outputs.token }}
+          persist-credentials: false
+
+      - name: Run the canonical PHP SDK checks
+        run: |
+          set -euo pipefail
+          cp Raims-PHP/AGENTS.md AGENTS.md
+          test "$(php -r 'echo PHP_VERSION;')" = '${{ matrix.php_version }}'
+          python Developer-Toolkit/scripts/release-preflight/php_sdk.py \
+            --source "$GITHUB_WORKSPACE/Raims-PHP" \
+            --workspace "$GITHUB_WORKSPACE" \
+            --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/validate-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-${{ matrix.php }}" \
+            --prepare-tools
+
+  securityLinux:
+    name: securityLinux
+    if: github.repository == 'raimshq/raims-php'
+    runs-on:
+      - codebuild-raims-github-actions-${{ github.run_id }}-${{ github.run_attempt }}
+      - php-sdk-security
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout the candidate commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          path: Raims-PHP
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12.14'
+
+      - name: Create a read-only validation source token
+        id: sources
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          client-id: ${{ vars.RAIMS_CI_SOURCE_READER_CLIENT_ID }}
+          private-key: ${{ secrets.RAIMS_CI_SOURCE_READER_PRIVATE_KEY }}
+          owner: raimshq
+          repositories: Raims-Developer-Toolkit
+          permission-contents: read
+
+      - name: Checkout the reviewed validation tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: raimshq/Raims-Developer-Toolkit
+          ref: ${{ env.RAIMS_PHP_TOOLKIT_REF }}
+          path: Developer-Toolkit
+          token: ${{ steps.sources.outputs.token }}
+          persist-credentials: false
+
+      - name: Run the canonical security gate
+        run: |
+          set -euo pipefail
+          cp Raims-PHP/AGENTS.md AGENTS.md
+          python Developer-Toolkit/scripts/release-preflight/sdk_security.py \
+            --source "$GITHUB_WORKSPACE/Raims-PHP" \
+            --workspace "$GITHUB_WORKSPACE" \
+            --repository Raims-PHP \
+            --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/security-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" \
+            --prepare-tools

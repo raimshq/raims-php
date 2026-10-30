@@ -43,5 +43,6 @@ O SDK é um consumidor do contrato público. Não importa código dos hosts Raim
   cenários de contrato e o pacote de distribuição, conforme `CONTRIBUTING.md`.
 - Preserve o código local sem commit e sem staging até pedido explícito.
   Repositório público, commit/push, release/Packagist e deploy são etapas distintas.
-- CI futuro usa os runners CodeBuild autorizados pela Raims. Este repositório
-  não instala workflows de publicação nem cria infraestrutura.
+- O CI de validação usa os runners CodeBuild autorizados, em pushes do próprio
+  repositório e execuções manuais. Não executar código de forks com acesso ao
+  Toolkit privado. Este repositório não publica no Packagist nem cria infraestrutura.

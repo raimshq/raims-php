@@ -75,10 +75,19 @@ O pacote deve conter os fontes PHP, os metadados do
 Composer, a licença e os guias de uso. Contratos, gerador, ferramentas,
 dependências de desenvolvimento e evidências não precisam ir ao consumidor.
 
-Este repositório não tem workflow de publicação. A primeira release precisa
-de CI nos runners CodeBuild autorizados da Raims e dos gates canônicos do
-Developer Toolkit antes de qualquer distribuição. Não acrescente um runner
-pessoal ou hospedado pelo GitHub para contornar essa preparação.
+O workflow `Validate PHP SDK` executa os checks canônicos em PHP 8.2, 8.3, 8.4
+e 8.5, com versões fixadas, e aplica a análise de segurança em um job separado.
+Ele roda em pushes do próprio repositório e por execução manual, nos runners
+CodeBuild autorizados. O Toolkit privado fica fixado por commit.
+
+Antes de promover uma alteração para `main`, valide o commit em uma branch
+candidata. A etapa `Deploy` do preflight exige a execução aprovada para o mesmo
+SHA, com todos os jobs esperados concluídos. Promova esse commit sem alterar
+seu conteúdo. Uma execução cancelada, incompleta ou de outro commit não serve
+como aprovação.
+
+A validação não publica uma release nem um pacote no Packagist. Não acrescente
+um runner pessoal ou hospedado pelo GitHub para contornar os checks.
 
 ## Compatibilidade
 

@@ -22,4 +22,5 @@
 /composer.lock export-ignore
 /contracts export-ignore
 /scripts export-ignore
+/security export-ignore
 /vendor export-ignore

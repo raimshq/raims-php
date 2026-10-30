@@ -1,0 +1,40 @@
+rules:
+  - id: raims.php.tls-validation-disabled
+    languages: [php]
+    severity: ERROR
+    message: Keep TLS certificate and hostname validation enabled.
+    pattern-either:
+      - pattern: curl_setopt($HANDLE, CURLOPT_SSL_VERIFYPEER, false)
+      - pattern: curl_setopt($HANDLE, CURLOPT_SSL_VERIFYPEER, 0)
+      - pattern: curl_setopt($HANDLE, CURLOPT_SSL_VERIFYHOST, 0)
+      - pattern: curl_setopt($HANDLE, CURLOPT_SSL_VERIFYHOST, 1)
+      - pattern: "[..., CURLOPT_SSL_VERIFYPEER => false, ...]"
+      - pattern: "[..., CURLOPT_SSL_VERIFYPEER => 0, ...]"
+      - pattern: "[..., CURLOPT_SSL_VERIFYHOST => 0, ...]"
+      - pattern: "[..., CURLOPT_SSL_VERIFYHOST => 1, ...]"
+      - pattern: "[..., 'verify_peer' => false, ...]"
+      - pattern: "[..., 'verify_peer_name' => false, ...]"
+  - id: raims.php.dynamic-code-execution
+    languages: [php]
+    paths:
+      include: ['**/src/**']
+    severity: ERROR
+    message: Do not evaluate code or execute shell commands from the SDK.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: shell_exec(...)
+      - pattern: system(...)
+      - pattern: passthru(...)
+      - pattern: exec(...)
+      - pattern: popen(...)
+      - pattern: proc_open(...)
+  - id: raims.php.embedded-private-key
+    languages: [generic]
+    severity: ERROR
+    message: Load private keys from the application's secret store.
+    pattern-regex: '-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----[\s]+[A-Za-z0-9+/=]{32}'
+  - id: raims.php.embedded-github-token
+    languages: [generic]
+    severity: ERROR
+    message: Keep access tokens outside source files.
+    pattern-regex: '\b(?:gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{82})\b'

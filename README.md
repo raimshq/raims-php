@@ -1,12 +1,6 @@
 # Raims PHP
 
-SDK PHP para a API pública da Raims. O cliente organiza os 67 endpoints publicados
-em serviços, com respostas tipadas, paginação por cursor e validação de webhooks.
-Os nomes dos campos e as regras de cada requisição seguem o contrato da API.
-
-Os objetos aninhados e os itens dos iteradores mantêm seus tipos no editor.
-O transporte reutiliza conexões e oferece diagnósticos opcionais de cada
-tentativa HTTP, incluindo a decisão de retry, sem parâmetros, corpos ou credenciais.
+SDK PHP para facilitar a integração com a API pública da Raims.
 
 Instale o pacote pelo Composer:
 
@@ -112,8 +106,8 @@ de idempotência nem repete escritas automaticamente. Leia as
 | `$raims->simulations->refunds` | Simulações de estorno com chave Sandbox |
 
 `create`, `retrieve`, `update` e `all` seguem o mesmo padrão entre os serviços.
-A [referência gerada](docs/reference.md) lista todas as assinaturas, os campos de
-entrada, os retornos e o suporte à idempotência.
+Consulte a [referência do SDK](docs/reference.md) para os parâmetros e as respostas
+de cada serviço.
 
 ## Documentação
 
@@ -122,8 +116,8 @@ entrada, os retornos e o suporte à idempotência.
 - [Paginação](docs/pagination.md)
 - [Erros, idempotência e retries](docs/errors-and-retries.md)
 - [Recebimento e validação de webhooks](docs/webhooks.md)
-- [Referência dos 67 endpoints](docs/reference.md)
-- [Contrato fixado e manutenção](docs/maintenance.md)
+- [Referência do SDK](docs/reference.md)
+- [Manutenção](docs/maintenance.md)
 - [Contribuição](CONTRIBUTING.md) e [segurança](SECURITY.md)
 - [Documentação da API](https://docs.raims.com/br/api)
 

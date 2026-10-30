@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: 9261b85dae92ead7922d0a463917ee5f5d29aafe
+  RAIMS_PHP_TOOLKIT_REF: 26de7253dff702b6db97766e7932eca8fdc1862b
 
 jobs:
   validatePhp:
@@ -54,6 +54,23 @@ jobs:
         with:
           python-version: '3.12.14'
 
+      - name: Prepare PHP tool selection
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import PurePosixPath
+
+          paths = [
+              path for path in os.environ['PATH'].split(':')
+              if not (
+                  PurePosixPath(path).name in {'shims', 'bin'}
+                  and PurePosixPath(path).parent.name == '.phpenv'
+              )
+          ]
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as environment:
+              environment.write('PATH=' + ':'.join(paths) + '\n')
+          PY
+
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
@@ -85,6 +102,7 @@ jobs:
         run: |
           set -euo pipefail
           cp Raims-PHP/AGENTS.md AGENTS.md
+          command -v php
           actual_php_version="$(php -r 'echo PHP_VERSION;')"
           printf 'PHP runtime: %s; expected: %s\n' "$actual_php_version" '${{ matrix.php_version }}'
           test "$actual_php_version" = '${{ matrix.php_version }}'
@@ -92,6 +110,7 @@ jobs:
             --source "$GITHUB_WORKSPACE/Raims-PHP" \
             --workspace "$GITHUB_WORKSPACE" \
             --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/validate-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-${{ matrix.php }}" \
+            --expected-php-version '${{ matrix.php_version }}' \
             --prepare-tools
 
   securityLinux:

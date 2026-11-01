@@ -146,6 +146,6 @@ consumidor implantado. O SDK usa a fonte `raims-developer-docs` já permitida;
 não exige outra ferramenta de consulta financeira ou alteração no contrato de
 contexto. `Raims-Chat/docs/knowledge-sources.md` registra essa responsabilidade.
 
-Mantenha a pendência correspondente no TODO até confirmar pacote, fontes
-publicadas, catálogo regenerado e orientação validada. CI, release, Packagist
-e publicação dos guias seguem suas autorizações próprias.
+Mantenha esse acompanhamento na fonte interna, fora do GitHub, até confirmar
+pacote, fontes publicadas, catálogo regenerado e orientação validada. CI,
+release, Packagist e publicação dos guias seguem suas autorizações próprias.

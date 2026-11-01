@@ -54,6 +54,25 @@ jobs:
         with:
           python-version: '3.12.14'
 
+      - name: Reject tracked files excluded by repository policy
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          checkout = Path(os.environ['GITHUB_WORKSPACE']) / 'Raims-PHP'
+          ignored = subprocess.check_output([
+              'git', '-C', str(checkout), 'ls-files', '--cached', '--ignored',
+              '--exclude-from=.gitignore', '-z',
+          ])
+          count = sum(bool(path) for path in ignored.split(b'\0'))
+          if count:
+              print(f'Repository policy rejects {count} tracked ignored file(s). Remove them from Git tracking before publishing.', file=sys.stderr)
+              raise SystemExit(1)
+          PY
+
       - name: Prepare PHP tool selection
         run: |
           python - <<'PY'
@@ -136,6 +155,25 @@ jobs:
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12.14'
+
+      - name: Reject tracked files excluded by repository policy
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          checkout = Path(os.environ['GITHUB_WORKSPACE']) / 'Raims-PHP'
+          ignored = subprocess.check_output([
+              'git', '-C', str(checkout), 'ls-files', '--cached', '--ignored',
+              '--exclude-from=.gitignore', '-z',
+          ])
+          count = sum(bool(path) for path in ignored.split(b'\0'))
+          if count:
+              print(f'Repository policy rejects {count} tracked ignored file(s). Remove them from Git tracking before publishing.', file=sys.stderr)
+              raise SystemExit(1)
+          PY
 
       - name: Create a read-only validation source token
         id: sources

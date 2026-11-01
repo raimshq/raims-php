@@ -3,6 +3,10 @@
 Leia o README e os guias de contribuição e manutenção antes de alterar o SDK.
 O SDK é um consumidor do contrato público. Não importa código dos hosts Raims.
 
+- Não versionar nem publicar TODOs, backlogs ou planos de trabalho internos,
+  independentemente do nome, formato ou diretório. Mantenha o acompanhamento
+  de tarefas em fonte interna, fora do GitHub. Não inclua listas de pendências
+  nem caminhos privados na documentação pública.
 - Descreva o SDK pelos recursos e contratos da Raims. Não use marcas de outras
   empresas como inspiração, comparação ou referência de design, arquitetura
   ou implementação em README, guias, comentários, exemplos, nomes próprios

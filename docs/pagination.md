@@ -1,13 +1,13 @@
-# Paginação
+# Pagination
 
-Listagens paginadas retornam `list` e `page`. O método `all()` busca uma página;
-iterar essa página não inicia outras requisições.
+Paginated lists return `list` and `page`. `all()` fetches one page; iterating
+that page does not trigger more requests.
 
 ```php
 $page = $raims->customers->all(['page_size' => 50]);
 
 foreach ($page as $customer) {
-    // Somente os clientes desta página.
+    // Only customers on this page.
 }
 
 $count = count($page);
@@ -18,16 +18,17 @@ $next = $page->nextPage();
 $previous = $page->previousPage();
 ```
 
-`first()` e `last()` retornam um item tipado ou `null` quando a página está vazia.
-`isEmpty()` informa somente se a página atual não tem itens. Esses métodos não
-buscam outras páginas. Uma página vazia pode ter continuação; consulte
-`page.has_next` ou use o iterador automático para percorrer os demais resultados.
+`first()` and `last()` return a typed item, or `null` when the page is empty.
+`isEmpty()` only indicates whether the current page has no items. These
+methods do not fetch other pages. An empty page may have a continuation;
+check `page.has_next` or use the automatic iterator to visit the remaining
+results.
 
-`nextPage()` retorna `null` quando `page.has_next` é falso. `previousPage()` faz
-o mesmo com `page.has_previous`. Os métodos preservam filtros e opções da
-requisição e removem o cursor da direção contrária.
+`nextPage()` returns `null` when `page.has_next` is false. `previousPage()` does
+the same for `page.has_previous`. The methods preserve request filters and
+options and remove the cursor for the opposite direction.
 
-## Percorrer todas as páginas
+## Iterate through every page
 
 ```php
 $page = $raims->charges->all([
@@ -36,22 +37,22 @@ $page = $raims->charges->all([
 ]);
 
 foreach ($page->autoPagingIterator() as $charge) {
-    // Processar cada cobrança conforme a autorização da aplicação.
+    // Process each charge according to the application's authorization.
 }
 ```
 
-O iterador busca a página seguinte quando necessário. Sair do `foreach` interrompe
-as novas buscas. Cada página é uma leitura HTTP e pode falhar, gerar um novo
-`Request-Id` ou atingir um limite. O SDK não fornece um snapshot do conjunto;
-alterações concorrentes seguem as garantias da listagem da API.
+The iterator fetches the next page when needed. Leaving the `foreach` stops
+further fetches. Each page is an HTTP read and can fail, produce a new
+`Request-Id`, or reach a limit. The SDK does not provide a snapshot of the
+result set; concurrent changes follow the API listing guarantees.
 
-Uma página vazia pode ter continuação, especialmente em destinos de saque.
-O SDK segue `has_next` e `next_after` mesmo nesse caso. Cursores repetidos,
-ausentes ou inválidos encerram a iteração com exceção, evitando um loop.
-`autoPagingIterator()` percorre a direção de avanço; para voltar, use
-`previousPage()` explicitamente.
+An empty page may have a continuation, particularly for withdrawal
+destinations. The SDK follows `has_next` and `next_after` in that case too.
+Repeated, missing, or invalid cursors stop iteration with an exception to
+prevent a loop. `autoPagingIterator()` moves forward; use `previousPage()`
+explicitly to move backward.
 
-## Controle manual
+## Manual control
 
 ```php
 $first = $raims->customers->all(['page_size' => 20]);
@@ -63,7 +64,7 @@ if ($first->page->has_next) {
 }
 ```
 
-Copie os cursores retornados pela API. Não calcule posições por ID nem envie
-`after` e `before` juntos. Mantenha os mesmos filtros e a mesma ordenação.
-A lista de tipos de evento de webhook contém apenas `list`, sem paginação:
-use `$raims->webhookEventTypes->all()->list`.
+Copy cursors returned by the API. Do not calculate positions from IDs or send
+`after` and `before` together. Keep the same filters and sort order. The
+webhook event type list contains only `list`, without pagination: use
+`$raims->webhookEventTypes->all()->list`.

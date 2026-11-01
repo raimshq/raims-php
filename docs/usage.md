@@ -1,10 +1,9 @@
-# Uso do cliente
+# Client usage
 
-## Configuração
+## Configuration
 
-Cada instância mantém sua própria credencial. Use instâncias distintas quando
-seu processo atender contas diferentes, ou informe `api_key` explicitamente
-nas opções de uma requisição.
+Each instance keeps its own credential. Use separate instances when a process
+serves different accounts, or pass `api_key` explicitly in a request's options.
 
 ```php
 $raims = new \Raims\RaimsClient([
@@ -19,32 +18,33 @@ $customer = $raims->customers->retrieve($customerId, [
 ]);
 ```
 
-| Opção do cliente | Padrão | Efeito |
+| Client option | Default | Effect |
 | --- | --- | --- |
-| `api_key` | Obrigatória | Chave enviada como Bearer |
-| `api_base` | `https://api.raims.com` | Origem HTTPS, sem caminho, query ou credenciais |
-| `timeout` | `80.0` | Prazo máximo de cada tentativa, em segundos |
-| `connect_timeout` | `10.0` | Prazo de conexão, limitado pelo prazo da tentativa |
-| `max_network_retries` | `0` | De zero a cinco retries adicionais somente em leituras |
-| `http_client` | `CurlClient` | Implementação de `HttpClientInterface` |
-| `request_observer` | Desativado | Callback com os metadados de cada tentativa HTTP |
+| `api_key` | Required | Key sent as a Bearer token |
+| `api_base` | `https://api.raims.com` | HTTPS origin without a path, query, or credentials |
+| `timeout` | `80.0` | Maximum duration of each attempt, in seconds |
+| `connect_timeout` | `10.0` | Connection deadline, bounded by the attempt deadline |
+| `max_network_retries` | `0` | Zero to five additional retries for reads only |
+| `http_client` | `CurlClient` | `HttpClientInterface` implementation |
+| `request_observer` | Disabled | Callback with metadata for each HTTP attempt |
 
-`api_base` só aceita HTTP em loopback para desenvolvimento. Trocar a origem não
-seleciona o ambiente da chave. Nunca configure uma origem que você não controla:
-ela receberá a credencial.
+`api_base` accepts HTTP only on loopback for development. Changing the origin
+does not select the key's environment. Never configure an origin you do not
+control: it will receive the credential.
 
-As opções por requisição são `api_key`, `idempotency_key`, `timeout` e
-`max_network_retries`. Também podem ser fornecidas em `new RequestOptions([...])`.
-Headers arbitrários não são aceitos. A API define o `Request-Id` de cada tentativa.
+Per-request options are `api_key`, `idempotency_key`, `timeout`, and
+`max_network_retries`. They can also be supplied through
+`new RequestOptions([...])`. Arbitrary headers are not accepted. The API sets
+the `Request-Id` for each attempt.
 
-Um transporte personalizado deve lançar `ApiConnectionException` quando não
-receber a resposta, para permitir o tratamento e os retries de leitura do SDK.
-Exceções da sua aplicação não são convertidas automaticamente em falhas de rede.
+A custom transport must throw `ApiConnectionException` when it does not receive
+a response so the SDK can handle the failure and retry reads. Application
+exceptions are not automatically converted into network failures.
 
-O `CurlClient` reutiliza conexões entre chamadas da mesma instância. Headers,
-corpo, método e callbacks são reiniciados a cada chamada, inclusive quando a
-chave muda. Para controlar a duração desse cache explicitamente, injete o
-transporte e use `close()` quando encerrar seu trabalho:
+`CurlClient` reuses connections between calls on the same instance. Headers,
+body, method, and callbacks are reset for every call, including when the key
+changes. To control the lifetime of this cache explicitly, inject the transport
+and call `close()` when its work is complete:
 
 ```php
 $httpClient = new \Raims\HttpClient\CurlClient();
@@ -60,13 +60,13 @@ try {
 }
 ```
 
-Uma chamada posterior ao mesmo transporte abre outra conexão. O fechamento
-também ocorre quando o transporte deixa de ser referenciado pelo processo.
+A later call through the same transport opens another connection. The
+transport also closes when the process no longer references it.
 
-## Diagnósticos opcionais
+## Optional diagnostics
 
-Configure um callback para observar cada tentativa, incluindo retries, falhas
-de conexão e respostas `204`:
+Configure a callback to observe each attempt, including retries, connection
+failures, and `204` responses:
 
 ```php
 $raims = new \Raims\RaimsClient([
@@ -77,32 +77,32 @@ $raims = new \Raims\RaimsClient([
 ]);
 ```
 
-`RequestDiagnostics` contém somente `operationId`, `method`, `path`, `attempt`,
-`durationMs`, `httpStatus`, `requestId`, `transportErrorCode`, `willRetry` e
-`retryDelayMs`. O caminho é o
-template do endpoint, como `/v1/customers/{id}`; ele não inclui o identificador
-recebido nem a query. `attempt` começa em 1. A duração mede apenas a tentativa,
-sem incluir a espera entre retries. Status e Request-Id são nulos quando a
-resposta não foi recebida; o código de transporte depende do cliente HTTP usado.
+`RequestDiagnostics` contains only `operationId`, `method`, `path`, `attempt`,
+`durationMs`, `httpStatus`, `requestId`, `transportErrorCode`, `willRetry`, and
+`retryDelayMs`. The path is the endpoint template, such as
+`/v1/customers/{id}`; it contains neither the supplied identifier nor the query.
+`attempt` starts at 1. Duration measures only the attempt and excludes the wait
+between retries. Status and Request-Id are null when no response was received;
+the transport code depends on the HTTP client.
 
-`willRetry` indica se o SDK decidiu fazer outra tentativa automática. Quando
-verdadeiro, `retryDelayMs` informa a espera planejada em milissegundos; caso
-contrário, o intervalo é `null`. O callback recebe essa decisão antes da espera.
-Sucessos, tentativas finais, escritas e recusas que exigem mais de 30 segundos
-de espera têm `willRetry: false`. O campo não confirma a execução de uma nova
-tentativa se o processo for interrompido.
+`willRetry` indicates whether the SDK decided to make another automatic
+attempt. When true, `retryDelayMs` is the planned wait in milliseconds;
+otherwise, the delay is `null`. The callback receives this decision before
+the wait. Successful and final attempts, writes, and rejections requiring more
+than 30 seconds of waiting have `willRetry: false`. The field does not confirm
+that another attempt ran if the process was interrupted.
 
-Esses metadados descrevem o transporte. HTTP `202` continua sendo um resultado
-pendente, e um HTTP `200` ainda pode ser recusado pela validação da estrutura.
-Agrupe falhas na sua aplicação antes de emitir alertas. O SDK não envia logs ou
-telemetria por conta própria. Exceções do callback são isoladas para preservar
-o resultado da requisição; trate falhas do seu coletor dentro do próprio callback.
-Chamadas feitas pelo callback não geram notificações recursivas ao mesmo observer.
+This metadata describes the transport. HTTP `202` remains a pending result,
+and an HTTP `200` can still fail structural validation. Group failures in your
+application before sending alerts. The SDK does not send logs or telemetry on
+its own. Callback exceptions are isolated to preserve the request result;
+handle collector failures inside the callback. Calls made by the callback do
+not recursively notify the same observer.
 
-## Respostas
+## Responses
 
-Os serviços retornam classes em `Raims\Model`, com propriedades documentadas
-para o editor e hidratação dos objetos aninhados. Os recursos são somente leitura:
+Services return classes in `Raims\Model`, with properties documented for editor
+support and hydrated nested objects. Resources are read-only:
 
 ```php
 $charge = $raims->charges->retrieve($chargeId);
@@ -118,34 +118,33 @@ $requestId = $http->getRequestId();
 $replayed = $http->getHeader('Idempotency-Replayed');
 ```
 
-Campos novos da API são preservados. As classes descrevem o contrato fixado,
-mas não convertem valores monetários para `float`, não traduzem estados e não
-alteram os valores recebidos. O SDK requer PHP 64 bits para os inteiros da API.
-Representações JSON equivalentes, como `1`, `1.0` e `1e0`, são entregues como
-inteiros quando cabem no runtime. Essa leitura preserva a precisão dos inteiros
-grandes; valores acima da capacidade do PHP permanecem texto. Frações continuam
-sendo recusadas nos campos inteiros. O corpo em `$http->body` mantém o texto
-original da resposta.
+New API fields are preserved. Classes describe the pinned contract without
+converting monetary amounts to `float`, translating states, or changing
+received values. The SDK requires 64-bit PHP for API integers. Equivalent JSON
+representations such as `1`, `1.0`, and `1e0` are returned as integers when they
+fit the runtime. This parsing preserves the precision of large integers;
+values beyond PHP's capacity remain text. Fractions are rejected in integer
+fields. `$http->body` retains the original response text.
 
-O SDK confere os campos obrigatórios e os tipos estruturais antes de construir
-o recurso. Uma lista sem paginação obrigatória, um item escalar no lugar de um
-objeto ou um campo obrigatório ausente gera `UnexpectedResponseException`.
-Campos novos e novos valores de enum são preservados; o SDK não repete as
-validações de formato, limites ou regras de negócio do servidor.
+The SDK checks required fields and structural types before constructing a
+resource. A list without required pagination, a scalar item where an object
+is expected, or a missing required field raises `UnexpectedResponseException`.
+New fields and enum values are preserved. The SDK does not repeat the server's
+format, limit, or business-rule validation.
 
-`getLastResponse()` está disponível no recurso principal. Objetos aninhados não
-representam outra requisição. `DeleteWebhook` retorna `null` após um `204` sem
-corpo. O SDK não acompanha automaticamente respostas `202`; consulte o recurso
-correspondente para confirmar o resultado.
+`getLastResponse()` is available on the top-level resource. Nested objects do
+not represent another request. `DeleteWebhook` returns `null` after a `204`
+without a body. The SDK does not automatically follow `202` responses; query
+the corresponding resource to confirm the result.
 
-O corpo bruto em `$http->body`, `toArray()` e a serialização podem conter dados
-pessoais, segredos ou URLs temporárias. Use-os somente onde houver necessidade.
-O debug padrão dos objetos do SDK oculta o conteúdo; isso não substitui os
-controles de acesso e de logs da sua aplicação.
+The raw body in `$http->body`, `toArray()`, and serialization may contain
+personal data, secrets, or temporary URLs. Use them only where needed. Default
+SDK object debugging hides the contents; this does not replace application
+access and logging controls.
 
-## Valores públicos nomeados
+## Named public values
 
-Use `Raims\EnumValues` para evitar strings e números repetidos na integração:
+Use `Raims\EnumValues` to avoid repeated strings and numbers in your integration:
 
 ```php
 use Raims\EnumValues;
@@ -158,37 +157,37 @@ $params = [
 ];
 ```
 
-As constantes são geradas dos campos públicos do contrato. Valores numéricos
-recebem nomes somente quando o contrato fornece rótulos explícitos. Consulte
-o catálogo no fim da [referência](reference.md); não há conversão automática
-dos valores recebidos nem uma lista manual de estados mantida pelo SDK.
+Constants are generated from public contract fields. Numeric values receive
+names only when the contract provides explicit labels. See the catalog at
+the end of the [reference](reference.md). The SDK does not automatically convert
+received values or maintain a manual list of states.
 
-## Omissão, null e mapas vazios
+## Omission, null, and empty maps
 
-As entradas são arrays PHP com os nomes do contrato em `snake_case`. O SDK não
-remove `null`, `false`, zero ou texto vazio do corpo. Uma atualização parcial
-segue as regras do endpoint:
+Inputs are PHP arrays using the contract's `snake_case` names. The SDK does not
+remove `null`, `false`, zero, or empty text from the body. Partial updates follow
+the endpoint's rules:
 
 ```php
-// Omitir description preserva a descrição da cobrança.
-$raims->charges->update($chargeId, ['title' => 'Pedido atualizado']);
+// Omitting description preserves the charge description.
+$raims->charges->update($chargeId, ['title' => 'Updated order']);
 
-// Na edição de cobrança, null limpa a descrição.
+// When editing a charge, null clears the description.
 $raims->charges->update($chargeId, ['description' => null]);
 
-// Um mapa vazio precisa ser um objeto JSON, não uma lista JSON.
+// An empty map must be a JSON object, not a JSON list.
 $raims->customers->update($customerId, ['metadata' => (object) []]);
 ```
 
-`metadata` tem regras de mesclagem e remoção próprias; não presuma que um mapa
-vazio apaga tudo. Na edição de links, remover uma URL exige o respectivo campo
-`clear_success_redirect_url` ou `clear_cancel_redirect_url`. Consulte o contrato
-do endpoint antes de atribuir significado a `null` ou texto vazio.
+`metadata` has its own merge and removal rules; do not assume an empty map
+clears everything. When editing links, removing a URL requires the respective
+`clear_success_redirect_url` or `clear_cancel_redirect_url` field. Read the
+endpoint contract before assigning meaning to `null` or empty text.
 
-## Documentos e uploads
+## Documents and uploads
 
-Recibos e boletos retornam um objeto `FinancialDocument` com `url` e `expires_at`.
-O endpoint autenticado não retorna os bytes do PDF:
+Receipts and boletos return a `FinancialDocument` with `url` and `expires_at`.
+The authenticated endpoint does not return PDF bytes:
 
 ```php
 $document = $raims->charges->retrieveReceipt($chargeId);
@@ -196,20 +195,21 @@ $temporaryUrl = $document->url;
 $expiresAt = $document->expires_at;
 ```
 
-Baixe a URL temporária em um GET separado, sem `Authorization`, cookies ou chave
-de API, e sem modificar seus parâmetros. A URL permite acesso até a expiração;
-não a registre em logs. Se expirar, consulte o endpoint autenticado novamente.
-O SDK não segue nem baixa essas URLs pelo transporte autenticado.
+Download the temporary URL with a separate GET, without `Authorization`,
+cookies, or an API key, and without changing its parameters. The URL grants
+access until expiration; do not log it. If it expires, query the authenticated
+endpoint again. The SDK does not follow or download these URLs through the
+authenticated transport.
 
-Para personalizar as imagens do checkout:
+To customize checkout images:
 
-1. Prepare o envio com `accounts->createCheckoutLogoUpload($params)` ou
-   `createCheckoutFaviconUpload($params)`, usando tipo e tamanho reais do arquivo.
-2. Faça um PUT separado para `upload_url`, com os bytes e os valores exatos de
-   `Content-Type` e `Content-Length`, sem chave de API, cookies ou redirects.
-3. Use o ID retornado em `accounts->updateCheckoutSettings($params)`. Uma resposta
-   `202` exige acompanhar a aplicação da imagem.
+1. Prepare the upload with `accounts->createCheckoutLogoUpload($params)` or
+   `createCheckoutFaviconUpload($params)`, using the file's actual type and size.
+2. Make a separate PUT to `upload_url` with the bytes and exact `Content-Type`
+   and `Content-Length` values, without an API key, cookies, or redirects.
+3. Pass the returned ID to `accounts->updateCheckoutSettings($params)`. A `202`
+   response requires you to follow the image update until it is applied.
 
-Os campos aceitos estão na [referência](reference.md). O SDK não envia o arquivo
-nem aplica a imagem automaticamente. Mantenha validação de destino, tamanho,
-tipo, expiração e conclusão no componente que executar o PUT.
+Accepted fields are listed in the [reference](reference.md). The SDK neither
+uploads the file nor applies the image automatically. The component performing
+the PUT must validate the destination, size, type, expiration, and completion.

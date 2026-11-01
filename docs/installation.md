@@ -1,50 +1,50 @@
-# Instalação
+# Installation
 
-O SDK requer PHP 8.2 ou superior em 64 bits, Composer 2 e as extensões `curl`,
-`json` e `hash`. Verifique o ambiente com `php -v`, `php -m` e
-`composer check-platform-reqs` após instalar as dependências.
+The SDK requires 64-bit PHP 8.2 or later, Composer 2, and the `curl`, `json`, and
+`hash` extensions. Check the environment with `php -v`, `php -m`, and
+`composer check-platform-reqs` after installing dependencies.
 
-## Instalar com Composer
+## Install with Composer
 
-No diretório da aplicação que consumirá o SDK:
+In the directory of the application that will consume the SDK:
 
 ```text
 composer require raims/raims-php:^0.1.0
 ```
 
-O pacote `raims/raims-php` é distribuído pelo
-[Packagist](https://packagist.org/packages/raims/raims-php). A restrição
-`^0.1.0` aceita atualizações da série `0.1`; mantenha o `composer.lock` da
-aplicação para repetir a instalação da mesma versão.
+The `raims/raims-php` package is distributed through
+[Packagist](https://packagist.org/packages/raims/raims-php). The `^0.1.0`
+constraint accepts updates in the `0.1` series. Keep the application's
+`composer.lock` to reproduce installation of the same version.
 
-Antes de atualizar, confira as
-[releases](https://github.com/raimshq/raims-php/releases) e teste os fluxos da
-sua integração. Para buscar uma versão admitida pela restrição da aplicação:
+Before updating, read the
+[releases](https://github.com/raimshq/raims-php/releases) and test your integration
+flows. To obtain a version allowed by the application's constraint:
 
 ```text
 composer update raims/raims-php
 ```
 
-## Acompanhar a branch de desenvolvimento
+## Follow the development branch
 
-Para contribuir com o SDK ou avaliar alterações antes de uma release, adicione
-o repositório público como fonte VCS do Composer:
+To contribute to the SDK or evaluate changes before a release, add the public
+repository as a Composer VCS source.
 
-Se o projeto ainda não tiver `composer.json`, crie-o com `composer init` antes
-dos comandos abaixo.
+If the project does not have a `composer.json` yet, create it with
+`composer init` before running the commands below.
 
 ```text
 composer config repositories.raims-php vcs https://github.com/raimshq/raims-php
 composer require raims/raims-php:dev-main
 ```
 
-`dev-main` acompanha a branch `main` e pode incluir alterações posteriores à
-última release. O `composer.lock` da aplicação fixa a revisão instalada.
+`dev-main` follows `main` and may include changes made after the latest release.
+The application's `composer.lock` pins the installed revision.
 
-## Usar um checkout local
+## Use a local checkout
 
-Para desenvolver com uma cópia local, use um repositório Composer do tipo `path`.
-Ajuste `../Raims-PHP` para a localização do checkout:
+For development with a local copy, use a Composer `path` repository. Adjust
+`../Raims-PHP` to the checkout location:
 
 ```json
 {
@@ -64,33 +64,33 @@ Ajuste `../Raims-PHP` para a localização do checkout:
 }
 ```
 
-Execute `composer update raims/raims-php` no projeto consumidor.
+Run `composer update raims/raims-php` in the consuming project.
 
-## Carregar o cliente
+## Load the client
 
-Depois da instalação por qualquer um dos caminhos, use o autoload do Composer:
+After installing through any of these methods, use Composer's autoloader:
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
 ```
 
-O repositório usa o nome de pacote `raims/raims-php` e o namespace `Raims`.
-O SDK não exige bibliotecas de terceiros em produção.
+The repository uses the package name `raims/raims-php` and the `Raims` namespace.
+The SDK requires no third-party libraries in production.
 
-## Credenciais
+## Credentials
 
-Obtenha uma chave da sua conta conforme o
-[guia de autenticação](https://docs.raims.com/br/integracoes/autenticacao).
-Guarde-a em uma variável de ambiente ou no cofre de segredos da aplicação.
-As permissões e restrições da chave continuam sendo validadas pela API.
+Obtain an account key as described in the
+[authentication guide](https://docs.raims.com/br/integracoes/autenticacao).
+Keep it in an environment variable or the application's secret store. The API
+continues to validate the key's permissions and restrictions.
 
-Uma chave Sandbox usa a mesma URL-base da chave de Produção. Não há opção de
-ambiente no SDK. As simulações exigem uma chave Sandbox; entregas de e-mail e
-webhooks ainda podem alcançar destinos externos nesse ambiente.
+Sandbox and Production keys use the same base URL. The SDK has no environment
+option. Simulations require a Sandbox key; email and webhook deliveries can
+still reach external destinations in that environment.
 
-## Versões
+## Versions
 
-A versão do pacote é independente da versão HTTP `/v1` e da versão do contrato
-fixado. Novas versões publicadas nas releases do repositório são disponibilizadas
-no Packagist pelo fluxo de distribuição do SDK. A aplicação decide quando
-atualizar sua dependência.
+The package version is independent of HTTP version `/v1` and the pinned
+contract version. New versions published as repository releases become
+available on Packagist through the SDK distribution process. The application
+decides when to update its dependency.

@@ -1,22 +1,22 @@
-# Contribuir
+# Contributing
 
-Leia o [guia de manutenção](docs/maintenance.md) e as instruções em `AGENTS.md`.
-Relate problemas reproduzíveis sem credenciais, dados de clientes ou URLs que
-permitam acessar arquivos e checkouts.
+Read the [maintenance guide](docs/maintenance.md) and the instructions in
+`AGENTS.md`. Report reproducible issues without credentials, customer data,
+or URLs that provide access to files or checkouts.
 
-## Textos e exemplos
+## Text and examples
 
-Descreva os recursos, contratos e condições de uso do SDK diretamente.
-Não apresente outras empresas como inspiração, comparação ou referência de
-design, arquitetura ou implementação. A orientação vale também para comentários,
-exemplos, nomes de componentes e textos de commits, pull requests e releases.
-Revise os arquivos alterados e novos e seus links antes de enviar a contribuição.
+Describe the SDK's features, contracts, and usage conditions directly. Do not
+present other companies as design, architecture, or implementation references.
+This also applies to comments, examples, component names, commits, pull requests,
+and releases. Review changed and new files and their links before submitting
+a contribution.
 
-Preserve avisos de licença, atribuições de código incorporado e nomes necessários
-às dependências e integrações reais. Código de terceiros deve manter sua autoria
-e procedência.
+Preserve license notices, incorporated-code attribution, and names required
+by actual dependencies and integrations. Third-party code must retain its
+authorship and provenance.
 
-## Validar alterações
+## Validate changes
 
 ```text
 composer validate --strict
@@ -26,85 +26,83 @@ composer check-compatibility
 composer check
 ```
 
-`composer check` usa o validador canônico do Developer Toolkit no checkout
-vizinho. Ele confere o contrato, a geração, a sintaxe, os tipos vistos pelo
-integrador, as regressões e o pacote. Os arquivos físicos das suítes são
-materializados somente em `.tmp`; o comando não chama a API real.
+`composer check` uses the canonical Developer Toolkit validator in the adjacent
+checkout. It checks the contract, generation, syntax, types exposed to
+integrators, regressions, and package contents. Physical test files are
+materialized only in `.tmp`; the command does not call the real API.
 
-Na primeira execução da estação, use `composer check -- --prepare-tools` para
-obter a versão fixada do PHPStan, com checksum conferido. As ferramentas e os
-resultados ficam em `.tmp`. Sem preparo explícito, ferramenta ausente ou hash
-divergente bloqueia a validação. `RAIMS_PYTHON` permite selecionar o Python
-compatível com o ambiente de engenharia.
+On a workstation's first run, use `composer check -- --prepare-tools` to obtain
+the pinned PHPStan version with checksum verification. Tools and results stay
+in `.tmp`. Without explicit preparation, a missing tool or mismatched hash
+blocks validation. `RAIMS_PYTHON` selects a Python compatible with the
+engineering environment.
 
-Um clone público isolado não contém o Toolkit de engenharia. Nessa situação,
-o comando informa a dependência ausente; não declara um check parcial aprovado.
-Os comandos de geração e lint continuam disponíveis no código do SDK.
+A standalone public clone does not contain the engineering Toolkit. In that
+case, the command reports the missing dependency and does not claim a partial
+check passed. Generation and lint commands remain available in the SDK source.
 
-Execute `php -l` em cada arquivo PHP, incluindo o gerador. Verifique também os
-tipos e os exemplos com a versão de PHP que será usada pela aplicação.
-Dependências e arquivos de validação ficam fora do pacote. No workspace Raims,
-use exclusivamente `C:\server\raims\.tmp\raims-php-sdk` para suítes, simuladores,
-ferramentas e relatórios. Não os inclua em commits nem no arquivo de distribuição.
+Run `php -l` on every PHP file, including the generator. Also check types and
+examples with the PHP version used by the application. Dependencies and
+validation files stay outside the package. In the Raims workspace, use only
+`C:\server\raims\.tmp\raims-php-sdk` for suites, simulators, tools, and reports.
+Do not include them in commits or distribution archives.
 
-Para alterações no transporte ou no gerador, a validação precisa cobrir:
+For transport or generator changes, validation must cover:
 
-- Cada endpoint fixado, com método, caminho, query, JSON e status de sucesso.
-- JSON em DELETE, POST sem corpo, `204`, respostas `202` e erros sem envelope.
-- Null, omissão, false, zero, mapas vazios e campos futuros.
-- Representações equivalentes de inteiros, valores grandes e frações que não
-  podem ser aceitas por arredondamento.
-- Opções por requisição, isolamento entre clientes e argumentos sensíveis.
-- Retries somente de leitura, idempotência estável e `Retry-After`.
-- Paginação nos dois sentidos, filtros, páginas vazias e ciclos.
-- TLS verificado, redirects bloqueados e timeouts usando transporte local.
-- Assinatura de webhook, rotação, relógio, Base62 e bytes originais do corpo.
+- Every pinned endpoint, including method, path, query, JSON, and success status.
+- JSON in DELETE, POST without a body, `204`, `202`, and errors without an envelope.
+- Null, omission, false, zero, empty maps, and future fields.
+- Equivalent integer representations, large values, and fractions that must
+  not be accepted through rounding.
+- Per-request options, isolation between clients, and sensitive arguments.
+- Read-only retries, stable idempotency, and `Retry-After`.
+- Pagination in both directions, filters, empty pages, and cycles.
+- Verified TLS, blocked redirects, and timeouts using local transport.
+- Webhook signatures, rotation, clocks, Base62, and original body bytes.
 
-Use transporte falso e receptores locais. O Sandbox pode emitir comunicações
-externas; não faça testes contra a API real como parte da validação da biblioteca.
-Encerre os processos temporários e confira suas portas antes de concluir.
+Use fake transports and local receivers. Sandbox can send external
+communications; do not test against the real API as part of library
+validation. Stop temporary processes and check their ports before finishing.
 
-## Revisar a distribuição
+## Review distribution
 
-O check confere o arquivo de `composer archive` e um arquivo Git equivalente ao
-ZIP de distribuição do GitHub. As regras `archive.exclude` e `export-ignore`
-devem produzir o mesmo conjunto de arquivos, sem alterar o índice ou os objetos
-Git do checkout do SDK. Toda preparação acontece em `.tmp`, sem criar um commit.
+The check inspects the `composer archive` output and a Git archive equivalent
+to the GitHub distribution ZIP. `archive.exclude` and `export-ignore` must
+produce the same file set without changing the SDK checkout's Git index or
+objects. All preparation happens in `.tmp`, without creating a commit.
 
-O pacote deve conter os fontes PHP, os metadados do
-Composer, a licença e os guias de uso. Contratos, gerador, ferramentas,
-dependências de desenvolvimento e evidências não precisam ir ao consumidor.
+The package must contain PHP source, Composer metadata, the license, and usage
+guides. Contracts, the generator, tools, development dependencies, and evidence
+do not need to be distributed to consumers.
 
-O workflow `Validate PHP SDK` executa os checks canônicos em PHP 8.2, 8.3, 8.4
-e 8.5, com versões fixadas, e aplica a análise de segurança em um job separado.
-Ele roda em pushes do próprio repositório e por execução manual, nos runners
-CodeBuild autorizados. O Toolkit privado fica fixado por commit.
+`Validate PHP SDK` runs the canonical checks on pinned PHP 8.2, 8.3, 8.4, and 8.5
+versions, with security analysis in a separate job. It runs for pushes from
+this repository and manual executions on authorized CodeBuild runners. The
+private Toolkit is pinned to a commit.
 
-Antes de promover uma alteração para `main`, valide o commit em uma branch
-candidata. A etapa `Deploy` do preflight exige a execução aprovada para o mesmo
-SHA, com todos os jobs esperados concluídos. Promova esse commit sem alterar
-seu conteúdo. Uma execução cancelada, incompleta ou de outro commit não serve
-como aprovação.
+Before promoting a change to `main`, validate the commit on a candidate branch.
+The preflight `Deploy` stage requires a successful run for the same SHA, with
+all expected jobs completed. Promote that commit without changing its contents.
+A canceled or incomplete run, or a run for a different commit, does not approve
+publication.
 
-A validação não publica uma release. Depois da aprovação dos cinco jobs para
-o mesmo commit e da autorização de distribuição, a publicação de uma release
-no GitHub aciona `packagist-release.yml`, que atualiza o pacote no Packagist.
-Pushes e tags sem release não substituem essa etapa. Confira a versão no
-Packagist e uma instalação limpa pelo Composer antes de declarar a distribuição
-concluída. O procedimento está no
-[guia de manutenção](docs/maintenance.md#publicar-uma-versão).
+Validation does not publish a release. After all five jobs pass for the same
+commit and distribution is authorized, publishing a GitHub release triggers
+`packagist-release.yml`, which updates the package on Packagist. Pushes and tags
+without a release do not replace this step. Verify the version on Packagist
+and a clean Composer installation before declaring distribution complete.
+See the [maintenance guide](docs/maintenance.md#publish-a-version).
 
-Não acrescente um runner pessoal ou hospedado pelo GitHub para contornar os
-checks. Credenciais de publicação não pertencem aos fontes, exemplos ou logs.
+Do not add personal or GitHub-hosted runners to bypass checks. Publication
+credentials do not belong in source, examples, or logs.
 
-## Compatibilidade
+## Compatibility
 
-Preserve o namespace, as assinaturas públicas e os nomes do contrato HTTP.
-O manifesto `contracts/php-api.json` é conferido por `composer check-compatibility`
-e pelo check completo. Para atualizar essa base deliberadamente, use
-`composer snapshot-api -- --write` e revise o diff conforme o
-[guia de manutenção](docs/maintenance.md#compatibilidade-da-biblioteca-php).
-Não acrescente retries de escrita, geração silenciosa de idempotência ou
-validação de domínio incompatível. Documente alterações de comportamento e
-compatibilidade em uma nota de versão; refactors internos não precisam virar
-orientação ao integrador.
+Preserve the namespace, public signatures, and HTTP contract names. The
+`contracts/php-api.json` manifest is checked by `composer check-compatibility`
+and the full check. To update this baseline deliberately, use
+`composer snapshot-api -- --write` and review the diff as described in the
+[maintenance guide](docs/maintenance.md#php-library-compatibility).
+Do not add write retries, silent idempotency key generation, or incompatible
+domain validation. Document behavior and compatibility changes in release
+notes. Internal refactors do not need to become integration guidance.

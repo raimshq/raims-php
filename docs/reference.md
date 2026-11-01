@@ -1,13 +1,13 @@
-# Referência do SDK PHP
+# PHP SDK reference
 
-Esta referência é gerada do contrato público fixado. Os campos mantêm os nomes da API.
-Consulte os exemplos e as condições de uso na [referência HTTP](https://docs.raims.com/br/api).
+This reference is generated from the pinned public contract. Fields retain their API names.
+See examples and usage conditions in the [HTTP reference](https://docs.raims.com/br/api).
 
 ## `accounts`
 
 ### `retrieveFees`
 
-Consultar tarifas da conta.
+Get account fees.
 
 ```php
 $raims->accounts->retrieveFees($options);
@@ -15,15 +15,15 @@ $raims->accounts->retrieveFees($options);
 
 `GET /v1/accounts/fees` · `GetAccountFees`
 
-Consulte as condições comerciais vigentes da sua empresa para recebimentos por Pix e boleto.
+Check your company's current commercial terms for Pix and boleto receipts.
 
-Retorno: `200` `AccountFees`.
+Returns: `200` `AccountFees`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveNumber`
 
-Recuperar número de conta.
+Get the account number.
 
 ```php
 $raims->accounts->retrieveNumber($options);
@@ -31,15 +31,15 @@ $raims->accounts->retrieveNumber($options);
 
 `GET /v1/accounts/account_number` · `GetAccountNumber`
 
-Consulte a agência e o número da conta financeira da sua empresa na Raims. A consulta exige uma chave de Produção e uma conta aprovada e habilitada.
+Retrieve your company's financial account branch and number at Raims. This request requires a Production key and an approved, enabled account.
 
-Retorno: `200` `AccountNumber`.
+Returns: `200` `AccountNumber`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveCheckoutSettings`
 
-Consultar personalização do checkout.
+Get checkout customization.
 
 ```php
 $raims->accounts->retrieveCheckoutSettings($options);
@@ -47,15 +47,15 @@ $raims->accounts->retrieveCheckoutSettings($options);
 
 `GET /v1/accounts/checkout_settings` · `GetCheckoutSettings`
 
-Consulte as imagens, as cores, o e-mail de suporte e os meios de pagamento padrão do checkout da empresa no ambiente da chave.
+Retrieve the images, colors, support email, and default payment methods for the company's checkout in the key's environment.
 
-Retorno: `200` `CheckoutSettings`.
+Returns: `200` `CheckoutSettings`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `updateCheckoutSettings`
 
-Atualizar personalização do checkout.
+Update checkout customization.
 
 ```php
 $raims->accounts->updateCheckoutSettings($params, $options);
@@ -63,23 +63,23 @@ $raims->accounts->updateCheckoutSettings($params, $options);
 
 `PATCH /v1/accounts/checkout_settings` · `UpdateCheckoutSettings`
 
-Altere as imagens, as cores e o e-mail de suporte do checkout. Campos omitidos preservam o valor atual. O envio de uma nova imagem pode exigir acompanhamento até sua aplicação.
+Change checkout images, colors, and support email. Omitted fields preserve their current values. Uploading a new image may require tracking until it is applied.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `support_email` | `string\|null` | Não | E-mail de suporte apresentado no checkout. Omitir preserva o valor; null ou texto vazio remove o contato. |
-| `hex_primary_color` | `string` | Não | Cor principal do checkout no formato #RRGGBB. Omitir preserva o valor; null ou texto vazio não são aceitos. |
-| `hex_secondary_color` | `string` | Não | Cor de fundo do checkout no formato #RRGGBB. Omitir preserva o valor; null ou texto vazio não são aceitos. |
-| `logo_upload_id` | `string\|null` | Não | ID retornado ao preparar o envio da logo. Envie o arquivo antes de associá-lo. Omitir preserva a imagem atual; null a remove. |
-| `favicon_upload_id` | `string\|null` | Não | ID retornado ao preparar o envio do ícone. Envie o arquivo antes de associá-lo. Omitir preserva a imagem atual; null a remove. |
+| `support_email` | `string\|null` | No | Support email displayed in checkout. Omission preserves the value; null or empty text removes the contact. |
+| `hex_primary_color` | `string` | No | Primary checkout color in #RRGGBB format. Omission preserves the value; null or empty text is not accepted. |
+| `hex_secondary_color` | `string` | No | Checkout background color in #RRGGBB format. Omission preserves the value; null or empty text is not accepted. |
+| `logo_upload_id` | `string\|null` | No | ID returned when preparing the logo upload. Upload the file before associating it. Omission preserves the current image; null removes it. |
+| `favicon_upload_id` | `string\|null` | No | ID returned when preparing the icon upload. Upload the file before associating it. Omission preserves the current image; null removes it. |
 
-Retorno: `200` `CheckoutSettings`, `202` `CheckoutSettings`.
+Returns: `200` `CheckoutSettings`, `202` `CheckoutSettings`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `createCheckoutLogoUpload`
 
-Preparar envio da logo.
+Prepare a logo upload.
 
 ```php
 $raims->accounts->createCheckoutLogoUpload($params, $options);
@@ -87,22 +87,22 @@ $raims->accounts->createCheckoutLogoUpload($params, $options);
 
 `POST /v1/accounts/checkout_settings/logo_uploads` · `CreateCheckoutLogoUpload`
 
-Obtenha uma URL temporária para enviar a imagem. Depois do envio dos bytes, associe o ID retornado à personalização do checkout. A preparação não altera a imagem atual.
+Obtain a temporary URL to upload the image. After uploading the bytes, associate the returned ID with checkout customization. Preparation does not change the current image.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `content_type` | `'image/png'\|'image/jpeg'` | Sim | Tipo de conteúdo do arquivo: image/png ou image/jpeg. |
-| `file_size` | `int` | Sim | Tamanho do arquivo em bytes. |
-| `width` | `int` | Sim | Largura da imagem em pixels. |
-| `height` | `int` | Sim | Altura da imagem em pixels. |
+| `content_type` | `'image/png'\|'image/jpeg'` | Yes | File content type: image/png or image/jpeg. |
+| `file_size` | `int` | Yes | File size in bytes. |
+| `width` | `int` | Yes | Image width in pixels. |
+| `height` | `int` | Yes | Image height in pixels. |
 
-Retorno: `201` `CheckoutAssetUpload`.
+Returns: `201` `CheckoutAssetUpload`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `createCheckoutFaviconUpload`
 
-Preparar envio do ícone.
+Prepare an icon upload.
 
 ```php
 $raims->accounts->createCheckoutFaviconUpload($params, $options);
@@ -110,22 +110,22 @@ $raims->accounts->createCheckoutFaviconUpload($params, $options);
 
 `POST /v1/accounts/checkout_settings/favicon_uploads` · `CreateCheckoutFaviconUpload`
 
-Obtenha uma URL temporária para enviar a imagem. Depois do envio dos bytes, associe o ID retornado à personalização do checkout. A preparação não altera a imagem atual.
+Obtain a temporary URL to upload the image. After uploading the bytes, associate the returned ID with checkout customization. Preparation does not change the current image.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `content_type` | `'image/png'\|'image/jpeg'` | Sim | Tipo de conteúdo do arquivo: image/png ou image/jpeg. |
-| `file_size` | `int` | Sim | Tamanho do arquivo em bytes. |
-| `width` | `int` | Sim | Largura do ícone em pixels. Deve ser igual à altura. |
-| `height` | `int` | Sim | Altura do ícone em pixels. Deve ser igual à largura. |
+| `content_type` | `'image/png'\|'image/jpeg'` | Yes | File content type: image/png or image/jpeg. |
+| `file_size` | `int` | Yes | File size in bytes. |
+| `width` | `int` | Yes | Icon width in pixels. Must equal its height. |
+| `height` | `int` | Yes | Icon height in pixels. Must equal its width. |
 
-Retorno: `201` `CheckoutAssetUpload`.
+Returns: `201` `CheckoutAssetUpload`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `deleteCheckoutAssetUpload`
 
-Descartar envio de imagem.
+Discard an image upload.
 
 ```php
 $raims->accounts->deleteCheckoutAssetUpload($id, $options);
@@ -133,19 +133,19 @@ $raims->accounts->deleteCheckoutAssetUpload($id, $options);
 
 `DELETE /v1/accounts/checkout_settings/uploads/{id}` · `DeleteCheckoutAssetUpload`
 
-Descarte um envio de logo ou ícone que ainda não foi associado ao checkout. Um envio expirado também pode ser descartado. Para remover uma imagem já aplicada, use o PATCH da personalização.
+Discard a logo or icon upload that has not been associated with checkout. Expired uploads may also be discarded. To remove an image that is already applied, use the customization PATCH endpoint.
 
-`id`: Identificador recebido ao preparar o envio da imagem.
+`id`: Identifier returned when preparing the image upload.
 
-Retorno: `200` `CheckoutAssetUploadDeleted`.
+Returns: `200` `CheckoutAssetUploadDeleted`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ## `balances`
 
 ### `retrieve`
 
-Recuperar saldo atual.
+Get the current balance.
 
 ```php
 $raims->balances->retrieve($options);
@@ -153,15 +153,15 @@ $raims->balances->retrieve($options);
 
 `GET /v1/balances` · `GetBalance`
 
-Consulta os valores total, bloqueado e disponível na empresa e no ambiente da chave de API. Os valores são expressos em centavos de real. O saldo disponível considera os bloqueios e não confirma a autorização de um saque ou estorno.
+Retrieve the total, blocked, and available amounts for the company and environment of the API key. Values are in Brazilian real cents. The available balance accounts for holds and does not confirm authorization for a withdrawal or refund.
 
-Retorno: `200` `Balance`.
+Returns: `200` `Balance`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `forecast`
 
-Consultar recebimentos previstos.
+Retrieve expected receipts.
 
 ```php
 $raims->balances->forecast($params, $options);
@@ -169,21 +169,21 @@ $raims->balances->forecast($params, $options);
 
 `GET /v1/balances/forecast` · `GetBalanceForecast`
 
-Consulte a estimativa de recebimentos pendentes no período e o saldo total projetado. Os valores são estimativas e não indicam disponibilidade para saque.
+Retrieve estimated pending receipts for the period and the projected total balance. These values are estimates and do not indicate funds available for withdrawal.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `period` | `'today'\|'last_7_days'\|'last_15_days'\|'last_30_days'` | Não | Período das datas previstas de recebimento, pelo calendário de São Paulo. Inclui hoje e os dias anteriores conforme a opção. Não consulta vencimentos nem projeta os próximos dias. |
+| `period` | `'today'\|'last_7_days'\|'last_15_days'\|'last_30_days'` | No | Period of expected receipt dates, using the São Paulo calendar. Includes today and prior days according to the option. Does not query due dates or project upcoming days. |
 
-Retorno: `200` `BalanceForecast`.
+Returns: `200` `BalanceForecast`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `charges`
 
 ### `create`
 
-Criar nova cobrança.
+Create a new charge.
 
 ```php
 $raims->charges->create($params, $options);
@@ -191,31 +191,31 @@ $raims->charges->create($params, $options);
 
 `POST /v1/charges` · `CreateCharge`
 
-Cria uma cobrança para um cliente já cadastrado. Informe o valor em centavos. Sem lista própria de meios, payment_method 1 solicita Pix e 2 solicita boleto, com os dados disponíveis em payment_information. Boleto usa nome, e-mail válido, CPF/CNPJ e endereço do cliente. Logradouro, bairro, cidade e UF ausentes podem ser preenchidos a partir do CEP quando disponíveis; número e complemento vêm do cadastro. Com lista própria, a emissão ocorre após a escolha no checkout. Use create_checkout true para obter o link sem solicitar e-mail. Uma URL de retorno ou send_email true também gera o link; somente send_email true solicita envio de e-mail.
+Create a charge for an existing customer. Supply the amount in cents. Without a custom method list, payment_method 1 requests Pix and 2 requests boleto, with details in payment_information. Boleto uses the customer name, valid email, CPF/CNPJ, and address. Missing street, neighborhood, city, and state may be filled from the CEP when available; street number and complement come from the customer record. With a custom list, issuance occurs after selection in checkout. Use create_checkout true to obtain the link without requesting email. A return URL or send_email true also generates the link; only send_email true requests email delivery.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `customer_id` | `string` | Sim | ID de um cliente da empresa e do ambiente da chave de API. Copie o id retornado no cadastro ou na consulta. Pix direto exige CPF/CNPJ válido. Boleto direto exige nome, e-mail válido, CPF/CNPJ e endereço, incluindo CEP e número; complete esses dados no cadastro do cliente. |
-| `amount_cents` | `int` | Sim | Valor da cobrança em centavos de real. Por exemplo, 10000 representa R$ 100,00. |
-| `payment_method` | `0\|1\|2` | Não | Meio da cobrança. Omitir ou enviar 0 permite escolher no checkout. Sem payment_method_types, 1 solicita Pix e 2 solicita boleto na criação, conforme os meios habilitados. Boleto usa o endereço do cliente e completa campos ausentes pelo CEP quando disponíveis. Com lista própria, envie 0 ou omita este campo; a emissão acontece após a escolha no checkout. |
-| `due_date` | `int` | Sim | Vencimento em segundos Unix UTC, pelo menos cinco minutos no futuro. A data máxima é hoje mais dez anos, no calendário de São Paulo. |
-| `title` | `string\|null` | Não | Título da cobrança. Você pode deixar este campo vazio. |
-| `description` | `string\|null` | Não | Descrição da cobrança. Você pode deixar este campo vazio. |
-| `send_email` | `bool` | Não | Com true, solicita o envio da cobrança ao e-mail do cliente e gera checkout_url. Em contas pendentes, o cliente precisa ter o mesmo e-mail principal da conta. Fora dessa condição, um e-mail ausente ou inválido impede o envio, mas permite criar a cobrança quando não houver emissão direta de boleto. Boleto direto exige e-mail válido mesmo com false. A resposta não confirma a entrega da mensagem. |
-| `create_checkout` | `bool` | Não | Com true, gera o link retornado em checkout_url, sem exigir uma URL de retorno nem solicitar envio de e-mail. Com false, o link ainda é gerado quando send_email é true ou uma URL de retorno é informada. |
-| `success_redirect_url` | `string\|null` | Não | URL HTTPS do seu site para retorno após a confirmação do pagamento. O redirecionamento não comprova o pagamento; consulte a cobrança para confirmá-lo. Não aceita credenciais no endereço, IP literal, localhost ou domínio Raims. Quando preenchida, gera checkout_url mesmo com send_email false. Se omitida, vazia ou null, o retorno não é definido. |
-| `cancel_redirect_url` | `string\|null` | Não | URL HTTPS do seu site para o pagador voltar pelo checkout. Voltar não cancela a cobrança, o Pix ou o boleto. Não aceita credenciais no endereço, IP literal, localhost ou domínio Raims. Quando preenchida, gera checkout_url mesmo com send_email false. Se omitida, vazia ou null, o retorno não é definido. |
-| `payment_method_types` | `list<1\|2>\|null` | Não | Meios permitidos para a cobrança: 1 para Pix e 2 para boleto. Omitir ou enviar null usa a configuração de checkout herdada. Informe uma lista sem repetições. A configuração própria substitui o padrão da conta; uma configuração do link pode apenas restringir essa lista. Combine com payment_method omitido ou 0. |
-| `external_reference` | `string\|null` | Não | Referência do pedido ou da cobrança no seu sistema. Null, vazio ou somente espaços deixam sem referência. Pode ser repetida e não evita cobranças duplicadas. É diferente da referência do cadastro do cliente. |
-| `metadata` | `array<string, string\|null>\|\stdClass\|null` | Não | Dados de integração associados à cobrança, em pares de chave e texto. Chaves diferenciam maiúsculas de minúsculas. Omitir, enviar null ou {} cria a cobrança sem esses dados; pares com valor null não são incluídos. Texto vazio é um valor válido. |
+| `customer_id` | `string` | Yes | ID of a customer in the company and environment of the API key. Copy the id returned when creating or retrieving the customer. Direct Pix requires a valid CPF/CNPJ. Direct boleto requires a name, valid email address, CPF/CNPJ, and address including CEP and street number; complete those fields on the customer record. |
+| `amount_cents` | `int` | Yes | Charge amount in Brazilian real cents. For example, 10000 represents BRL 100.00. |
+| `payment_method` | `0\|1\|2` | No | Charge payment method. Omit it or send 0 to allow selection in checkout. Without payment_method_types, 1 requests Pix and 2 requests boleto at creation, subject to enabled methods. Boleto uses the customer's address and fills missing fields from the CEP when available. With a custom list, send 0 or omit this field; issuance occurs after the checkout selection. |
+| `due_date` | `int` | Yes | Due date in Unix seconds UTC, at least five minutes in the future. The latest date is today plus ten years, using the São Paulo calendar. |
+| `title` | `string\|null` | No | Charge title. You may leave this field empty. |
+| `description` | `string\|null` | No | Charge description. You may leave this field empty. |
+| `send_email` | `bool` | No | With true, requests delivery of the charge to the customer's email address and generates checkout_url. For pending accounts, the customer must use the account's primary email address. Outside that condition, a missing or invalid email prevents delivery but still allows charge creation when there is no direct boleto issuance. Direct boleto requires a valid email even with false. The response does not confirm message delivery. |
+| `create_checkout` | `bool` | No | With true, generates the link returned in checkout_url without requiring a return URL or requesting email delivery. With false, the link is still generated when send_email is true or a return URL is supplied. |
+| `success_redirect_url` | `string\|null` | No | HTTPS URL on your website for returning after confirmed payment. Redirection does not prove payment; retrieve the charge to confirm it. Credentials in the address, literal IPs, localhost, and Raims domains are not accepted. When supplied, generates checkout_url even with send_email false. If omitted, empty, or null, no return destination is set. |
+| `cancel_redirect_url` | `string\|null` | No | HTTPS URL on your website for the payer to return from checkout. Returning does not cancel the charge, Pix, or boleto. Credentials in the address, literal IPs, localhost, and Raims domains are not accepted. When supplied, generates checkout_url even with send_email false. If omitted, empty, or null, no return destination is set. |
+| `payment_method_types` | `list<1\|2>\|null` | No | Allowed methods for the charge: 1 for Pix and 2 for boleto. Omission or null uses the inherited checkout settings. Supply a list without duplicates. A custom configuration replaces the account default; a link configuration can only restrict that list. Combine with payment_method omitted or set to 0. |
+| `external_reference` | `string\|null` | No | Order or charge reference in your system. Null, empty text, or whitespace leaves it without a reference. It may be repeated and does not prevent duplicate charges. It differs from the reference on the customer record. |
+| `metadata` | `array<string, string\|null>\|\stdClass\|null` | No | Integration data associated with the charge, as key and text pairs. Keys are case-sensitive. Omission, null, or {} creates the charge without this data; pairs with a null value are not included. Empty text is a valid value. |
 
-Retorno: `201` `ChargeCreated`, `202` `ChargeCreated`.
+Returns: `201` `ChargeCreated`, `202` `ChargeCreated`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `all`
 
-Listar cobranças.
+List charges.
 
 ```php
 $raims->charges->all($params, $options);
@@ -223,35 +223,35 @@ $raims->charges->all($params, $options);
 
 `GET /v1/charges` · `ListCharges`
 
-Lista cobranças da empresa e do ambiente da sua chave de API, com filtros e paginação por cursor. Para avançar, use page.next_after em after enquanto page.has_next for true, mantendo os filtros e a ordenação. Alterações de status podem levar alguns segundos para aparecer nos filtros; aguarde antes de consultar novamente.
+List charges for the company and environment of your API key, with filters and cursor pagination. To move forward, use page.next_after as after while page.has_next is true, keeping the filters and sort order. Status changes may take a few seconds to appear in filters; wait before querying again.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de cobranças por página. Inteiros positivos acima do máximo usam o máximo. Valor omitido, vazio, zero, negativo ou inválido usa 10. |
-| `after` | `string` | Não | Copie page.next_after da resposta anterior para avançar. Mantenha os mesmos filtros e a ordenação; não envie before junto. Deixe vazio para começar a listagem. |
-| `before` | `string` | Não | Copie page.previous_before da resposta anterior para voltar. Mantenha os mesmos filtros e a ordenação; não envie after junto. Deixe vazio se não quiser voltar. |
-| `identifier` | `string` | Não | Filtra pelo ID completo da cobrança. Se não houver correspondência, list será vazio. |
-| `customer_id` | `string` | Não | Filtra pelo ID público completo do cliente, retornado no cadastro ou na consulta. O vínculo permanece o mesmo se nome ou e-mail mudar. Pode ser combinado com os demais filtros; mantenha o mesmo customer_id ao mudar de página. Um ID válido sem cobranças na empresa e no ambiente da chave retorna list vazio. Vazio ou ausência não aplica o filtro. |
-| `external_reference` | `string` | Não | Filtra pela referência atual da cobrança no seu sistema, com igualdade do valor completo, incluindo maiúsculas, minúsculas e acentos. Vazio ou ausência não aplica o filtro. Pode ser combinado com os demais filtros; preserve o valor ao navegar por cursor. Após criar ou editar uma cobrança, pode levar alguns segundos para a busca refletir a referência. |
-| `email` | `string` | Não | Filtra pelo e-mail completo registrado na cobrança. Alterar o cadastro do cliente não altera esse e-mail. |
-| `status` | `string` | Não | Filtra por um ou mais códigos separados por vírgula, como 0,1. 0 criado, 1 aguardando pagamento, 2 autorizado, 3 em processamento, 4 pago, 5 parcialmente devolvido, 6 devolvido, 7 cancelado, 8 expirado, 9 falha, 10 chargeback, 11 chargeback em análise, 12 chargeback perdido e 13 chargeback ganho. Pode levar alguns segundos para refletir alterações. |
-| `payment_method` | `string` | Não | Filtra pelo meio de pagamento da cobrança: 1 para Pix e 2 para boleto. Para combinar, envie 1,2. Uma cobrança com meio indefinido pode passar a usar Pix ou boleto quando o código Pix ou boleto é gerado no checkout. A seleção na tela, por si só, não altera o filtro. |
-| `created_gte` | `int` | Não | Filtra cobranças criadas a partir deste instante, inclusive, em segundos Unix UTC. Se informar created_lte, este valor deve ser menor ou igual a ele. |
-| `created_lte` | `int` | Não | Filtra cobranças criadas até este instante, inclusive, em segundos Unix UTC. |
-| `due_gte` | `int` | Não | Filtra cobranças com vencimento a partir deste instante, inclusive, em segundos Unix UTC. Pode ser combinado com due_lte e os demais filtros; mantenha o valor ao mudar de página. |
-| `due_lte` | `int` | Não | Filtra cobranças com vencimento até este instante, inclusive, em segundos Unix UTC. Se informar due_gte, este valor deve ser maior ou igual a ele. Pode ser usado sozinho ou com os demais filtros. |
-| `paid_gte` | `int` | Não | Filtra cobranças pagas a partir deste instante, inclusive, em segundos Unix UTC. Usa a data do pagamento confirmado, mesmo quando houver estorno posterior. Cobranças sem pagamento confirmado ficam fora do resultado. Mantenha o valor ao mudar de página. |
-| `paid_lte` | `int` | Não | Filtra cobranças pagas até este instante, inclusive, em segundos Unix UTC. Se informar paid_gte, este valor deve ser maior ou igual a ele. Pode ser combinado com os demais filtros. |
-| `sort_key` | `'amount_cents'\|'created_at'` | Não | Ordena por valor em centavos ou data de criação. Se omitido, usa a ordem de cadastro; com filtro de criação, usa created_at. Mantenha a mesma ordenação ao mudar de página. |
-| `sort_order` | `'asc'\|'desc'` | Não | Define a direção da ordenação. Com desc, a ordem padrão mostra as cobranças mais recentes primeiro. |
+| `page_size` | `int` | No | Charges per page. Positive integers above the maximum use the maximum. Omitted, empty, zero, negative, or invalid values use 10. |
+| `after` | `string` | No | Copy page.next_after from the previous response to move forward. Keep the same filters and sort order; do not send before as well. Leave it empty to start the list. |
+| `before` | `string` | No | Copy page.previous_before from the previous response to move backward. Keep the same filters and sort order; do not send after as well. Leave it empty if you do not want to go backward. |
+| `identifier` | `string` | No | Filter by the complete charge ID. If there is no match, list is empty. |
+| `customer_id` | `string` | No | Filter by the customer's complete public ID returned when creating or retrieving the customer. The relationship remains unchanged if the name or email changes. It can be combined with other filters; keep the same customer_id when changing pages. A valid ID with no charges in the company and environment of the key returns an empty list. An empty or omitted value does not apply the filter. |
+| `external_reference` | `string` | No | Filter by the charge's current reference in your system, matching the complete value, including case and accents. An empty or omitted value does not apply the filter. It can be combined with other filters; preserve the value when navigating by cursor. After creating or editing a charge, it may take a few seconds for search to reflect the reference. |
+| `email` | `string` | No | Filter by the complete email address recorded on the charge. Editing the customer record does not change that email address. |
+| `status` | `string` | No | Filter by one or more comma-separated codes, such as 0,1. 0 created, 1 awaiting payment, 2 authorized, 3 processing, 4 paid, 5 partially refunded, 6 refunded, 7 cancelled, 8 expired, 9 failed, 10 chargeback, 11 chargeback under review, 12 chargeback lost, and 13 chargeback won. Changes may take a few seconds to appear. |
+| `payment_method` | `string` | No | Filter by the charge's payment method: 1 for Pix and 2 for boleto. To combine them, send 1,2. A charge with an undefined method may switch to Pix or boleto when the Pix code or boleto is generated in checkout. Selecting a method on the page alone does not change the filter. |
+| `created_gte` | `int` | No | Filter charges created at or after this instant, inclusive, in Unix seconds UTC. If created_lte is supplied, this value must be less than or equal to it. |
+| `created_lte` | `int` | No | Filter charges created at or before this instant, inclusive, in Unix seconds UTC. |
+| `due_gte` | `int` | No | Filter charges due at or after this instant, inclusive, in Unix seconds UTC. It can be combined with due_lte and other filters; preserve the value when changing pages. |
+| `due_lte` | `int` | No | Filter charges due at or before this instant, inclusive, in Unix seconds UTC. If due_gte is supplied, this value must be greater than or equal to it. It can be used alone or with other filters. |
+| `paid_gte` | `int` | No | Filter charges paid at or after this instant, inclusive, in Unix seconds UTC. Uses the confirmed payment date, even if a refund occurred later. Charges without a confirmed payment are excluded. Preserve the value when changing pages. |
+| `paid_lte` | `int` | No | Filter charges paid at or before this instant, inclusive, in Unix seconds UTC. If paid_gte is supplied, this value must be greater than or equal to it. It can be combined with other filters. |
+| `sort_key` | `'amount_cents'\|'created_at'` | No | Sort by the amount in cents or creation date. If omitted, uses registration order; with a creation-date filter, uses created_at. Keep the same sort order when changing pages. |
+| `sort_order` | `'asc'\|'desc'` | No | Set the sort direction. With desc, the default order shows the newest charges first. |
 
-Retorno: `200` `ChargeListResponse`.
+Returns: `200` `ChargeListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar uma única cobrança.
+Get a single charge.
 
 ```php
 $raims->charges->retrieve($id, $options);
@@ -259,17 +259,17 @@ $raims->charges->retrieve($id, $options);
 
 `GET /v1/charges/{id}` · `GetCharge`
 
-Consulta os dados, o status e as instruções de pagamento disponíveis de uma cobrança da empresa e do ambiente da sua chave de API.
+Retrieve the details, status, and available payment instructions of a charge in the company and environment of your API key.
 
-`id`: Identificador público da cobrança na Raims, recebido na criação ou na listagem de cobranças.
+`id`: Public charge identifier in Raims, returned when creating or listing charges.
 
-Retorno: `200` `Charge`.
+Returns: `200` `Charge`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `update`
 
-Atualizar cobrança existente.
+Update an existing charge.
 
 ```php
 $raims->charges->update($id, $params, $options);
@@ -277,24 +277,24 @@ $raims->charges->update($id, $params, $options);
 
 `PATCH /v1/charges/{id}` · `UpdateCharge`
 
-Atualiza título, descrição, referência externa e dados de integração de uma cobrança da empresa e do ambiente da sua chave de API. Você pode alterar somente metadata mesmo após o pagamento ou estorno. Alterações nos demais campos continuam sujeitas ao estado da cobrança; se algum campo não puder ser alterado, nenhuma mudança da requisição será aplicada.
+Update the title, description, external reference, and integration data of a charge in the company and environment of your API key. You may update metadata alone even after payment or refund. Changes to other fields remain subject to the charge's state; if any field cannot be changed, no change from the request is applied.
 
-`id`: Identificador público da cobrança na Raims, recebido na criação ou na listagem de cobranças.
+`id`: Public charge identifier in Raims, returned when creating or listing charges.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `title` | `string\|null` | Não | Título da cobrança. Omita para manter o título atual; envie null ou texto vazio para removê-lo. |
-| `description` | `string\|null` | Não | Descrição da cobrança. Omita para manter a descrição atual; envie null ou texto vazio para removê-la. |
-| `external_reference` | `string\|null` | Não | Referência do pedido ou da cobrança no seu sistema. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. Pode ser repetida em outras cobranças e é independente da referência do cliente. |
-| `metadata` | `array<string, string\|null>\|\stdClass\|null` | Não | Dados de integração associados ao recurso. Informe pares de chave e texto. Chaves diferenciam maiúsculas de minúsculas. Omitir ou enviar {} preserva os dados; null remove todos os pares, e null em uma chave remove somente essa chave. Texto vazio é um valor válido. |
+| `title` | `string\|null` | No | Charge title. Omit it to keep the current title; send null or empty text to remove it. |
+| `description` | `string\|null` | No | Charge description. Omit it to keep the current description; send null or empty text to remove it. |
+| `external_reference` | `string\|null` | No | Order or charge reference in your system. Omit it to keep the current value; send null or empty text to remove it. It may be repeated on other charges and is independent of the customer reference. |
+| `metadata` | `array<string, string\|null>\|\stdClass\|null` | No | Integration data associated with the resource. Supply key and text pairs. Keys are case-sensitive. Omission or {} preserves the data; null removes all pairs, and null for a key removes only that key. Empty text is a valid value. |
 
-Retorno: `200` `Charge`.
+Returns: `200` `Charge`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `revoke`
 
-Revogar cobrança.
+Revoke a charge.
 
 ```php
 $raims->charges->revoke($id, $options);
@@ -302,17 +302,17 @@ $raims->charges->revoke($id, $options);
 
 `DELETE /v1/charges/{id}` · `RevokeCharge`
 
-Revoga uma cobrança em aberto da empresa e do ambiente da chave de API, preservando seu histórico. No Sandbox, o cancelamento é simulado. Em Produção, a revogação pode aguardar confirmação.
+Revoke an open charge in the company and environment of the API key, preserving its history. Cancellation is simulated in Sandbox. In Production, revocation may await confirmation.
 
-`id`: Identificador público da cobrança na Raims, recebido na criação ou na listagem de cobranças.
+`id`: Public charge identifier in Raims, returned when creating or listing charges.
 
-Retorno: `200` `ChargeRevoked`, `202` `ChargeRevocationPending`.
+Returns: `200` `ChargeRevoked`, `202` `ChargeRevocationPending`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `retrievePayment`
 
-Consultar dados do pagamento.
+Get payment details.
 
 ```php
 $raims->charges->retrievePayment($id, $options);
@@ -320,17 +320,17 @@ $raims->charges->retrievePayment($id, $options);
 
 `GET /v1/charges/{id}/payment` · `GetChargePayment`
 
-Consulte o valor, a data e o meio de pagamento confirmado de uma cobrança. Nos recebimentos Pix, end_to_end_id informa o identificador bancário quando disponível. A cobrança precisa estar paga, parcialmente estornada ou com contestação ganha, com a data do pagamento registrada. A consulta considera a empresa e o ambiente da sua chave de API.
+Retrieve the amount, date, and method of a confirmed charge payment. For Pix receipts, end_to_end_id provides the banking identifier when available. The charge must be paid, partially refunded, or have a won dispute, with the payment date recorded. The request uses the company and environment of your API key.
 
-`id`: Identificador público da cobrança, recebido na criação ou na listagem de cobranças.
+`id`: Public charge identifier, returned when creating or listing charges.
 
-Retorno: `200` `PaymentReceipt`.
+Returns: `200` `PaymentReceipt`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveReceipt`
 
-Baixar recibo de pagamento.
+Download a payment receipt.
 
 ```php
 $raims->charges->retrieveReceipt($id, $options);
@@ -338,17 +338,17 @@ $raims->charges->retrieveReceipt($id, $options);
 
 `GET /v1/charges/{id}/receipt` · `GetChargeReceipt`
 
-Obtenha uma URL temporária para baixar o recibo de um pagamento confirmado em PDF. A cobrança precisa estar paga, parcialmente estornada ou com contestação ganha, com a data do pagamento registrada. O recibo informa o valor original da cobrança paga; devoluções têm comprovantes próprios. O documento é emitido pela Raims e não substitui nota fiscal nem comprovante bancário. A requisição exige a chave de API da mesma empresa e ambiente.
+Obtain a temporary URL to download the PDF receipt for a confirmed payment. The charge must be paid, partially refunded, or have a won dispute, with the payment date recorded. The receipt shows the original paid charge amount; refunds have their own receipts. The document is issued by Raims and does not replace a tax invoice or bank receipt. The request requires an API key for the same company and environment.
 
-`id`: Identificador público da cobrança cujo recibo você deseja baixar.
+`id`: Public identifier of the charge whose receipt you want to download.
 
-Retorno: `200` `FinancialDocument`.
+Returns: `200` `FinancialDocument`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveBoleto`
 
-Baixar boleto.
+Download a boleto.
 
 ```php
 $raims->charges->retrieveBoleto($id, $options);
@@ -356,17 +356,17 @@ $raims->charges->retrieveBoleto($id, $options);
 
 `GET /v1/charges/{id}/boleto` · `GetChargeBoleto`
 
-Obtenha uma URL temporária para baixar o PDF de um boleto já emitido, inclusive antes do pagamento. A consulta exige a chave da mesma empresa e ambiente e não emite nem renova o boleto. O documento não comprova pagamento. No Sandbox, o PDF identifica a simulação e não deve ser usado para pagar.
+Obtain a temporary URL to download the PDF of an issued boleto, including before payment. The request requires a key for the same company and environment and does not issue or renew the boleto. The document does not prove payment. In Sandbox, the PDF identifies the simulation and must not be used to pay.
 
-`id`: Identificador público da cobrança cujo boleto você deseja baixar.
+`id`: Public identifier of the charge whose boleto you want to download.
 
-Retorno: `200` `FinancialDocument`.
+Returns: `200` `FinancialDocument`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `createRefund`
 
-Solicitar estorno.
+Request a refund.
 
 ```php
 $raims->charges->createRefund($id, $params, $options);
@@ -374,22 +374,22 @@ $raims->charges->createRefund($id, $params, $options);
 
 `POST /v1/charges/{id}/refunds` · `CreateRefund`
 
-Solicita a devolução integral ou parcial de um pagamento Pix recebido. Em Produção, o valor retorna à conta de origem e uma solicitação aceita ainda precisa de confirmação. No Sandbox, a simulação conclui na própria requisição, sem movimentar dinheiro real.
+Request a full or partial refund of a received Pix payment. In Production, funds return to the originating account and an accepted request still requires confirmation. In Sandbox, the simulation completes within the request without moving real money.
 
-`id`: Identificador da cobrança que recebeu o pagamento Pix.
+`id`: Identifier of the charge that received the Pix payment.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `amount_cents` | `int` | Sim | Valor solicitado para devolução, em centavos de real. Para devolver tudo, informe o valor restante mostrado na consulta de elegibilidade. |
-| `description` | `string\|null` | Não | Descrição da solicitação de devolução. Você pode deixar este campo vazio. |
+| `amount_cents` | `int` | Yes | Amount requested for refund, in Brazilian real cents. To refund everything, supply the remaining amount shown by the eligibility query. |
+| `description` | `string\|null` | No | Refund request description. You may leave this field empty. |
 
-Retorno: `200` `Refund`, `202` `Refund`.
+Returns: `200` `Refund`, `202` `Refund`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `allRefunds`
 
-Listar estornos de uma cobrança.
+List refunds for a charge.
 
 ```php
 $raims->charges->allRefunds($id, $params, $options);
@@ -397,25 +397,25 @@ $raims->charges->allRefunds($id, $params, $options);
 
 `GET /v1/charges/{id}/refunds` · `ListChargeRefunds`
 
-Lista as solicitações de estorno de uma cobrança, das mais recentes para as mais antigas, com paginação por cursor. A consulta não inicia nem repete devoluções.
+List refund requests for a charge, newest first, with cursor pagination. This request does not initiate or repeat refunds.
 
-`id`: Identificador da cobrança que recebeu o pagamento Pix.
+`id`: Identifier of the charge that received the Pix payment.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de estornos por página. Valores acima do máximo usam o máximo; ausência, vazio, texto, zero ou valor negativo usa o padrão. |
-| `after` | `string` | Não | Cursor recebido em page.next_after para avançar. Copie o valor completo e mantenha a mesma cobrança. Não envie junto de before. |
-| `before` | `string` | Não | Cursor recebido em page.previous_before para voltar. Copie o valor completo e mantenha a mesma cobrança. Não envie junto de after. |
-| `created_gte` | `int` | Não | Filtra estornos solicitados a partir deste instante, inclusive, em segundos Unix UTC. Usa a data de criação da solicitação, sem depender da conclusão. Mantenha o valor ao mudar de página. |
-| `created_lte` | `int` | Não | Filtra estornos solicitados até este instante, inclusive, em segundos Unix UTC. Se informar created_gte, este valor deve ser maior ou igual a ele. |
+| `page_size` | `int` | No | Refunds per page. Values above the maximum use the maximum; omitted, empty, text, zero, or negative values use the default. |
+| `after` | `string` | No | Cursor received in page.next_after to move forward. Copy the complete value and keep the same charge. Do not send it together with before. |
+| `before` | `string` | No | Cursor received in page.previous_before to move backward. Copy the complete value and keep the same charge. Do not send it together with after. |
+| `created_gte` | `int` | No | Filter refunds requested at or after this instant, inclusive, in Unix seconds UTC. Uses the request creation date, regardless of completion. Preserve the value when changing pages. |
+| `created_lte` | `int` | No | Filter refunds requested at or before this instant, inclusive, in Unix seconds UTC. If created_gte is supplied, this value must be greater than or equal to it. |
 
-Retorno: `200` `RefundListResponse`.
+Returns: `200` `RefundListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveRefundEligibility`
 
-Consultar elegibilidade para estorno.
+Get refund eligibility.
 
 ```php
 $raims->charges->retrieveRefundEligibility($id, $options);
@@ -423,17 +423,17 @@ $raims->charges->retrieveRefundEligibility($id, $options);
 
 `GET /v1/charges/{id}/refund_eligibility` · `GetRefundEligibility`
 
-Consulta se uma cobrança aceita um pedido de devolução, o valor restante, o máximo disponível para solicitar agora e os valores pendentes. As condições são conferidas novamente ao solicitar o estorno.
+Check whether a charge accepts a refund request, the remaining amount, the maximum available to request now, and pending amounts. These conditions are checked again when requesting the refund.
 
-`id`: Identificador da cobrança que recebeu o pagamento Pix.
+`id`: Identifier of the charge that received the Pix payment.
 
-Retorno: `200` `RefundEligibility`.
+Returns: `200` `RefundEligibility`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `statistics`
 
-Consultar estatísticas de cobranças.
+Retrieve charge statistics.
 
 ```php
 $raims->charges->statistics($params, $options);
@@ -441,21 +441,21 @@ $raims->charges->statistics($params, $options);
 
 `GET /v1/charges/statistics` · `GetChargeStatistics`
 
-Consulte quantidades, valores e taxa de pagamento das cobranças para acompanhar seus recebimentos no ERP ou sistema de gestão. A consulta considera a empresa e o ambiente da sua chave de API. Os dados podem levar alguns segundos para refletir alterações nas cobranças.
+Retrieve charge counts, amounts, and payment rates to track receipts in your ERP or management system. The request uses the company and environment of your API key. Data may take a few seconds to reflect charge changes.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `period` | `'today'\|'last_7_days'\|'last_15_days'\|'last_30_days'` | Não | Período da consulta, pelo calendário de São Paulo. today considera hoje; last_7_days, last_15_days e last_30_days incluem hoje e os dias anteriores. A consulta aceita somente esses períodos. start_at e end_at são campos da resposta, não filtros de datas personalizadas. |
+| `period` | `'today'\|'last_7_days'\|'last_15_days'\|'last_30_days'` | No | Query period using the São Paulo calendar. today covers today; last_7_days, last_15_days, and last_30_days include today and prior days. Only those periods are accepted. start_at and end_at are response fields, not custom date filters. |
 
-Retorno: `200` `ChargeStatistics`.
+Returns: `200` `ChargeStatistics`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `customers`
 
 ### `create`
 
-Criar cliente.
+Create a customer.
 
 ```php
 $raims->customers->create($params, $options);
@@ -463,32 +463,32 @@ $raims->customers->create($params, $options);
 
 `POST /v1/customers` · `CreateCustomer`
 
-Cria um cliente na empresa e no ambiente da sua chave de API. Se o CPF ou CNPJ já estiver cadastrado, atualiza esse cliente e mantém seu identificador. Ao informar somente o CEP como endereço, logradouro, bairro, cidade e UF podem ser preenchidos automaticamente. Retorna 201 ao criar e 200 ao atualizar.
+Create a customer in the company and environment of your API key. If the CPF or CNPJ is already registered, update that customer and keep its identifier. When only the CEP is supplied as the address, street, neighborhood, city, and state may be filled automatically. Returns 201 on creation and 200 on update.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `full_name` | `string\|null` | Não | Nome completo do pagador. |
-| `tax_id` | `string` | Sim | CPF ou CNPJ válido, com ou sem pontos, barra, hífen e espaços. |
-| `email` | `string\|null` | Não | E-mail do pagador. Cadastrar o e-mail não envia uma mensagem. |
-| `dial_code` | `string\|null` | Não | Código de discagem internacional. Pode ser informado sem phone_local. |
-| `phone_local` | `string\|null` | Não | Número de telefone sem o código de discagem, com ou sem pontuação. Pode ser informado sem dial_code. |
-| `zip_code` | `string\|null` | Não | CEP do endereço, com ou sem hífen. Se street, neigh, city, uf, street_number e complement estiverem vazios, o CEP pode preencher rua, bairro, cidade e estado. O preenchimento não inclui número nem complemento. |
-| `street` | `string\|null` | Não | Logradouro do endereço. |
-| `street_number` | `string\|null` | Não | Número do endereço. |
-| `complement` | `string\|null` | Não | Complemento do endereço. |
-| `neigh` | `string\|null` | Não | Bairro do endereço. |
-| `city` | `string\|null` | Não | Cidade do endereço. |
-| `uf` | `string\|null` | Não | Sigla do estado, como SP. |
-| `external_reference` | `string\|null` | Não | Identificador do cliente no seu sistema. Para um cliente já cadastrado, omita para manter a referência ou envie null ou texto vazio para removê-la. Use external_reference na listagem de clientes para buscar esse valor. |
-| `metadata` | `array<string, string\|null>\|\stdClass\|null` | Não | Dados de integração associados ao recurso. Informe pares de chave e texto. Chaves diferenciam maiúsculas de minúsculas. Omitir ou enviar {} preserva os dados; null remove todos os pares, e null em uma chave remove somente essa chave. Texto vazio é um valor válido. |
+| `full_name` | `string\|null` | No | Payer's full name. |
+| `tax_id` | `string` | Yes | Valid CPF or CNPJ, with or without periods, slash, hyphen, and spaces. |
+| `email` | `string\|null` | No | Payer's email address. Recording an email address does not send a message. |
+| `dial_code` | `string\|null` | No | International dialing code. It may be supplied without phone_local. |
+| `phone_local` | `string\|null` | No | Phone number without the dialing code, with or without punctuation. It may be supplied without dial_code. |
+| `zip_code` | `string\|null` | No | Address CEP, with or without a hyphen. If street, neigh, city, uf, street_number, and complement are empty, the CEP may populate street, neighborhood, city, and state. It does not populate the street number or address complement. |
+| `street` | `string\|null` | No | Address street. |
+| `street_number` | `string\|null` | No | Address street number. |
+| `complement` | `string\|null` | No | Address complement. |
+| `neigh` | `string\|null` | No | Address neighborhood. |
+| `city` | `string\|null` | No | Address city. |
+| `uf` | `string\|null` | No | State abbreviation, such as SP. |
+| `external_reference` | `string\|null` | No | Customer identifier in your system. For an existing customer, omit it to keep the reference, or send null or empty text to remove it. Use external_reference in the customer list to search for this value. |
+| `metadata` | `array<string, string\|null>\|\stdClass\|null` | No | Integration data associated with the resource. Supply key and text pairs. Keys are case-sensitive. Omission or {} preserves the data; null removes all pairs, and null for a key removes only that key. Empty text is a valid value. |
 
-Retorno: `200` `CustomerCreated`, `201` `CustomerCreated`.
+Returns: `200` `CustomerCreated`, `201` `CustomerCreated`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `all`
 
-Listar clientes.
+List customers.
 
 ```php
 $raims->customers->all($params, $options);
@@ -496,26 +496,26 @@ $raims->customers->all($params, $options);
 
 `GET /v1/customers` · `ListCustomers`
 
-Lista os clientes da empresa e do ambiente da chave conforme os filtros informados, com paginação por cursor. Envie os parâmetros na URL, sem corpo na requisição.
+List customers in the company and environment of the key according to the supplied filters, with cursor pagination. Send parameters in the URL, without a request body.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de clientes por página. Inteiros positivos acima do máximo usam o máximo. Valor omitido, vazio, zero, negativo ou inválido usa 10. |
-| `after` | `string` | Não | Copie page.next_after da resposta anterior para avançar. Use o cursor sem alterações, mantenha os mesmos filtros e não envie before junto. |
-| `before` | `string` | Não | Copie page.previous_before da resposta anterior para voltar uma página. Mantenha os mesmos filtros e não envie after junto. |
-| `identifier` | `string` | Não | Identificador público do cliente, com prefixo cus_. |
-| `name` | `string` | Não | Busca pelo nome do cliente, com os cadastros mais recentes primeiro. Deixe vazio para ignorar este filtro. |
-| `email` | `string` | Não | Filtra pelo e-mail completo do cliente. |
-| `document` | `string` | Não | Filtra pelo CPF ou CNPJ completo do cliente, com ou sem pontos, barra, hífen e espaços. |
-| `external_reference` | `string` | Não | Filtra pela referência atual do cliente no seu sistema, com igualdade do valor completo, incluindo maiúsculas, minúsculas e acentos. Pode ser combinada com os demais filtros. Após criar ou editar o cliente, a busca pode levar alguns segundos para refletir a referência. Mantenha o valor ao navegar por cursor. |
+| `page_size` | `int` | No | Customers per page. Positive integers above the maximum use the maximum. Omitted, empty, zero, negative, or invalid values use 10. |
+| `after` | `string` | No | Copy page.next_after from the previous response to move forward. Use the cursor unchanged, keep the same filters, and do not send before as well. |
+| `before` | `string` | No | Copy page.previous_before from the previous response to go back one page. Keep the same filters and do not send after as well. |
+| `identifier` | `string` | No | Customer's public identifier, with the cus_ prefix. |
+| `name` | `string` | No | Search by customer name, with the newest records first. Leave it empty to ignore this filter. |
+| `email` | `string` | No | Filter by the customer's complete email address. |
+| `document` | `string` | No | Filter by the customer's complete CPF or CNPJ, with or without periods, slash, hyphen, and spaces. |
+| `external_reference` | `string` | No | Filter by the customer's current reference in your system, matching the complete value, including case and accents. It can be combined with other filters. After creating or editing the customer, search may take a few seconds to reflect the reference. Preserve the value when navigating by cursor. |
 
-Retorno: `200` `CustomerListResponse`.
+Returns: `200` `CustomerListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um único cliente.
+Get a single customer.
 
 ```php
 $raims->customers->retrieve($id, $options);
@@ -523,17 +523,17 @@ $raims->customers->retrieve($id, $options);
 
 `GET /v1/customers/{id}` · `GetCustomer`
 
-Consulta os dados cadastrais de um cliente pelo identificador público na empresa e no ambiente da chave de API. A requisição não tem corpo.
+Retrieve customer registration details by public identifier in the company and environment of the API key. The request has no body.
 
-`id`: Identificador público do cliente na Raims, recebido na criação ou na listagem de clientes.
+`id`: Public customer identifier in Raims, returned when creating or listing customers.
 
-Retorno: `200` `CustomerListItem`.
+Returns: `200` `CustomerListItem`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `update`
 
-Atualizar cliente existente.
+Update an existing customer.
 
 ```php
 $raims->customers->update($id, $params, $options);
@@ -541,33 +541,33 @@ $raims->customers->update($id, $params, $options);
 
 `PATCH /v1/customers/{id}` · `UpdateCustomer`
 
-Atualiza os campos enviados do cadastro e os dados de integração do cliente. Campos omitidos mantêm o valor atual. Nos campos de texto, null ou texto vazio limpam o conteúdo; metadata possui as regras indicadas no campo. CPF/CNPJ, identificador e data de criação permanecem iguais. O CEP não preenche outros campos de endereço nesta requisição. Enviar {} retorna o cadastro atual.
+Update the supplied customer registration fields and integration data. Omitted fields keep their current values. For text fields, null or empty text clears the content; metadata follows the rules given for that field. CPF/CNPJ, identifier, and creation date remain unchanged. The CEP does not fill other address fields in this request. Sending {} returns the current record.
 
-`id`: Identificador público do cliente na Raims, recebido na criação ou na listagem de clientes.
+`id`: Public customer identifier in Raims, returned when creating or listing customers.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `full_name` | `string\|null` | Não | Nome completo do pagador. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `email` | `string\|null` | Não | E-mail do pagador. Atualizar o e-mail não envia uma mensagem. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `dial_code` | `string\|null` | Não | Código de discagem internacional. Pode ser informado sem phone_local. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `phone_local` | `string\|null` | Não | Número de telefone sem o código de discagem, com ou sem pontuação. Pode ser informado sem dial_code. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `zip_code` | `string\|null` | Não | CEP do endereço, com ou sem hífen. Atualizar o CEP não preenche os outros campos de endereço. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `street` | `string\|null` | Não | Logradouro do endereço. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `street_number` | `string\|null` | Não | Número do endereço. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `complement` | `string\|null` | Não | Complemento do endereço. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `neigh` | `string\|null` | Não | Bairro do endereço. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `city` | `string\|null` | Não | Cidade do endereço. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `uf` | `string\|null` | Não | Sigla do estado, como SP. Omita para manter o valor atual; envie null ou texto vazio para removê-lo. |
-| `external_reference` | `string\|null` | Não | Identificador do cliente no seu sistema. Omita para manter a referência atual; envie null ou texto vazio para removê-la. Use external_reference na listagem de clientes para buscar esse valor. |
-| `metadata` | `array<string, string\|null>\|\stdClass\|null` | Não | Dados de integração associados ao recurso. Informe pares de chave e texto. Chaves diferenciam maiúsculas de minúsculas. Omitir ou enviar {} preserva os dados; null remove todos os pares, e null em uma chave remove somente essa chave. Texto vazio é um valor válido. |
+| `full_name` | `string\|null` | No | Payer's full name. Omit it to keep the current value; send null or empty text to remove it. |
+| `email` | `string\|null` | No | Payer's email address. Updating the email address does not send a message. Omit it to keep the current value; send null or empty text to remove it. |
+| `dial_code` | `string\|null` | No | International dialing code. It may be supplied without phone_local. Omit it to keep the current value; send null or empty text to remove it. |
+| `phone_local` | `string\|null` | No | Phone number without the dialing code, with or without punctuation. It may be supplied without dial_code. Omit it to keep the current value; send null or empty text to remove it. |
+| `zip_code` | `string\|null` | No | Address CEP, with or without a hyphen. Updating the CEP does not fill other address fields. Omit it to keep the current value; send null or empty text to remove it. |
+| `street` | `string\|null` | No | Address street. Omit it to keep the current value; send null or empty text to remove it. |
+| `street_number` | `string\|null` | No | Address street number. Omit it to keep the current value; send null or empty text to remove it. |
+| `complement` | `string\|null` | No | Address complement. Omit it to keep the current value; send null or empty text to remove it. |
+| `neigh` | `string\|null` | No | Address neighborhood. Omit it to keep the current value; send null or empty text to remove it. |
+| `city` | `string\|null` | No | Address city. Omit it to keep the current value; send null or empty text to remove it. |
+| `uf` | `string\|null` | No | State abbreviation, such as SP. Omit it to keep the current value; send null or empty text to remove it. |
+| `external_reference` | `string\|null` | No | Customer identifier in your system. Omit it to keep the current reference; send null or empty text to remove it. Use external_reference in the customer list to search for this value. |
+| `metadata` | `array<string, string\|null>\|\stdClass\|null` | No | Integration data associated with the resource. Supply key and text pairs. Keys are case-sensitive. Omission or {} preserves the data; null removes all pairs, and null for a key removes only that key. Empty text is a valid value. |
 
-Retorno: `200` `CustomerListItem`.
+Returns: `200` `CustomerListItem`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `delete`
 
-Remover cliente.
+Delete a customer.
 
 ```php
 $raims->customers->delete($id, $options);
@@ -575,17 +575,17 @@ $raims->customers->delete($id, $options);
 
 `DELETE /v1/customers/{id}` · `DeleteCustomer`
 
-Remove um cliente pelo identificador público na empresa e no ambiente da chave de API. A remoção é permitida somente quando não há cobranças vinculadas ainda não removidas, inclusive pagas. Não remove cobranças nem devolve valores. Repetir a requisição para o mesmo cadastro já removido retorna o mesmo identificador com deleted: true. A requisição não tem corpo.
+Delete a customer by public identifier in the company and environment of the API key. Deletion is allowed only when no linked charges remain undeleted, including paid charges. It does not delete charges or refund amounts. Repeating the request for the same deleted record returns the same identifier with deleted: true. The request has no body.
 
-`id`: Identificador público do cliente na Raims, recebido na criação ou na listagem de clientes.
+`id`: Public customer identifier in Raims, returned when creating or listing customers.
 
-Retorno: `200` `CustomerDeleted`.
+Returns: `200` `CustomerDeleted`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `deleteBatch`
 
-Remover clientes em lote.
+Delete customers in a batch.
 
 ```php
 $raims->customers->deleteBatch($params, $options);
@@ -593,21 +593,21 @@ $raims->customers->deleteBatch($params, $options);
 
 `DELETE /v1/customers` · `DeleteCustomersBatch`
 
-Remove até 100 clientes da empresa e do ambiente da sua chave em uma requisição. Confira o resultado de cada identificador em removed, blocked ou invalid. Cobranças não removidas impedem a remoção do cliente, inclusive quando pagas. Identificadores repetidos são processados uma vez; clientes já removidos aparecem em removed. A remoção de clientes não remove cobranças nem devolve valores.
+Delete up to 100 customers in the company and environment of your key in one request. Check each identifier in removed, blocked, or invalid. Undeleted charges prevent customer deletion, including paid charges. Repeated identifiers are processed once; already deleted customers appear in removed. Deleting customers does not delete charges or refund amounts.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `identifiers` | `list<string\|null>` | Sim | IDs dos clientes que deseja remover. IDs repetidos não geram mais de uma remoção. IDs inválidos ou de clientes que a chave não pode acessar aparecem em invalid. |
+| `identifiers` | `list<string\|null>` | Yes | IDs of customers to delete. Repeated IDs do not cause more than one deletion. Invalid IDs and IDs of customers the key cannot access appear in invalid. |
 
-Retorno: `200` `CustomerBatchDeleted`.
+Returns: `200` `CustomerBatchDeleted`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ## `disputes`
 
 ### `all`
 
-Listar contestações.
+List disputes.
 
 ```php
 $raims->disputes->all($params, $options);
@@ -615,28 +615,28 @@ $raims->disputes->all($params, $options);
 
 `GET /v1/disputes` · `ListDisputes`
 
-Consulta as contestações da empresa e do ambiente da chave, com filtros e paginação por cursor.
+Retrieve disputes in the company and environment of the key, with filters and cursor pagination.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de contestações por página. Valores inválidos usam o padrão; valores acima do máximo usam o limite. |
-| `after` | `string` | Não | Cursor de page.next_after da resposta anterior. Preserve os filtros e a ordenação; não envie junto de before. |
-| `before` | `string` | Não | Cursor de page.previous_before para voltar. Preserve os filtros e a ordenação; não envie junto de after. |
-| `stage` | `string` | Não | Etapas do caso separadas por vírgula: open, in_analysis, refund_in_analysis, closed, cancelled, rejected ou failed. Closed informa análise encerrada, sem confirmar decisão favorável ou devolução. |
-| `charge_id` | `string` | Não | Filtra pela cobrança vinculada, usando o identificador público completo. Um ID válido sem casos acessíveis retorna uma lista vazia. |
-| `disputed_amount_cents` | `int` | Não | Filtra pelo valor contestado exato, em centavos de real. Não representa o valor atualmente bloqueado. |
-| `created_gte` | `int` | Não | Inclui contestações criadas a partir deste instante, em segundos Unix UTC. O limite é inclusivo. |
-| `created_lte` | `int` | Não | Inclui contestações criadas até este instante, em segundos Unix UTC. O limite é inclusivo e deve ser igual ou posterior a created_gte. |
-| `sort_key` | `'created_at'\|'disputed_amount_cents'` | Não | Campo usado para ordenar a lista: criação ou valor contestado. |
-| `sort_order` | `'asc'\|'desc'` | Não | Ordem crescente ou decrescente do campo selecionado. |
+| `page_size` | `int` | No | Disputes per page. Invalid values use the default; values above the maximum use the limit. |
+| `after` | `string` | No | Cursor from page.next_after in the previous response. Preserve filters and sort order; do not send it together with before. |
+| `before` | `string` | No | Cursor from page.previous_before to move backward. Preserve filters and sort order; do not send it together with after. |
+| `stage` | `string` | No | Comma-separated case stages: open, in_analysis, refund_in_analysis, closed, cancelled, rejected, or failed. Closed means the review has ended without confirming a favorable decision or refund. |
+| `charge_id` | `string` | No | Filter by the linked charge, using its complete public identifier. A valid ID without accessible cases returns an empty list. |
+| `disputed_amount_cents` | `int` | No | Filter by the exact disputed amount, in Brazilian real cents. It does not represent the amount currently held. |
+| `created_gte` | `int` | No | Include disputes created at or after this instant, in Unix seconds UTC. The boundary is inclusive. |
+| `created_lte` | `int` | No | Include disputes created at or before this instant, in Unix seconds UTC. The boundary is inclusive and must be equal to or later than created_gte. |
+| `sort_key` | `'created_at'\|'disputed_amount_cents'` | No | Field used to sort the list: creation date or disputed amount. |
+| `sort_order` | `'asc'\|'desc'` | No | Ascending or descending order for the selected field. |
 
-Retorno: `200` `DisputeListResponse`.
+Returns: `200` `DisputeListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar uma contestação.
+Get a dispute.
 
 ```php
 $raims->disputes->retrieve($id, $options);
@@ -644,19 +644,19 @@ $raims->disputes->retrieve($id, $options);
 
 `GET /v1/disputes/{id}` · `GetDispute`
 
-Consulta a etapa, os motivos e os resultados disponíveis de uma contestação da empresa e do ambiente da chave.
+Retrieve the stage, reasons, and available results of a dispute in the company and environment of the key.
 
-`id`: Identificador completo da contestação retornado pela listagem, com prefixo dp_ ou med_.
+`id`: Complete dispute identifier returned by the list, with the dp_ or med_ prefix.
 
-Retorno: `200` `Dispute`.
+Returns: `200` `Dispute`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `paymentLinks`
 
 ### `create`
 
-Criar ou recuperar um link de pagamento.
+Create or retrieve a payment link.
 
 ```php
 $raims->paymentLinks->create($params, $options);
@@ -664,22 +664,22 @@ $raims->paymentLinks->create($params, $options);
 
 `POST /v1/payment_links` · `CreatePaymentLink`
 
-Cria o link de uma cobrança existente ou retorna o mesmo link quando ele já existe. Informe charge_id. Um link novo começa ativo; reutilizar um link pausado preserva a pausa. Título, valor, vencimento e cliente vêm da cobrança. Esta requisição não cria outra cobrança, não emite pagamentos e não solicita e-mail.
+Create the link for an existing charge or return the same link when it already exists. Supply charge_id. A new link starts active; reusing a paused link preserves the pause. Title, amount, due date, and customer come from the charge. This request does not create another charge, issue payments, or request email.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `charge_id` | `string` | Sim | Identificador da cobrança existente. O link utiliza o cliente, o valor e o vencimento dessa cobrança. |
-| `success_redirect_url` | `string\|null` | Não | URL HTTPS de retorno após o pagamento confirmado. Omitir, enviar null ou texto vazio preserva a URL existente. |
-| `cancel_redirect_url` | `string\|null` | Não | URL HTTPS para voltar ao seu site. Esse retorno não cancela a cobrança. Omitir, enviar null ou texto vazio preserva a URL existente. |
-| `payment_method_types` | `list<1\|2>\|null` | Não | Meios permitidos no link. Omitir preserva a configuração; null remove a configuração própria. Uma lista limita os meios do checkout e não amplia os permitidos pela cobrança. |
+| `charge_id` | `string` | Yes | Identifier of the existing charge. The link uses that charge's customer, amount, and due date. |
+| `success_redirect_url` | `string\|null` | No | HTTPS return URL after confirmed payment. Omission, null, or empty text preserves the existing URL. |
+| `cancel_redirect_url` | `string\|null` | No | HTTPS URL for returning to your website. Returning does not cancel the charge. Omission, null, or empty text preserves the existing URL. |
+| `payment_method_types` | `list<1\|2>\|null` | No | Allowed methods for the link. Omission preserves the configuration; null removes the custom configuration. A list restricts checkout methods and cannot expand the methods allowed by the charge. |
 
-Retorno: `200` `PaymentLink`, `201` `PaymentLink`.
+Returns: `200` `PaymentLink`, `201` `PaymentLink`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `all`
 
-Listar links de pagamento.
+List payment links.
 
 ```php
 $raims->paymentLinks->all($params, $options);
@@ -687,22 +687,22 @@ $raims->paymentLinks->all($params, $options);
 
 `GET /v1/payment_links` · `ListPaymentLinks`
 
-Lista os links da empresa e do ambiente da chave, pela ordem decrescente das cobranças vinculadas. Use charge_id para localizar o link de uma cobrança e page.next_after para continuar.
+List links in the company and environment of the key, in descending order of linked charges. Use charge_id to find a charge link and page.next_after to continue.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de links por página. |
-| `after` | `string` | Não | Cursor recebido em page.next_after. Mantenha o mesmo filtro charge_id. |
-| `before` | `string` | Não | Cursor recebido em page.previous_before. Não envie junto com after. |
-| `charge_id` | `string` | Não | Identificador da cobrança cujo link você quer consultar. |
+| `page_size` | `int` | No | Links per page. |
+| `after` | `string` | No | Cursor received in page.next_after. Keep the same charge_id filter. |
+| `before` | `string` | No | Cursor received in page.previous_before. Do not send it together with after. |
+| `charge_id` | `string` | No | Identifier of the charge whose link you want to retrieve. |
 
-Retorno: `200` `PaymentLinkListResponse`.
+Returns: `200` `PaymentLinkListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um link de pagamento.
+Get a payment link.
 
 ```php
 $raims->paymentLinks->retrieve($id, $options);
@@ -710,17 +710,17 @@ $raims->paymentLinks->retrieve($id, $options);
 
 `GET /v1/payment_links/{id}` · `GetPaymentLink`
 
-Consulta a URL, a configuração e a disponibilidade atual do link. is_active informa se o link está ativo; is_payable indica se o checkout pode receber pagamento neste momento. O link precisa pertencer à empresa e ao ambiente da chave. Para valor, vencimento, cliente e status financeiro, use GET /v1/charges/{charge_id}.
+Retrieve the URL, configuration, and current availability of the link. is_active indicates whether the link is active; is_payable indicates whether checkout can receive payment now. The link must belong to the company and environment of the key. For amount, due date, customer, and financial status, use GET /v1/charges/{charge_id}.
 
-`id`: Identificador público do link, recebido na criação ou na listagem.
+`id`: Public link identifier, returned when creating or listing links.
 
-Retorno: `200` `PaymentLinkDetails`.
+Returns: `200` `PaymentLinkDetails`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `update`
 
-Atualizar um link de pagamento.
+Update a payment link.
 
 ```php
 $raims->paymentLinks->update($id, $params, $options);
@@ -728,26 +728,26 @@ $raims->paymentLinks->update($id, $params, $options);
 
 `PATCH /v1/payment_links/{id}` · `UpdatePaymentLink`
 
-Atualiza as URLs de retorno, os meios de pagamento e a pausa do link. Envie is_active false para pausar e true para reativar a mesma URL; omitir preserva o estado. A pausa bloqueia novas ações no checkout e novos pedidos de envio por e-mail, sem cancelar Pix ou boleto emitidos nem prorrogar o vencimento. A cobrança precisa estar aberta e dentro do vencimento. Use clear_success_redirect_url ou clear_cancel_redirect_url com true para remover o respectivo destino.
+Update return URLs, payment methods, and link pause state. Send is_active false to pause and true to reactivate the same URL; omission preserves the state. Pausing blocks new checkout actions and new email delivery requests without cancelling issued Pix or boleto payments or extending the due date. The charge must be open and not past due. Use clear_success_redirect_url or clear_cancel_redirect_url with true to remove the corresponding destination.
 
-`id`: Identificador público do link, recebido na criação ou na listagem.
+`id`: Public link identifier, returned when creating or listing links.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `is_active` | `bool` | Não | Envie false para pausar o checkout e true para reativar a mesma URL. Omitir preserva o estado atual. A pausa não cancela Pix ou boleto emitidos nem prorroga o vencimento. |
-| `success_redirect_url` | `string\|null` | Não | URL HTTPS de retorno após o pagamento confirmado. Omitir, enviar null ou texto vazio preserva a URL existente. Para removê-la, use clear_success_redirect_url com true, sem informar uma URL preenchida. |
-| `cancel_redirect_url` | `string\|null` | Não | URL HTTPS para voltar ao seu site. Esse retorno não cancela a cobrança. Omitir, enviar null ou texto vazio preserva a URL existente. Para removê-la, use clear_cancel_redirect_url com true, sem informar uma URL preenchida. |
-| `clear_success_redirect_url` | `bool` | Não | Envie true para remover o destino de retorno após o pagamento. False ou omissão não solicita remoção. Não envie true junto de success_redirect_url preenchida. |
-| `clear_cancel_redirect_url` | `bool` | Não | Envie true para remover o destino de voltar ao site. False ou omissão não solicita remoção. Não envie true junto de cancel_redirect_url preenchida. |
-| `payment_method_types` | `list<1\|2>\|null` | Não | Meios permitidos no link. Omitir preserva a configuração; null remove a configuração própria. Uma lista limita os meios do checkout e não amplia os permitidos pela cobrança. |
+| `is_active` | `bool` | No | Send false to pause checkout and true to reactivate the same URL. Omission preserves the current state. Pausing does not cancel an issued Pix or boleto or extend the due date. |
+| `success_redirect_url` | `string\|null` | No | HTTPS return URL after confirmed payment. Omission, null, or empty text preserves the existing URL. To remove it, set clear_success_redirect_url to true without supplying a nonempty URL. |
+| `cancel_redirect_url` | `string\|null` | No | HTTPS URL for returning to your website. Returning does not cancel the charge. Omission, null, or empty text preserves the existing URL. To remove it, set clear_cancel_redirect_url to true without supplying a nonempty URL. |
+| `clear_success_redirect_url` | `bool` | No | Send true to remove the return destination after payment. False or omission does not request removal. Do not send true with a nonempty success_redirect_url. |
+| `clear_cancel_redirect_url` | `bool` | No | Send true to remove the return destination for your website. False or omission does not request removal. Do not send true with a nonempty cancel_redirect_url. |
+| `payment_method_types` | `list<1\|2>\|null` | No | Allowed methods for the link. Omission preserves the configuration; null removes the custom configuration. A list restricts checkout methods and cannot expand the methods allowed by the charge. |
 
-Retorno: `200` `PaymentLink`.
+Returns: `200` `PaymentLink`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `sendEmail`
 
-Enviar link por e-mail.
+Send a link by email.
 
 ```php
 $raims->paymentLinks->sendEmail($id, $options);
@@ -755,19 +755,19 @@ $raims->paymentLinks->sendEmail($id, $options);
 
 `POST /v1/payment_links/{id}/send_email` · `SendPaymentLinkEmail`
 
-Solicita o envio ou reenvio do link ao destinatário da cobrança, sem criar outra cobrança ou alterar o checkout. A cobrança precisa estar aberta e dentro do vencimento. O intervalo mínimo de 60 segundos entre solicitações aceitas é compartilhado com a ação de reenvio do Dashboard. A resposta confirma o pedido de envio, não a entrega do e-mail. Sandbox também pode enviar e-mails reais. O link precisa estar ativo; a pausa impede o envio.
+Request delivery or redelivery of the link to the charge recipient without creating another charge or changing checkout. The charge must be open and not past due. The minimum 60-second interval between accepted requests is shared with the Dashboard resend action. The response confirms the delivery request, not email delivery. Sandbox can also send real emails. The link must be active; pausing prevents delivery requests.
 
-`id`: Identificador público do link a enviar, recebido na criação ou na listagem.
+`id`: Public identifier of the link to send, returned when creating or listing links.
 
-Retorno: `202` `PaymentLinkEmailRequestAccepted`.
+Returns: `202` `PaymentLinkEmailRequestAccepted`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ## `refunds`
 
 ### `all`
 
-Listar estornos.
+List refunds.
 
 ```php
 $raims->refunds->all($params, $options);
@@ -775,23 +775,23 @@ $raims->refunds->all($params, $options);
 
 `GET /v1/refunds` · `ListRefunds`
 
-Lista as solicitações de estorno das cobranças da empresa e do ambiente da chave, das mais recentes para as mais antigas. Use a paginação para conciliar as devoluções sem consultar cada cobrança. A consulta não inicia nem repete estornos.
+List refund requests for charges in the company and environment of the key, newest first. Use pagination to reconcile refunds without querying each charge. This request does not initiate or repeat refunds.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de estornos por página. Valores acima do máximo usam o máximo; ausência, vazio, texto, zero ou valor negativo usa o padrão. |
-| `after` | `string` | Não | Cursor recebido em page.next_after para avançar nesta lista. Copie o valor completo. Não use um cursor da lista de uma cobrança nem envie junto de before. |
-| `before` | `string` | Não | Cursor recebido em page.previous_before para voltar nesta lista. Copie o valor completo. Não use um cursor da lista de uma cobrança nem envie junto de after. |
-| `created_gte` | `int` | Não | Filtra estornos solicitados a partir deste instante, inclusive, em segundos Unix UTC. Usa a data de criação da solicitação, sem depender da conclusão. Mantenha o valor ao mudar de página. |
-| `created_lte` | `int` | Não | Filtra estornos solicitados até este instante, inclusive, em segundos Unix UTC. Se informar created_gte, este valor deve ser maior ou igual a ele. |
+| `page_size` | `int` | No | Refunds per page. Values above the maximum use the maximum; omitted, empty, text, zero, or negative values use the default. |
+| `after` | `string` | No | Cursor received in page.next_after to move forward in this list. Copy the complete value. Do not use a charge-specific list cursor or send it together with before. |
+| `before` | `string` | No | Cursor received in page.previous_before to move backward in this list. Copy the complete value. Do not use a charge-specific list cursor or send it together with after. |
+| `created_gte` | `int` | No | Filter refunds requested at or after this instant, inclusive, in Unix seconds UTC. Uses the request creation date, regardless of completion. Preserve the value when changing pages. |
+| `created_lte` | `int` | No | Filter refunds requested at or before this instant, inclusive, in Unix seconds UTC. If created_gte is supplied, this value must be greater than or equal to it. |
 
-Retorno: `200` `RefundListResponse`.
+Returns: `200` `RefundListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um estorno.
+Get a refund.
 
 ```php
 $raims->refunds->retrieve($id, $options);
@@ -799,17 +799,17 @@ $raims->refunds->retrieve($id, $options);
 
 `GET /v1/refunds/{id}` · `GetRefund`
 
-Consulta o estado, o valor, as datas e o motivo disponível de uma falha confirmada no estorno. A consulta não inicia nem repete a devolução.
+Retrieve the status, amount, dates, and available reason for a confirmed refund failure. This request does not initiate or repeat the refund.
 
-`id`: Identificador do estorno recebido na solicitação ou no histórico de devoluções.
+`id`: Refund identifier returned in the request or refund history.
 
-Retorno: `200` `Refund`.
+Returns: `200` `Refund`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveReceipt`
 
-Baixar comprovante de estorno.
+Download a refund receipt.
 
 ```php
 $raims->refunds->retrieveReceipt($id, $options);
@@ -817,19 +817,19 @@ $raims->refunds->retrieveReceipt($id, $options);
 
 `GET /v1/refunds/{id}/receipt` · `GetRefundReceipt`
 
-Obtenha uma URL temporária para baixar o comprovante em PDF de um estorno concluído. O documento informa o ID, o valor e a data de conclusão desse estorno. Para cobranças com mais de uma devolução, consulte cada ID desejado. A solicitação precisa estar em completed, com a data de conclusão registrada. A requisição exige a chave de API da mesma empresa e ambiente. O documento é emitido pela Raims e não substitui nota fiscal nem comprovante bancário.
+Obtain a temporary URL to download the PDF receipt for a completed refund. The document shows the ID, amount, and completion date of that refund. For charges with multiple refunds, query each desired ID. The request must be in completed with a recorded completion date. The request requires an API key for the same company and environment. The document is issued by Raims and does not replace a tax invoice or bank receipt.
 
-`id`: Identificador público do estorno, recebido na solicitação ou na listagem de estornos.
+`id`: Public refund identifier, returned when requesting or listing refunds.
 
-Retorno: `200` `FinancialDocument`.
+Returns: `200` `FinancialDocument`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `statements`
 
 ### `all`
 
-Recuperar extrato.
+Retrieve statements.
 
 ```php
 $raims->statements->all($params, $options);
@@ -837,26 +837,26 @@ $raims->statements->all($params, $options);
 
 `GET /v1/statements` · `ListStatements`
 
-Consulte os lançamentos do extrato da empresa e do ambiente da sua chave de API. Filtre por período, tipo de lançamento ou referência e percorra os resultados com os cursores retornados. Valores positivos representam entradas ou liberações; valores negativos representam saídas, tarifas ou bloqueios. Uma confirmação financeira pode levar alguns instantes para aparecer no extrato.
+Retrieve statement entries for the company and environment of your API key. Filter by period, entry type, or reference and navigate the results with the returned cursors. Positive amounts represent inflows or releases; negative amounts represent outflows, fees, or holds. Financial confirmation may take a short time to appear in the statement.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de lançamentos por página. |
-| `after` | `string` | Não | Cursor recebido em page.next_after para avançar. Mantenha os mesmos filtros e a mesma ordem. Use somente after ou before. |
-| `before` | `string` | Não | Cursor recebido em page.previous_before para voltar. Mantenha os mesmos filtros e a mesma ordem. Use somente after ou before. |
-| `statement_type` | `string` | Não | Tipos de lançamento separados por vírgula: 1 recebimento; 2 tarifa; 3 tarifa de serviço; 4 saque; 5 devolução; 6 devolução parcial; 7 crédito por ajuste; 8 débito por ajuste; 9 bloqueio; 10 liberação. |
-| `reference_id` | `string` | Não | Identificador da cobrança, contestação, saque ou ajuste relacionado ao lançamento. Use o ID completo retornado pela Raims. |
-| `created_gte` | `int` | Não | Início inclusivo do período, em segundos Unix UTC. O filtro considera o instante do lançamento. |
-| `created_lte` | `int` | Não | Fim inclusivo do período, em segundos Unix UTC. O instante informado é o limite exato; frações posteriores ao segundo informado ficam fora do período. |
-| `sort_order` | `'asc'\|'desc'` | Não | Ordem dos lançamentos pela data: desc mostra os mais recentes primeiro; asc mostra os mais antigos primeiro. |
+| `page_size` | `int` | No | Entries per page. |
+| `after` | `string` | No | Cursor received in page.next_after to move forward. Keep the same filters and sort order. Use only after or before. |
+| `before` | `string` | No | Cursor received in page.previous_before to move backward. Keep the same filters and sort order. Use only after or before. |
+| `statement_type` | `string` | No | Comma-separated entry types: 1 receipt of funds; 2 fee; 3 service fee; 4 withdrawal; 5 refund; 6 partial refund; 7 adjustment credit; 8 adjustment debit; 9 hold; 10 release. |
+| `reference_id` | `string` | No | Identifier of the charge, dispute, withdrawal, or adjustment associated with the entry. Use the complete ID returned by Raims. |
+| `created_gte` | `int` | No | Inclusive start of the period, in Unix seconds UTC. The filter uses the entry timestamp. |
+| `created_lte` | `int` | No | Inclusive end of the period, in Unix seconds UTC. The supplied instant is the exact boundary; fractions later than the supplied second are outside the period. |
+| `sort_order` | `'asc'\|'desc'` | No | Entry order by date: desc shows the newest first; asc shows the oldest first. |
 
-Retorno: `200` `StatementListResponse`.
+Returns: `200` `StatementListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um lançamento.
+Get a statement entry.
 
 ```php
 $raims->statements->retrieve($id, $options);
@@ -864,19 +864,19 @@ $raims->statements->retrieve($id, $options);
 
 `GET /v1/statements/{id}` · `GetStatement`
 
-Consulta um lançamento do extrato pelo ID, com seus valores e vínculos disponíveis, na empresa e no ambiente da chave de API.
+Retrieve a statement entry by ID, with its amounts and available relationships, in the company and environment of the API key.
 
-`id`: Identificador do lançamento retornado na consulta do extrato.
+`id`: Entry identifier returned when retrieving a statement.
 
-Retorno: `200` `Statement`.
+Returns: `200` `Statement`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `webhookEventTypes`
 
 ### `all`
 
-Listar os eventos disponíveis.
+List available events.
 
 ```php
 $raims->webhookEventTypes->all($options);
@@ -884,17 +884,17 @@ $raims->webhookEventTypes->all($options);
 
 `GET /v1/webhook_event_types` · `ListWebhookEventTypes`
 
-Consulte os códigos que podem ser selecionados ao cadastrar ou atualizar um webhook. O teste técnico webhook.test é solicitado no endpoint de teste e não entra na lista de eventos do cadastro.
+Retrieve the codes that may be selected when creating or updating a webhook. The technical webhook.test event is requested through the test endpoint and is not part of the registration event list.
 
-Retorno: `200` `WebhookEventTypeListResponse`.
+Returns: `200` `WebhookEventTypeListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `webhooks`
 
 ### `create`
 
-Criar um webhook.
+Create a webhook.
 
 ```php
 $raims->webhooks->create($params, $options);
@@ -902,22 +902,22 @@ $raims->webhooks->create($params, $options);
 
 `POST /v1/webhooks` · `CreateWebhook`
 
-Cadastre o endereço HTTPS que receberá os eventos escolhidos da empresa e do ambiente da sua chave de API. Guarde o id para administrar o destino e o secret_key para validar as assinaturas. As consultas do cadastro não retornam o segredo.
+Register the HTTPS address that will receive selected events for the company and environment of your API key. Store the id to manage the destination and the secret_key to validate signatures. Registration queries do not return the secret.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `name` | `string` | Sim | Nome para identificar o destino. |
-| `url` | `string` | Sim | URL HTTPS que recebe os eventos. Use a porta padrão 443 e um endereço público externo à Raims. |
-| `events` | `list<'charge.created'\|'charge.paid'\|'charge.canceled'\|'charge.failed'\|'refund.requested'\|'refund.completed'\|'refund.failed'>` | Sim | Códigos dos eventos que este destino deve receber. Consulte o catálogo de eventos disponíveis. |
-| `is_active` | `bool` | Não | Define se o destino pode receber eventos após o cadastro. |
+| `name` | `string` | Yes | Name identifying the destination. |
+| `url` | `string` | Yes | HTTPS URL receiving events. Use the default port 443 and a public address outside Raims. |
+| `events` | `list<'charge.created'\|'charge.paid'\|'charge.canceled'\|'charge.failed'\|'refund.requested'\|'refund.completed'\|'refund.failed'>` | Yes | Event codes this destination should receive. Consult the available event catalog. |
+| `is_active` | `bool` | No | Set whether the destination can receive events after registration. |
 
-Retorno: `201` `WebhookCreated`.
+Returns: `201` `WebhookCreated`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `all`
 
-Listar webhooks.
+List webhooks.
 
 ```php
 $raims->webhooks->all($params, $options);
@@ -925,21 +925,21 @@ $raims->webhooks->all($params, $options);
 
 `GET /v1/webhooks` · `ListWebhooks`
 
-Consulte os destinos cadastrados na empresa e no ambiente da sua chave de API, incluindo os desativados. Para avançar, copie page.next_after para after. A listagem não retorna segredos de assinatura.
+Retrieve destinations registered in the company and environment of your API key, including disabled destinations. To move forward, copy page.next_after to after. The list does not return signing secrets.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de registros por página. A resposta informa o tamanho efetivo em page.page_size. |
-| `after` | `string` | Não | Para avançar, copie page.next_after da resposta anterior. Use apenas after ou before. |
-| `before` | `string` | Não | Para voltar, copie page.previous_before da resposta anterior. Use apenas after ou before. |
+| `page_size` | `int` | No | Records per page. The response reports the effective size in page.page_size. |
+| `after` | `string` | No | To move forward, copy page.next_after from the previous response. Use only after or before. |
+| `before` | `string` | No | To move backward, copy page.previous_before from the previous response. Use only after or before. |
 
-Retorno: `200` `WebhookListResponse`.
+Returns: `200` `WebhookListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um webhook.
+Get a webhook.
 
 ```php
 $raims->webhooks->retrieve($webhookId, $options);
@@ -947,17 +947,17 @@ $raims->webhooks->retrieve($webhookId, $options);
 
 `GET /v1/webhooks/{webhook_id}` · `GetWebhook`
 
-Consulte a URL, os eventos assinados e a situação de um webhook. O segredo de assinatura não é retornado nesta consulta.
+Retrieve the URL, subscribed events, and state of a webhook. The signing secret is not returned by this request.
 
-`webhook_id`: Identificador do webhook, recebido no cadastro ou na listagem.
+`webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
-Retorno: `200` `Webhook`.
+Returns: `200` `Webhook`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `update`
 
-Atualizar um webhook.
+Update a webhook.
 
 ```php
 $raims->webhooks->update($webhookId, $params, $options);
@@ -965,24 +965,24 @@ $raims->webhooks->update($webhookId, $params, $options);
 
 `PATCH /v1/webhooks/{webhook_id}` · `UpdateWebhook`
 
-Altere o nome, a URL, a seleção de eventos ou a ativação de um webhook. Envie apenas os campos que deseja mudar; omitir um campo preserva seu valor. A seleção de eventos enviada substitui a anterior. Os campos não aceitam null nem valores vazios.
+Change a webhook name, URL, event selection, or activation. Send only fields you want to change; omission preserves a field value. The supplied event selection replaces the previous selection. Fields do not accept null or empty values.
 
-`webhook_id`: Identificador do webhook, recebido no cadastro ou na listagem.
+`webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `name` | `string` | Não | Novo nome do webhook. |
-| `url` | `string` | Não | Nova URL HTTPS que recebe os eventos, na porta padrão 443. |
-| `events` | `list<string>` | Não | Lista completa dos eventos que o destino deve receber. Ela substitui a seleção anterior. |
-| `is_active` | `bool` | Não | Use true para permitir envios ou false para desativar o destino. |
+| `name` | `string` | No | New webhook name. |
+| `url` | `string` | No | New HTTPS URL receiving events, on the default port 443. |
+| `events` | `list<string>` | No | Complete list of events the destination should receive. Replaces the previous selection. |
+| `is_active` | `bool` | No | Use true to allow deliveries or false to disable the destination. |
 
-Retorno: `200` `Webhook`.
+Returns: `200` `Webhook`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `delete`
 
-Excluir um webhook.
+Delete a webhook.
 
 ```php
 $raims->webhooks->delete($webhookId, $options);
@@ -990,17 +990,17 @@ $raims->webhooks->delete($webhookId, $options);
 
 `DELETE /v1/webhooks/{webhook_id}` · `DeleteWebhook`
 
-Exclua um destino que não será mais usado. A exclusão impede novos envios, mas uma requisição já autorizada ou em andamento pode terminar. O histórico disponível continua consultável, inclusive pelo webhook_id excluído.
+Delete a destination that will no longer be used. Deletion prevents new deliveries, but a request that is already authorized or in progress may finish. Available history remains queryable, including by the deleted webhook_id.
 
-`webhook_id`: Identificador do webhook, recebido no cadastro ou na listagem.
+`webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
-Retorno: `204` `null`.
+Returns: `204` `null`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `retrieveHealth`
 
-Consultar as falhas de um webhook.
+Get webhook failures.
 
 ```php
 $raims->webhooks->retrieveHealth($webhookId, $options);
@@ -1008,17 +1008,17 @@ $raims->webhooks->retrieveHealth($webhookId, $options);
 
 `GET /v1/webhooks/{webhook_id}/health` · `GetWebhookHealth`
 
-Consulte a situação conhecida do destino e há quanto tempo suas entregas estão falhando. Os dados refletem os resultados de envio disponíveis e podem levar um tempo para aparecer após uma tentativa. A consulta não faz uma chamada ao destino. O estado healthy indica um sucesso conhecido; não garante que o endereço continua disponível. O estado unknown indica que ainda não há dados suficientes para informar a situação.
+Retrieve the known state of the destination and how long its deliveries have been failing. Data reflects available delivery results and may take time to appear after an attempt. This request does not call the destination. A healthy state indicates a known success; it does not guarantee that the address remains available. An unknown state indicates insufficient data to determine the state.
 
-`webhook_id`: Identificador do webhook, recebido no cadastro ou na listagem.
+`webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
-Retorno: `200` `WebhookHealth`.
+Returns: `200` `WebhookHealth`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `setPause`
 
-Pausar ou retomar envios.
+Pause or resume deliveries.
 
 ```php
 $raims->webhooks->setPause($webhookId, $params, $options);
@@ -1026,21 +1026,21 @@ $raims->webhooks->setPause($webhookId, $params, $options);
 
 `PATCH /v1/webhooks/{webhook_id}/pause` · `SetWebhookPause`
 
-Pausa os envios de um webhook ativo sem desativá-lo. Eventos novos e entregas pendentes aguardam a retomada enquanto estiverem dentro de seu prazo original. A pausa não amplia esse prazo: 72 horas em Produção e 4 horas no Sandbox. Envie is_paused false para retomar as entregas ainda válidas. A retomada respeita os limites de envio, sem garantir ordem ou horário. O envio explícito de um evento de teste continua disponível durante a pausa.
+Pause deliveries for an active webhook without disabling it. New events and pending deliveries wait for resumption while within their original lifetime. Pausing does not extend that lifetime: 72 hours in Production and 4 hours in Sandbox. Send is_paused false to resume deliveries that are still valid. Resumption respects delivery limits without guaranteeing order or timing. Explicit delivery of a test event remains available while paused.
 
-`webhook_id`: Identificador do webhook que terá os envios pausados ou retomados.
+`webhook_id`: Identifier of the webhook whose deliveries will be paused or resumed.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `is_paused` | `bool` | Sim | Envie true para pausar os envios ou false para retomá-los. Repetir o mesmo valor preserva o estado e a data de pausa. |
+| `is_paused` | `bool` | Yes | Send true to pause deliveries or false to resume them. Repeating the same value preserves the state and pause timestamp. |
 
-Retorno: `200` `WebhookPause`.
+Returns: `200` `WebhookPause`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `rotateSecret`
 
-Rotacionar o segredo de assinatura.
+Rotate the signing secret.
 
 ```php
 $raims->webhooks->rotateSecret($webhookId, $params, $options);
@@ -1048,21 +1048,21 @@ $raims->webhooks->rotateSecret($webhookId, $params, $options);
 
 `POST /v1/webhooks/{webhook_id}/rotate_secret` · `RotateWebhookSecret`
 
-Substitua o segredo usado para assinar os eventos, preservando o identificador e a configuração do webhook. Guarde o secret_key retornado e atualize o receptor durante o período de transição. Repetir uma rotação com período positivo enquanto a transição está ativa retorna o mesmo segredo e o mesmo vencimento. Para revogar os segredos anteriores, envie grace_period_seconds igual a zero: uma nova assinatura será gerada, inclusive durante uma transição ativa. Requisições já autorizadas ou em andamento podem chegar com a assinatura anterior.
+Replace the secret used to sign events, preserving the webhook identifier and configuration. Store the returned secret_key and update the receiver during the transition period. Repeating a rotation with a positive period while a transition is active returns the same secret and expiration. To revoke previous secrets, send grace_period_seconds equal to zero: a new signature is generated, including during an active transition. Requests that are already authorized or in progress may arrive with the previous signature.
 
-`webhook_id`: Identificador do webhook, recebido no cadastro ou na listagem.
+`webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `grace_period_seconds` | `int` | Não | Período em que o segredo anterior pode continuar assinando envios. Zero gera uma nova assinatura e encerra a validade dos segredos anteriores, inclusive durante uma transição ativa. Requisições já autorizadas ou em andamento podem chegar com a assinatura anterior. |
+| `grace_period_seconds` | `int` | No | Period during which the previous secret can continue signing deliveries. Zero generates a new signature and ends the validity of previous secrets, including during an active transition. Requests already authorized or in progress may arrive with the previous signature. |
 
-Retorno: `200` `WebhookSecretRotation`.
+Returns: `200` `WebhookSecretRotation`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `test`
 
-Enviar um evento de teste.
+Send a test event.
 
 ```php
 $raims->webhooks->test($webhookId, $options);
@@ -1070,19 +1070,19 @@ $raims->webhooks->test($webhookId, $options);
 
 `POST /v1/webhooks/{webhook_id}/test` · `TestWebhook`
 
-Envie webhook.test para conferir o recebimento e a validação da assinatura de um webhook ativo. A requisição não recebe corpo. O teste faz uma tentativa HTTP em até cinco minutos e não altera cobranças, saldo ou a contagem de falhas do destino. O aceite do pedido não confirma a entrega. Confira o recebimento nos registros do receptor.
+Send webhook.test to check receipt and signature validation for an active webhook. The request has no body. The test makes one HTTP attempt within five minutes and does not change charges, balances, or the destination failure count. Acceptance of the request does not confirm delivery. Check receipt in the receiver logs.
 
-`webhook_id`: Identificador do webhook, recebido no cadastro ou na listagem.
+`webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
-Retorno: `202` `WebhookTestAccepted`.
+Returns: `202` `WebhookTestAccepted`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ## `withdrawalDestinations`
 
 ### `all`
 
-Listar destinos de saque.
+List withdrawal destinations.
 
 ```php
 $raims->withdrawalDestinations->all($params, $options);
@@ -1090,21 +1090,21 @@ $raims->withdrawalDestinations->all($params, $options);
 
 `GET /v1/withdrawal_destinations` · `ListWithdrawalDestinations`
 
-Consulte os destinos Pix próprios verificados e identifique o padrão antes de solicitar um saque. A consulta exige uma chave de Produção.
+Retrieve verified Pix destinations owned by your company and identify the default before requesting a withdrawal. This request requires a Production key.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de registros considerados para a página. A lista pode ter menos destinos e ainda indicar uma próxima página; continue enquanto page.has_next for true. |
-| `after` | `string` | Não | Cursor recebido em page.next_after para avançar. Copie o valor inteiro e mantenha a mesma chave de API. Não envie junto de before. |
-| `before` | `string` | Não | Cursor recebido em page.previous_before para voltar. Copie o valor inteiro e mantenha a mesma chave de API. Não envie junto de after. |
+| `page_size` | `int` | No | Records considered for the page. The list may contain fewer destinations and still indicate a next page; continue while page.has_next is true. |
+| `after` | `string` | No | Cursor received in page.next_after to move forward. Copy the entire value and keep the same API key. Do not send it together with before. |
+| `before` | `string` | No | Cursor received in page.previous_before to move backward. Copy the entire value and keep the same API key. Do not send it together with after. |
 
-Retorno: `200` `WithdrawalDestinationListResponse`.
+Returns: `200` `WithdrawalDestinationListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um destino de saque.
+Get a withdrawal destination.
 
 ```php
 $raims->withdrawalDestinations->retrieve($id, $options);
@@ -1112,19 +1112,19 @@ $raims->withdrawalDestinations->retrieve($id, $options);
 
 `GET /v1/withdrawal_destinations/{id}` · `GetWithdrawalDestination`
 
-Consulte um destino Pix próprio pelo identificador recebido na listagem. A resposta apresenta a chave mascarada e informa se ela é o padrão atual. Use uma chave de Produção.
+Retrieve a Pix destination owned by your company using the identifier returned in the list. The response shows the masked key and indicates whether it is the current default. Use a Production key.
 
-`id`: Identificador do destino retornado pela listagem. Use o ID completo com prefixo wdst_; o ID de saque wd_ pertence a outro recurso.
+`id`: Destination identifier returned by the list. Use the complete ID with the wdst_ prefix; a wd_ withdrawal ID belongs to a different resource.
 
-Retorno: `200` `WithdrawalDestination`.
+Returns: `200` `WithdrawalDestination`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ## `withdrawals`
 
 ### `create`
 
-Solicitar saque.
+Request a withdrawal.
 
 ```php
 $raims->withdrawals->create($params, $options);
@@ -1132,19 +1132,19 @@ $raims->withdrawals->create($params, $options);
 
 `POST /v1/withdrawals` · `CreateWithdrawal`
 
-Solicite um saque Pix para a chave padrão da própria empresa cadastrada no Dashboard. O valor solicitado inclui a tarifa. Guarde o identificador e acompanhe o mesmo saque enquanto o resultado estiver pendente.
+Request a Pix withdrawal to the company's own default key registered in the Dashboard. The requested amount includes the fee. Store the identifier and track the same withdrawal while its result is pending.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `amount_cents` | `int` | Sim | Valor total a retirar, em centavos de real, incluindo a tarifa. Consulte as condições de saque para conferir saldo, tarifa e limites antes de solicitar. |
+| `amount_cents` | `int` | Yes | Total amount to withdraw, in Brazilian real cents, including the fee. Consult withdrawal conditions to check the balance, fee, and limits before requesting. |
 
-Retorno: `200` `Withdrawal`, `202` `Withdrawal`.
+Returns: `200` `Withdrawal`, `202` `Withdrawal`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `all`
 
-Listar saques.
+List withdrawals.
 
 ```php
 $raims->withdrawals->all($params, $options);
@@ -1152,25 +1152,25 @@ $raims->withdrawals->all($params, $options);
 
 `GET /v1/withdrawals` · `ListWithdrawals`
 
-Consulte o histórico de saques da sua empresa. Use os filtros de status e período para acompanhar as transferências e conferir as saídas do extrato. A consulta considera o ambiente da sua chave de API.
+Retrieve your company withdrawal history. Use status and period filters to track transfers and check statement outflows. The request uses the environment of your API key.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `page_size` | `int` | Não | Quantidade de saques por página. |
-| `after` | `string` | Não | Cursor next_after retornado na página anterior. Mantenha os mesmos filtros e a mesma ordem da consulta. |
-| `before` | `string` | Não | Cursor previous_before retornado na página seguinte. Mantenha os mesmos filtros e a mesma ordem da consulta. |
-| `status` | `string` | Não | Filtre por um ou mais estados separados por vírgula: PENDING, PROCESSING, COMPLETED, FAILED ou CANCELED. |
-| `requested_gte` | `int` | Não | Retorne saques solicitados a partir deste instante, inclusive. Informe segundos Unix UTC. |
-| `requested_lte` | `int` | Não | Retorne saques solicitados até este instante, inclusive. Informe segundos Unix UTC. |
-| `sort_order` | `'asc'\|'desc'` | Não | Ordenação pela data de solicitação: desc mostra os mais recentes primeiro; asc mostra os mais antigos primeiro. |
+| `page_size` | `int` | No | Withdrawals per page. |
+| `after` | `string` | No | next_after cursor returned on the previous page. Keep the same filters and query sort order. |
+| `before` | `string` | No | previous_before cursor returned on the next page. Keep the same filters and query sort order. |
+| `status` | `string` | No | Filter by one or more comma-separated states: PENDING, PROCESSING, COMPLETED, FAILED, or CANCELED. |
+| `requested_gte` | `int` | No | Return withdrawals requested at or after this instant, inclusive. Supply Unix seconds UTC. |
+| `requested_lte` | `int` | No | Return withdrawals requested at or before this instant, inclusive. Supply Unix seconds UTC. |
+| `sort_order` | `'asc'\|'desc'` | No | Sort by request date: desc shows the newest first; asc shows the oldest first. |
 
-Retorno: `200` `WithdrawalListResponse`.
+Returns: `200` `WithdrawalListResponse`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieve`
 
-Recuperar um saque.
+Get a withdrawal.
 
 ```php
 $raims->withdrawals->retrieve($id, $options);
@@ -1178,17 +1178,17 @@ $raims->withdrawals->retrieve($id, $options);
 
 `GET /v1/withdrawals/{id}` · `GetWithdrawal`
 
-Consulte o status, os valores e o destino de um saque pelo identificador. Use o mesmo ID que aparece no histórico de saques ou na referência do extrato.
+Retrieve the status, amounts, and destination of a withdrawal by identifier. Use the same ID shown in withdrawal history or the statement reference.
 
-`id`: Identificador do saque, com prefixo wd_.
+`id`: Withdrawal identifier with the wd_ prefix.
 
-Retorno: `200` `Withdrawal`.
+Returns: `200` `Withdrawal`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveLimits`
 
-Consultar condições de saque.
+Get withdrawal conditions.
 
 ```php
 $raims->withdrawals->retrieveLimits($options);
@@ -1196,15 +1196,15 @@ $raims->withdrawals->retrieveLimits($options);
 
 `GET /v1/withdrawals/limits` · `GetWithdrawalLimits`
 
-Consulte saldo disponível, mínimo, tarifa e limites de saque para planejar uma retirada. A consulta não reserva dinheiro nem limite e não garante que uma solicitação será aceita.
+Retrieve the available balance, minimum, fee, and withdrawal limits to plan a withdrawal. The request does not reserve funds or limits and does not guarantee that a request will be accepted.
 
-Retorno: `200` `WithdrawalLimits`.
+Returns: `200` `WithdrawalLimits`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveSummary`
 
-Consultar saques em processamento.
+Get withdrawals in progress.
 
 ```php
 $raims->withdrawals->retrieveSummary($options);
@@ -1212,15 +1212,15 @@ $raims->withdrawals->retrieveSummary($options);
 
 `GET /v1/withdrawals/summary` · `GetWithdrawalSummary`
 
-Consulte a quantidade e o valor total dos saques pendentes ou em processamento da empresa. A consulta exige uma chave de API de Produção e não altera o andamento dos pedidos.
+Retrieve the count and total amount of company withdrawals that are pending or processing. This request requires a Production API key and does not change request progress.
 
-Retorno: `200` `WithdrawalSummary`.
+Returns: `200` `WithdrawalSummary`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `retrieveAutomaticSettings`
 
-Consultar saque automático.
+Get automatic withdrawal settings.
 
 ```php
 $raims->withdrawals->retrieveAutomaticSettings($options);
@@ -1228,15 +1228,15 @@ $raims->withdrawals->retrieveAutomaticSettings($options);
 
 `GET /v1/withdrawals/automatic_settings` · `GetAutomaticWithdrawalSettings`
 
-Consulte a ativação, o valor mínimo, o horário diário e a próxima tentativa prevista de saque da empresa. A consulta exige uma chave de API de Produção.
+Retrieve activation, minimum amount, daily time, and the next scheduled withdrawal attempt for the company. This request requires a Production API key.
 
-Retorno: `200` `AutomaticWithdrawalSettings`.
+Returns: `200` `AutomaticWithdrawalSettings`.
 
-Não aceita `idempotency_key`.
+Does not accept `idempotency_key`.
 
 ### `updateAutomaticSettings`
 
-Atualizar saque automático.
+Update automatic withdrawals.
 
 ```php
 $raims->withdrawals->updateAutomaticSettings($params, $options);
@@ -1244,23 +1244,23 @@ $raims->withdrawals->updateAutomaticSettings($params, $options);
 
 `PATCH /v1/withdrawals/automatic_settings` · `UpdateAutomaticWithdrawalSettings`
 
-Ative, desative ou ajuste a tentativa diária de saque para o destino próprio selecionado. Use uma chave de API de Produção. Campos omitidos preservam o valor atual; salvar não solicita um saque imediato.
+Enable, disable, or adjust the daily withdrawal attempt for the selected destination owned by your company. Use a Production API key. Omitted fields preserve their current values; saving does not request an immediate withdrawal.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `enabled` | `bool` | Não | Ativa ou desativa novas tentativas de saque. Desativar não cancela saques já solicitados. |
-| `minimum_amount_cents` | `int` | Não | Saldo mínimo para tentar o saque, em centavos de real. O valor retirado depende do saldo disponível e do limite Pix restante. |
-| `time` | `string` | Não | Horário diário no formato HH:mm, pelo fuso de São Paulo. |
+| `enabled` | `bool` | No | Enable or disable new withdrawal attempts. Disabling does not cancel withdrawals already requested. |
+| `minimum_amount_cents` | `int` | No | Minimum balance for attempting a withdrawal, in Brazilian real cents. The amount withdrawn depends on the available balance and remaining Pix limit. |
+| `time` | `string` | No | Daily time in HH:mm format, using the São Paulo time zone. |
 
-Retorno: `200` `AutomaticWithdrawalSettings`.
+Returns: `200` `AutomaticWithdrawalSettings`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ## `simulations->charges`
 
 ### `confirmPayment`
 
-Confirmar pagamento.
+Confirm payment.
 
 ```php
 $raims->simulations->charges->confirmPayment($id, $options);
@@ -1268,17 +1268,17 @@ $raims->simulations->charges->confirmPayment($id, $options);
 
 `POST /v1/simulations/charges/{id}/confirm_payment` · `ConfirmSimulationPayment`
 
-Confirme o pagamento de uma cobrança de teste e confira o crédito no saldo do Sandbox.
+Confirm payment of a test charge and check the credit to the Sandbox balance.
 
-`id`: Identificador público da cobrança criada no Sandbox da sua empresa.
+`id`: Public identifier of the charge created in your company's Sandbox.
 
-Retorno: `200` `ChargeSimulation`.
+Returns: `200` `ChargeSimulation`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `failPayment`
 
-Simular falha no pagamento.
+Simulate a payment failure.
 
 ```php
 $raims->simulations->charges->failPayment($id, $options);
@@ -1286,17 +1286,17 @@ $raims->simulations->charges->failPayment($id, $options);
 
 `POST /v1/simulations/charges/{id}/fail_payment` · `FailSimulationPayment`
 
-Simule a falha de uma cobrança aberta para testar o tratamento desse resultado no Sandbox.
+Simulate failure of an open charge to test handling of this result in Sandbox.
 
-`id`: Identificador público da cobrança criada no Sandbox da sua empresa.
+`id`: Public identifier of the charge created in your company's Sandbox.
 
-Retorno: `200` `ChargeSimulation`.
+Returns: `200` `ChargeSimulation`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `configureScenario`
 
-Preparar cenário.
+Prepare a scenario.
 
 ```php
 $raims->simulations->charges->configureScenario($id, $params, $options);
@@ -1304,22 +1304,22 @@ $raims->simulations->charges->configureScenario($id, $params, $options);
 
 `POST /v1/simulations/charges/{id}/scenario` · `ConfigureSimulationScenario`
 
-Escolha uma pendência ou falha para a emissão de Pix ou boleto, ou para o cancelamento de uma cobrança no Sandbox. Depois, execute a ação sobre a mesma cobrança.
+Choose a pending or failed result for Pix or boleto issuance, or charge cancellation in Sandbox. Then perform the action on the same charge.
 
-`id`: Identificador público da cobrança criada no Sandbox da sua empresa.
+`id`: Public identifier of the charge created in your company's Sandbox.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `action` | `'pix_issuance'\|'boleto_issuance'\|'cancellation'` | Sim | Ação a testar: pix_issuance para emissão Pix, boleto_issuance para emissão de boleto ou cancellation para cancelamento. Para cancellation, mantenha a cobrança aberta com Pix ou boleto já emitido, sem confirmar o pagamento. |
-| `outcome` | `'pending'\|'failed'` | Sim | Resultado da ação: pending mantém a confirmação em aberto; failed apresenta uma falha. |
+| `action` | `'pix_issuance'\|'boleto_issuance'\|'cancellation'` | Yes | Action to test: pix_issuance for Pix issuance, boleto_issuance for boleto issuance, or cancellation for cancellation. For cancellation, keep the charge open with Pix or boleto already issued, without confirming payment. |
+| `outcome` | `'pending'\|'failed'` | Yes | Action result: pending leaves confirmation open; failed presents a failure. |
 
-Retorno: `200` `ChargeScenario`.
+Returns: `200` `ChargeScenario`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `resolveScenario`
 
-Resolver cenário pendente.
+Resolve a pending scenario.
 
 ```php
 $raims->simulations->charges->resolveScenario($id, $params, $options);
@@ -1327,22 +1327,22 @@ $raims->simulations->charges->resolveScenario($id, $params, $options);
 
 `POST /v1/simulations/charges/{id}/resolve` · `ResolveSimulationScenario`
 
-Conclua ou falhe uma emissão ou um cancelamento que ficou pendente no cenário de teste. A ação precisa ter sido iniciada sobre a cobrança.
+Complete or fail an issuance or cancellation that remained pending in the test scenario. The action must already have been started on the charge.
 
-`id`: Identificador público da cobrança criada no Sandbox da sua empresa.
+`id`: Public identifier of the charge created in your company's Sandbox.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `action` | `'pix_issuance'\|'boleto_issuance'\|'cancellation'` | Sim | Ação a testar: pix_issuance para emissão Pix, boleto_issuance para emissão de boleto ou cancellation para cancelamento. |
-| `outcome` | `'completed'\|'failed'` | Sim | Resultado para a pendência: completed conclui a ação; failed confirma a falha. |
+| `action` | `'pix_issuance'\|'boleto_issuance'\|'cancellation'` | Yes | Action to test: pix_issuance for Pix issuance, boleto_issuance for boleto issuance, or cancellation for cancellation. |
+| `outcome` | `'completed'\|'failed'` | Yes | Result for the pending action: completed finishes the action; failed confirms failure. |
 
-Retorno: `200` `ChargeScenario`.
+Returns: `200` `ChargeScenario`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `issuePayment`
 
-Emitir pagamento de teste.
+Issue a test payment.
 
 ```php
 $raims->simulations->charges->issuePayment($id, $params, $options);
@@ -1350,21 +1350,21 @@ $raims->simulations->charges->issuePayment($id, $params, $options);
 
 `POST /v1/simulations/charges/{id}/issue_payment` · `IssueSimulationPayment`
 
-Emita Pix ou boleto de uma cobrança existente no Sandbox. Um cenário preparado para essa emissão define se ela ficará pendente ou apresentará falha.
+Issue Pix or boleto for an existing charge in Sandbox. A scenario prepared for that issuance determines whether it remains pending or fails.
 
-`id`: Identificador público da cobrança criada no Sandbox da sua empresa.
+`id`: Public identifier of the charge created in your company's Sandbox.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `payment_method` | `int` | Sim | Meio a emitir: 1 para Pix ou 2 para boleto. Deve estar habilitado na cobrança. |
+| `payment_method` | `int` | Yes | Method to issue: 1 for Pix or 2 for boleto. It must be enabled on the charge. |
 
-Retorno: `200` `Charge`, `202` `Charge`.
+Returns: `200` `Charge`, `202` `Charge`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `compensateBoleto`
 
-Simular compensação de boleto.
+Simulate boleto clearing.
 
 ```php
 $raims->simulations->charges->compensateBoleto($id, $options);
@@ -1372,17 +1372,17 @@ $raims->simulations->charges->compensateBoleto($id, $options);
 
 `POST /v1/simulations/charges/{id}/compensate_boleto` · `CompensateSimulationBoleto`
 
-Registre um boleto como compensado, ainda aguardando liquidação. Esta etapa não credita o saldo nem disponibiliza recibo de pagamento concluído.
+Record a boleto as cleared, still awaiting settlement. This step does not credit the balance or make a completed payment receipt available.
 
-`id`: Identificador público da cobrança criada no Sandbox da sua empresa.
+`id`: Public identifier of the charge created in your company's Sandbox.
 
-Retorno: `200` `ChargeBoletoCompensation`.
+Returns: `200` `ChargeBoletoCompensation`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `createRefund`
 
-Simular estorno pendente.
+Simulate a pending refund.
 
 ```php
 $raims->simulations->charges->createRefund($id, $params, $options);
@@ -1390,24 +1390,24 @@ $raims->simulations->charges->createRefund($id, $params, $options);
 
 `POST /v1/simulations/charges/{id}/refunds` · `CreateSimulationRefund`
 
-Inicie uma devolução Pix de teste que aguarda confirmação. Use o ID retornado para concluir o estorno ou simular uma falha.
+Start a test Pix refund that awaits confirmation. Use the returned ID to complete the refund or simulate a failure.
 
-`id`: Identificador da cobrança que recebeu o pagamento Pix.
+`id`: Identifier of the charge that received the Pix payment.
 
-| Campo em `$params` | Tipo | Obrigatório | Descrição |
+| Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `amount_cents` | `int` | Sim | Valor solicitado para devolução, em centavos de real. Para devolver tudo, informe o valor restante mostrado na consulta de elegibilidade. |
-| `description` | `string\|null` | Não | Descrição da solicitação de devolução. Você pode deixar este campo vazio. |
+| `amount_cents` | `int` | Yes | Amount requested for refund, in Brazilian real cents. To refund everything, supply the remaining amount shown by the eligibility query. |
+| `description` | `string\|null` | No | Refund request description. You may leave this field empty. |
 
-Retorno: `200` `Refund`, `202` `Refund`.
+Returns: `200` `Refund`, `202` `Refund`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ## `simulations->refunds`
 
 ### `complete`
 
-Concluir estorno simulado.
+Complete a simulated refund.
 
 ```php
 $raims->simulations->refunds->complete($id, $options);
@@ -1415,17 +1415,17 @@ $raims->simulations->refunds->complete($id, $options);
 
 `POST /v1/simulations/refunds/{id}/complete` · `CompleteSimulationRefund`
 
-Conclua um estorno Pix pendente no Sandbox. O valor não é descontado novamente do saldo.
+Complete a pending Pix refund in Sandbox. The amount is not deducted from the balance again.
 
-`id`: Identificador do estorno de teste retornado por Simular estorno pendente.
+`id`: Test refund identifier returned by Simulate a pending refund.
 
-Retorno: `200` `Refund`.
+Returns: `200` `Refund`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
 ### `fail`
 
-Simular falha no estorno.
+Simulate a refund failure.
 
 ```php
 $raims->simulations->refunds->fail($id, $options);
@@ -1433,19 +1433,19 @@ $raims->simulations->refunds->fail($id, $options);
 
 `POST /v1/simulations/refunds/{id}/fail` · `FailSimulationRefund`
 
-Simule a falha de um estorno Pix pendente no Sandbox e confira a devolução do valor ao saldo disponível.
+Simulate failure of a pending Pix refund in Sandbox and check that the amount returns to the available balance.
 
-`id`: Identificador do estorno de teste retornado por Simular estorno pendente.
+`id`: Test refund identifier returned by Simulate a pending refund.
 
-Retorno: `200` `Refund`.
+Returns: `200` `Refund`.
 
-Aceita `idempotency_key` em `$options`.
+Accepts `idempotency_key` in `$options`.
 
-## Constantes de valores públicos
+## Public value constants
 
-Use `Raims\EnumValues` para os valores nomeados do contrato. Os nomes identificam o schema ou endpoint e o campo de origem; `QUERY` identifica um filtro da URL.
-Valores numéricos recebem nomes somente quando o contrato fornece rótulos públicos; os demais continuam documentados no campo.
-As constantes não alteram os valores enviados à API.
+Use `Raims\EnumValues` for named contract values. Names identify the source schema or endpoint and field; `QUERY` identifies a URL filter.
+Numeric values receive names only when the contract provides public labels; other values remain documented on their fields.
+Constants do not change the values sent to the API.
 
 ```php
 use Raims\EnumValues;
@@ -1453,7 +1453,7 @@ use Raims\EnumValues;
 $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_PIX];
 ```
 
-| Constante em `EnumValues` | Valor | Campo público no contrato |
+| Constant in `EnumValues` | Value | Public contract field |
 | --- | --- | --- |
 | `BALANCE_FORECAST_PERIOD_LAST_15_DAYS` | `'last_15_days'` | `BalanceForecast.period` |
 | `BALANCE_FORECAST_PERIOD_LAST_30_DAYS` | `'last_30_days'` | `BalanceForecast.period` |

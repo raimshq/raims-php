@@ -1,151 +1,155 @@
-# Contrato e manutenção
+# Contract and maintenance
 
-## Fonte da biblioteca
+## Library source
 
-O SDK consome o OpenAPI da API pública, distribuído em
-[raimshq/openapi](https://github.com/raimshq/openapi). O snapshot em
-`contracts/openapi.json` contém somente a superfície publicada. O arquivo
-`contracts/source.json` identifica a revisão imutável, a URL de origem, o SHA-256,
-a versão da API e a quantidade de endpoints.
+The SDK consumes the public API's OpenAPI contract, distributed through
+[raimshq/openapi](https://github.com/raimshq/openapi). The snapshot in
+`contracts/openapi.json` contains only the published surface.
+`contracts/source.json` records the immutable revision, source URL, SHA-256,
+API version, and endpoint count.
 
-A revisão inicial fixa 67 endpoints e gera 77 modelos de resposta. O gerador
-não baixa arquivos, não chama a API e não acessa credenciais.
+The initial revision pins 67 endpoints and generates 77 response models. The
+generator does not download files, call the API, or access credentials.
 
-## Organização
+## Organization
 
-| Diretório ou arquivo | Responsabilidade |
+| Directory or file | Responsibility |
 | --- | --- |
-| `src/RaimsClient.php` | Composição dos serviços e configuração isolada |
-| `src/Service` | Métodos nomeados para os endpoints |
-| `src/Generated/Contract.php` | Método, caminho, parâmetros e retornos por endpoint |
-| `src/EnumValues.php` | Constantes geradas dos enums públicos |
-| `src/Model` | Classes de resposta e tipos de objetos aninhados |
-| `src/ApiRequestor.php` | Serialização, execução, retries de leitura e erros |
-| `src/HttpClient` | Interface de transporte, cURL e resposta HTTP |
-| `src/ApiResource.php` | Recursos somente leitura e serialização |
-| `src/Collection.php` | Navegação por cursor |
-| `src/ResponseValidator.php` | Conferência estrutural das respostas pelos metadados gerados |
-| `src/JsonNumberNormalizer.php` | Leitura exata das representações JSON de inteiros antes da decodificação |
-| `src/RequestDiagnostics.php` | Metadados de uma tentativa HTTP, sem parâmetros ou credenciais |
-| `src/Exception` | Categorias de falha e metadados |
-| `src/Webhook.php` | Autenticação do corpo de uma entrega |
-| `scripts/generate.php` | Geração determinística offline |
-| `docs/reference.md` | Referência gerada da superfície PHP |
+| `src/RaimsClient.php` | Service composition and isolated configuration |
+| `src/Service` | Named endpoint methods |
+| `src/Generated/Contract.php` | Method, path, parameters, and responses for each endpoint |
+| `src/EnumValues.php` | Constants generated from public enums |
+| `src/Model` | Response classes and nested object types |
+| `src/ApiRequestor.php` | Serialization, execution, read retries, and errors |
+| `src/HttpClient` | Transport interface, cURL, and HTTP responses |
+| `src/ApiResource.php` | Read-only resources and serialization |
+| `src/Collection.php` | Cursor navigation |
+| `src/ResponseValidator.php` | Structural response validation using generated metadata |
+| `src/JsonNumberNormalizer.php` | Exact parsing of JSON integer representations before decoding |
+| `src/RequestDiagnostics.php` | Metadata for an HTTP attempt, without parameters or credentials |
+| `src/Exception` | Failure categories and metadata |
+| `src/Webhook.php` | Delivery body authentication |
+| `scripts/generate.php` | Deterministic offline generation |
+| `scripts/reference.en.json` | English editorial text for the generated reference |
+| `docs/reference.md` | Generated reference for the PHP surface |
 
-`AbstractService.php` e `SimulationsService.php` são mantidos manualmente.
-Os demais serviços, modelos, constantes, catálogo de endpoints e referência são gerados.
-Edite o mapa de métodos no gerador quando acrescentar um recurso; a geração
-recusa endpoints ausentes ou duplicados nesse mapa.
+`AbstractService.php` and `SimulationsService.php` are maintained manually.
+Other services, models, constants, the endpoint catalog, and reference are
+generated. Edit the method map in the generator when adding a resource;
+generation rejects endpoints that are missing from or duplicated in this map.
 
-As entradas são arrays documentados com shapes PHPDoc; as respostas são classes
-nomeadas com propriedades PHPDoc somente leitura. Isso oferece sugestões no
-editor sem duplicar toda a validação do servidor. As coleções propagam o tipo
-dos itens no `foreach` e no iterador de todas as páginas. O gerador normaliza
-objetos anuláveis e recusa composições que não consegue representar.
+Inputs are arrays documented with PHPDoc shapes; responses are named classes
+with read-only PHPDoc properties. This provides editor suggestions without
+duplicating all server validation. Collections propagate item types through
+`foreach` and the iterator for all pages. The generator normalizes nullable
+objects and rejects compositions it cannot represent.
 
-O SDK valida a configuração, os limites do transporte e a estrutura publicada
-das respostas. Essa conferência exige campos obrigatórios e os tipos de objetos,
-listas e escalares, mas preserva campos e enums novos. Formatos, limites,
-permissões e regras de negócio continuam sendo validados pela API.
+The SDK validates configuration, transport limits, and the published response
+structure. It requires mandatory fields and checks object, list, and scalar
+types while preserving future fields and enums. The API continues to validate
+formats, limits, permissions, and business rules.
 
-## Atualizar o contrato
+## Update the contract
 
-1. Escolha uma revisão pública aprovada e baixe o JSON por sua URL imutável.
-   Confira o manifesto e o checksum dessa revisão antes de substituir o snapshot.
-2. Revise mudanças estruturais e semânticas: campos, status, idempotência,
-   paginação, permissões, ambiente e resultados pendentes. Atualize
-   `contracts/source.json` com a origem e o hash conferidos.
-3. Ajuste o mapa de serviços quando necessário e execute `composer generate`.
-   Revise as classes, os parâmetros e a referência gerados.
-4. Execute `composer check` no workspace de engenharia. Ele reúne a conferência
-   dos gerados, lint, análise estática, cenários de contrato e transporte e o
-   pacote. Use o mesmo perfil do preflight ao preparar uma entrega. Confira
-   todos os arquivos alterados e novos.
-5. Atualize os guias de uso e registre mudanças de compatibilidade antes de
-   publicar uma versão. Mudanças incompatíveis exigem uma versão principal.
+1. Choose an approved public revision and download the JSON from its immutable
+   URL. Check that revision's manifest and checksum before replacing the snapshot.
+2. Review structural and semantic changes: fields, statuses, idempotency,
+   pagination, permissions, environment, and pending results. Update
+   `contracts/source.json` with the verified source and hash.
+3. Adjust the service map when needed and run `composer generate`. Review the
+   generated classes, parameters, and reference. Update exact-source English
+   translations in `scripts/reference.en.json` when reference text changes.
+   Missing translations block generation; they never change the pinned contract.
+4. Run `composer check` in the engineering workspace. It combines generated
+   output checks, lint, static analysis, contract and transport scenarios, and
+   packaging checks. Use the same preflight profile when preparing a delivery.
+   Review every changed and new file.
+5. Update usage guides and record compatibility changes before publishing a
+   version. Incompatible changes require a major version.
 
-Não edite o snapshot para inventar um endpoint ou aceitar uma regra diferente.
-Corrija a fonte canônica da API e aguarde sua publicação quando houver um erro
-de contrato. A geração confere o hash, mas a revisão de compatibilidade exige
-analisar o significado das respostas, inclusive `202` e erros.
+Do not edit the snapshot to invent an endpoint or accept a different rule.
+When the contract is wrong, fix the canonical API source and wait for its
+publication. Generation checks the hash, but compatibility review requires
+examining response semantics, including `202` and errors.
 
-## Compatibilidade da biblioteca PHP
+## PHP library compatibility
 
-`contracts/php-api.json` registra o contrato de símbolos da biblioteca: classes,
-interfaces, métodos, parâmetros, retornos, propriedades, constantes e tipos
-documentados. Ele é independente do OpenAPI e não é regravado pela geração HTTP.
+`contracts/php-api.json` records the library's symbol contract: classes,
+interfaces, methods, parameters, returns, properties, constants, and documented
+types. It is independent of OpenAPI and is not overwritten by HTTP generation.
 
-Execute `composer check-compatibility` para conferir a implementação atual contra
-essa base. O check permite adições compatíveis e recusa remoções ou alterações
-que invalidem o uso registrado. Descrições de documentação não entram nessa
-comparação; os tipos documentados de modelos e coleções entram. Classes marcadas
-`@internal` e o catálogo interno `Generated\Contract` ficam fora. O valor de
-`RaimsClient::VERSION` pode mudar entre releases; sua existência e seu tipo
-continuam protegidos.
+Run `composer check-compatibility` to compare the current implementation with
+this baseline. The check allows compatible additions and rejects removals or
+changes that invalidate recorded usage. Documentation descriptions are not
+compared; documented model and collection types are. Classes marked
+`@internal` and the internal `Generated\Contract` catalog are excluded. The
+value of `RaimsClient::VERSION` may change between releases; its presence and
+type remain protected.
 
-Alterações de tipos complexos passam por revisão explícita; o check usa uma
-comparação conservadora nesses casos. Parâmetros opcionais adicionais também
-exigem cuidado em métodos que outras classes possam implementar ou sobrescrever.
+Complex type changes require explicit review; the check uses conservative
+comparison for these cases. Additional optional parameters also require care
+in methods that other classes may implement or override.
 
-Uma atualização deliberada da base usa `composer snapshot-api -- --write`.
-Revise o diff do manifesto e o impacto nas integrações antes de aceitar uma
-mudança. Regenerar o OpenAPI ou atualizar a base não torna uma alteração
-incompatível segura para os consumidores.
+A deliberate baseline update uses `composer snapshot-api -- --write`. Review
+the manifest diff and integration impact before accepting a change. Regenerating
+OpenAPI or updating the baseline does not make an incompatible change safe for
+consumers.
 
-## Diagnóstico da integração
+## Integration diagnostics
 
-A aplicação consumidora define seus próprios alertas de indisponibilidade,
-resposta inválida e recuperação. Agrupe falhas e registre somente metadados
-necessários, como HTTP, código e `Request-Id`. Não envie alertas por requisição
-nem inclua chaves, corpos, documentos pessoais ou URLs temporárias.
+The consuming application defines its own availability, invalid-response, and
+recovery alerts. Group failures and record only necessary metadata, such as
+HTTP status, error code, and `Request-Id`. Do not send per-request alerts or
+include keys, bodies, personal documents, or temporary URLs.
 
-O SDK expõe exceções de conexão, HTTP e protocolo para essa finalidade. Ele não
-envia telemetria nem notificações externas. Uma recuperação deve se basear em
-novas respostas válidas, sem repetir automaticamente uma escrita anterior.
+The SDK exposes connection, HTTP, and protocol exceptions for this purpose.
+It does not send telemetry or external notifications. Recovery must be based
+on new valid responses without automatically retrying a previous write.
 
-## Publicar uma versão
+## Publish a version
 
-O pacote `raims/raims-php` usa as versões das releases do repositório. O workflow
-`packagist-release.yml` reage à publicação de uma release no GitHub e atualiza
-o pacote no Packagist após conferir a identidade e a aprovação do commit.
-Pushes e tags sem release não iniciam a distribuição.
+The `raims/raims-php` package uses repository release versions.
+`packagist-release.yml` reacts to a published GitHub release and updates the
+Packagist package after checking commit identity and approval. Pushes and tags
+without a release do not start distribution.
 
-1. Atualize a versão do cliente e revise as alterações públicas e os guias.
-   A versão da biblioteca é independente da versão HTTP `/v1`.
-2. Valide o commit candidato nos cinco jobs esperados de `Validate PHP SDK`:
-   PHP 8.2, 8.3, 8.4, 8.5 e análise de segurança, todos nos runners AWS
-   CodeBuild autorizados. Resultados de outro SHA ou execução incompleta
-   não aprovam a distribuição.
-3. Promova o mesmo commit para `main`, conforme o preflight, e publique a release
-   autorizada com tag `v<versão>`, por exemplo `v0.1.0`. A tag, o código e os
-   metadados devem representar a mesma versão.
-4. Confira a execução de `packagist-release.yml` e a versão no
-   [Packagist](https://packagist.org/packages/raims/raims-php). Não trate o
-   aceite da atualização como comprovação de que a versão já está disponível.
-5. Faça uma instalação limpa com Composer, confira a versão e a revisão
-   resolvidas e valide o consumidor pelas verificações canônicas. Não chame
-   a API real para conferir a instalação. Preserve os arquivos e dependências
-   de validação em `.tmp`.
+1. Update the client version and review public changes and guides. The library
+   version is independent of HTTP version `/v1`.
+2. Validate the candidate commit in the five expected `Validate PHP SDK` jobs:
+   PHP 8.2, 8.3, 8.4, 8.5, and security analysis, all on authorized AWS CodeBuild
+   runners. Results for another SHA or an incomplete run do not approve
+   distribution.
+3. Promote the same commit to `main` through the preflight process and publish
+   the authorized release with a `v<version>` tag, such as `v0.1.0`. The tag,
+   code, and metadata must identify the same version.
+4. Check the `packagist-release.yml` run and the version on
+   [Packagist](https://packagist.org/packages/raims/raims-php). Acceptance of the
+   update request does not prove that the version is available.
+5. Perform a clean Composer installation, check the resolved version and
+   revision, and validate the consumer using the canonical checks. Do not
+   call the real API to verify installation. Keep validation files and
+   dependencies in `.tmp`.
 
-O workflow de distribuição não cria uma release nem substitui os checks
-anteriores. Guarde a credencial de publicação na configuração protegida do
-workflow; nunca a inclua em comandos registrados, arquivos ou exemplos.
-Uma falha na distribuição deve permanecer visível até a conferência no destino.
+The distribution workflow does not create a release or replace earlier checks.
+Keep publication credentials in the workflow's protected configuration;
+never include them in recorded commands, files, or examples. A distribution
+failure must remain visible until the destination is verified.
 
-## Guias e conhecimento do atendimento
+## Guides and support knowledge
 
-O guia BR/EN `integracoes/sdk-php` em `raims-developer-docs` é a fonte pública
-para instalação, requisitos, uso no backend, chave, permissões, ambiente,
-paginação, idempotência, respostas pendentes e webhooks. A primeira distribuição
-também exige uma nota no changelog com a data efetiva de disponibilização.
+The BR/EN `integracoes/sdk-php` guide in `raims-developer-docs` is the public
+source for installation, requirements, backend usage, keys, permissions,
+environment, pagination, idempotency, pending responses, and webhooks. First
+distribution also requires a changelog entry with the actual availability date.
 
-Depois de confirmar o pacote, publique os guias pelo ciclo autorizado do Docs,
-regenere os catálogos e valide a recuperação dos procedimentos em português e
-inglês pela bateria canônica do atendimento. Confira a versão do catálogo no
-consumidor implantado. O SDK usa a fonte `raims-developer-docs` já permitida;
-não exige outra ferramenta de consulta financeira ou alteração no contrato de
-contexto. `Raims-Chat/docs/knowledge-sources.md` registra essa responsabilidade.
+After confirming the package, publish the guides through the authorized Docs
+process, regenerate catalogs, and validate retrieval of Portuguese and English
+procedures through the canonical support checks. Check the catalog version in
+the deployed consumer. The SDK uses the existing allowed
+`raims-developer-docs` source; it requires neither another financial query tool
+nor a context contract change. `Raims-Chat/docs/knowledge-sources.md` records
+this responsibility.
 
-Mantenha esse acompanhamento na fonte interna, fora do GitHub, até confirmar
-pacote, fontes publicadas, catálogo regenerado e orientação validada. CI,
-release, Packagist e publicação dos guias seguem suas autorizações próprias.
+Track this work privately, outside GitHub, until the package, published sources,
+regenerated catalog, and validated guidance are confirmed. CI, releases,
+Packagist, and guide publication each require their own authorization.

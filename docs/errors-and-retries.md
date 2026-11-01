@@ -1,10 +1,10 @@
-# Erros, idempotência e retries
+# Errors, idempotency, and retries
 
-## Tratar erros
+## Handle errors
 
-Decida pelo status HTTP e por `error.code`. As mensagens da API são diagnósticos
-em inglês e podem mudar. Os detalhes de validação identificam `field`, `code` e
-`message` quando aplicáveis.
+Make decisions using the HTTP status and `error.code`. API messages are English
+diagnostics and may change. Validation details identify `field`, `code`, and
+`message` where applicable.
 
 ```php
 use Raims\Exception\ApiConnectionException;
@@ -17,56 +17,56 @@ try {
 } catch (RateLimitException $error) {
     $retryAfterSeconds = $error->getRetryAfter();
     $requestId = $error->getRequestId();
-    // Reagendar a leitura conforme os limites da aplicação.
+    // Reschedule the read according to the application's limits.
 } catch (ApiConnectionException $error) {
-    // A resposta não foi recebida. Uma escrita pode ter sido processada.
+    // No response was received. A write may have been processed.
 } catch (ApiErrorException $error) {
     $status = $error->getHttpStatus();
     $code = $error->getErrorCode();
     $details = $error->getError()['details'] ?? [];
-    // Exibir uma mensagem apropriada, sem registrar dados pessoais.
+    // Display an appropriate message without logging personal data.
 } catch (ExceptionInterface $error) {
-    // Tratar outra falha do SDK, como configuração ou argumento inválido.
+    // Handle another SDK failure, such as invalid configuration or arguments.
 }
 ```
 
-| Exceção | Condição |
+| Exception | Condition |
 | --- | --- |
-| `InvalidRequestException` | HTTP 400, 405, 413, 415 ou 422 |
+| `InvalidRequestException` | HTTP 400, 405, 413, 415, or 422 |
 | `AuthenticationException` | HTTP 401 |
 | `PermissionException` | HTTP 403 |
 | `NotFoundException` | HTTP 404 |
 | `ConflictException` | HTTP 409 |
 | `RateLimitException` | HTTP 429 |
-| `ApiException` | Demais falhas HTTP, incluindo 5xx |
-| `UnexpectedResponseException` | Redirect, status de sucesso inesperado, JSON inválido ou estrutura de resposta incompatível |
-| `ApiConnectionException` | Falha de transporte ou timeout |
+| `ApiException` | Other HTTP failures, including 5xx |
+| `UnexpectedResponseException` | Redirect, unexpected success status, invalid JSON, or incompatible response structure |
+| `ApiConnectionException` | Transport failure or timeout |
 
-As exceções emitidas pelas interfaces públicas do SDK implementam
-`Raims\Exception\ExceptionInterface`. Use esse tipo para capturar falhas da
-biblioteca; mantenha os catches específicos quando precisar tratar cada condição.
-Erros nativos de tipo do PHP e exceções da sua aplicação seguem seus próprios tipos.
+Exceptions raised by the SDK's public interfaces implement
+`Raims\Exception\ExceptionInterface`. Use it to catch library failures, while
+keeping specific catches when each condition needs different handling. Native
+PHP type errors and application exceptions retain their own types.
 
-As falhas HTTP derivam de `ApiErrorException`. Erros de configuração e de entrada
-do cliente usam `Raims\Exception\InvalidArgumentException`, que também é uma
-`\InvalidArgumentException` do PHP. A mesma compatibilidade vale para os tipos
-`LogicException`, `UnexpectedValueException` e `RuntimeException` do SDK.
-Uma resposta HTML de uma borda pode
-não ter `error.code`; os accessors retornam `null` quando o dado não existe.
+HTTP failures extend `ApiErrorException`. Client configuration and input errors
+use `Raims\Exception\InvalidArgumentException`, which is also a PHP
+`\InvalidArgumentException`. The SDK's `LogicException`,
+`UnexpectedValueException`, and `RuntimeException` preserve the same
+compatibility. An edge server's HTML response may have no `error.code`;
+accessors return `null` for missing data.
 
-`getHttpHeaders()` disponibiliza os headers recebidos, incluindo
-`Raims-Rate-Limited-Reason` quando presente. Prefira registrar apenas código,
-status e `Request-Id`. Não registre o erro completo, o corpo ou headers livres.
-`getRequestId()` prioriza `Request-Id` e aceita `X-Request-Id` como alias.
+`getHttpHeaders()` exposes received headers, including
+`Raims-Rate-Limited-Reason` when present. Prefer logging only the code, status,
+and `Request-Id`. Do not log the complete error, body, or arbitrary headers.
+`getRequestId()` prefers `Request-Id` and accepts `X-Request-Id` as an alias.
 
-Em `ApiConnectionException`, `getTransportErrorCode()` retorna o código cURL
-quando disponível, ou `null` para um transporte que não forneça esse diagnóstico.
-O código permite distinguir timeout e falhas de conexão ou certificado sem
-interpretar o texto da mensagem. Ele não confirma se uma escrita foi processada.
+For `ApiConnectionException`, `getTransportErrorCode()` returns the cURL code
+when available, or `null` for a transport that does not provide this diagnostic.
+The code distinguishes timeouts and connection or certificate failures without
+parsing the message text. It does not confirm whether a write was processed.
 
-## Idempotência
+## Idempotency
 
-Forneça `idempotency_key` nas opções somente nos endpoints que a declaram:
+Pass `idempotency_key` in the options only for endpoints that declare it:
 
 ```php
 $charge = $raims->charges->create($params, [
@@ -74,31 +74,32 @@ $charge = $raims->charges->create($params, [
 ]);
 ```
 
-A chave deve ter de 1 a 255 caracteres ASCII visíveis, sem espaços. Gere e
-persista sua identidade de negócio antes da chamada. Após perda da resposta,
-conserve a mesma chave e a mesma requisição enquanto o resultado puder ser
-reutilizado. Não reutilize uma chave para outra intenção nem altere os parâmetros
-para contornar uma falha.
+The key must contain 1 to 255 visible ASCII characters, without spaces. Generate
+and persist the identity for your business operation before the call. After
+losing a response, keep the same key and request while the result can be reused.
+Do not reuse a key for a different intent or change parameters to bypass a
+failure.
 
-O SDK não gera a chave. Quando ela não é informada, o header não é enviado.
-O suporte é definido por endpoint; `customers->delete($id)` não o aceita.
-Os métodos rejeitam uma chave em endpoints que não declaram esse header.
+The SDK does not generate the key. When omitted, the header is not sent.
+Support is defined per endpoint; `customers->delete($id)` does not accept it.
+Methods reject a key for endpoints that do not declare this header.
 
-A política publicada conserva respostas de sucesso e falhas 5xx admitidas por
-24 horas; erros 4xx e recusas 503 explicitamente repetíveis não ficam retidos.
-Uma resposta retida de erro não confirma o resultado financeiro. Consulte
-[idempotência na API](https://docs.raims.com/br/api/idempotencia) antes de decidir
-por uma nova tentativa.
+The published policy retains successful responses and eligible 5xx failures
+for 24 hours. It does not retain 4xx errors or explicitly retryable 503
+rejections. A retained error response does not confirm the financial result.
+Read [API idempotency](https://docs.raims.com/br/api/idempotencia) before deciding
+to retry.
 
-`IDEMPOTENCY_REQUEST_IN_PROGRESS` e `IDEMPOTENCY_RESULT_UNKNOWN` exigem ações
-diferentes. No primeiro caso, respeite `Retry-After`. No segundo, consulte e
-reconcilie o recurso; não troque a chave nem repita a intenção financeira.
+`IDEMPOTENCY_REQUEST_IN_PROGRESS` and `IDEMPOTENCY_RESULT_UNKNOWN` require
+different actions. For the former, respect `Retry-After`. For the latter, query
+and reconcile the resource; do not change the key or repeat the financial
+intent.
 
 ## Retries
 
-O padrão é zero retries. `max_network_retries` entre 1 e 5 habilita tentativas
-adicionais somente para GET/HEAD, em falhas de conexão e HTTP 408, 429, 500,
-502, 503 ou 504. Os métodos de produto publicados usam GET para essas leituras.
+The default is zero retries. A `max_network_retries` value from 1 to 5 enables
+additional attempts only for GET/HEAD on connection failures and HTTP 408,
+429, 500, 502, 503, or 504. Published product methods use GET for these reads.
 
 ```php
 $raims = new \Raims\RaimsClient([
@@ -107,13 +108,13 @@ $raims = new \Raims\RaimsClient([
 ]);
 ```
 
-O intervalo usa backoff exponencial com jitter entre 250 ms e 2 s, para distribuir
-as novas tentativas entre clientes. Um `Retry-After` válido pode ampliar essa
-espera para até 30 s. Se ele exigir mais de 30 s, o SDK devolve a falha para que
-a aplicação reagende. Cada tentativa tem seu próprio timeout; o tempo total
-pode incluir todos os prazos e intervalos.
+The delay uses exponential backoff with jitter between 250 ms and 2 s to
+spread retries across clients. A valid `Retry-After` can extend that wait to
+30 s. If it requires more than 30 s, the SDK returns the failure so the
+application can reschedule. Each attempt has its own timeout; total time may
+include every deadline and delay.
 
-POST, PATCH e DELETE não são repetidos automaticamente, mesmo com chave de
-idempotência ou retries configurados. Uma falha de conexão não demonstra que
-o servidor deixou de executar a requisição. Respostas `202` também não iniciam
-polling ou uma nova tentativa automaticamente.
+POST, PATCH, and DELETE are never retried automatically, even with an
+idempotency key or configured retries. A connection failure does not prove
+that the server did not execute the request. `202` responses also do not
+start polling or another attempt automatically.

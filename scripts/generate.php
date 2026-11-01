@@ -13,6 +13,29 @@ if (!hash_equals($source['sha256'], hash('sha256', $bytes))) {
 }
 $spec = json_decode($bytes, true, 512, JSON_THROW_ON_ERROR);
 $schemas = $spec['components']['schemas'];
+$referenceCatalog = json_decode(file_get_contents($root . '/scripts/reference.en.json'), true, 512, JSON_THROW_ON_ERROR);
+$referenceTranslations = $referenceCatalog['translations'] ?? null;
+if (($referenceCatalog['locale'] ?? null) !== 'en' || !is_array($referenceTranslations)) {
+    throw new RuntimeException('The reference requires an English editorial translation catalog.');
+}
+foreach ($referenceTranslations as $sourceText => $translatedText) {
+    if (!is_string($sourceText) || trim($sourceText) === '' || !is_string($translatedText) || trim($translatedText) === '') {
+        throw new RuntimeException('Reference translations must map exact nonempty source text to English text.');
+    }
+}
+
+function referenceText(string $source): string
+{
+    global $referenceTranslations;
+    if ($source === '') {
+        return '';
+    }
+    if (!array_key_exists($source, $referenceTranslations)) {
+        throw new RuntimeException('Missing English reference translation for exact source: ' . $source);
+    }
+
+    return trim(preg_replace('/\s+/u', ' ', $referenceTranslations[$source]));
+}
 
 // Each published operation has exactly one idiomatic PHP entry point.
 $services = [
@@ -370,7 +393,7 @@ foreach ($models as $name => $_) {
     $outputs['src/Model/' . $name . '.php'] = $header . "namespace Raims\\Model;\n\n/**\n" . implode("\n", $doc) . "\n */\nfinal class $name extends $base\n{\n    protected const FIELD_TYPES = " . phpLiteral($fields) . ";\n}\n";
 }
 
-$reference = "# Referência do SDK PHP\n\nEsta referência é gerada do contrato público fixado. Os campos mantêm os nomes da API.\nConsulte os exemplos e as condições de uso na [referência HTTP](https://docs.raims.com/br/api).\n\n";
+$reference = "# PHP SDK reference\n\nThis reference is generated from the pinned public contract. Fields retain their API names.\nSee examples and usage conditions in the [HTTP reference](https://docs.raims.com/br/api).\n\n";
 foreach ($services as $service => $methods) {
     $property = lcfirst($service);
     if (str_starts_with($service, 'Simulation')) {
@@ -430,28 +453,28 @@ foreach ($services as $service => $methods) {
         }
         $body .= "    }\n\n";
         $signature = '$raims->' . $property . '->' . $method . '(' . implode(', ', array_map(static fn ($p) => preg_replace('/ = \[\]$/', '', preg_replace('/^(string|array|array\|RequestOptions) /', '', $p)), $paramParts)) . ')';
-        $reference .= "### `$method`\n\n" . ($op['summary'] ?? $id) . ".\n\n```php\n$signature;\n```\n\n`{$descriptor['method']} {$descriptor['path']}` · `$id`\n\n";
+        $reference .= "### `$method`\n\n" . referenceText($op['summary'] ?? $id) . ".\n\n```php\n$signature;\n```\n\n`{$descriptor['method']} {$descriptor['path']}` · `$id`\n\n";
         if (isset($op['description'])) {
-            $reference .= $op['description'] . "\n\n";
+            $reference .= referenceText($op['description']) . "\n\n";
         }
         foreach ($pathParams as $parameter) {
-            $reference .= '`' . $parameter['name'] . '`: ' . ($parameter['description'] ?? 'Identificador do recurso.') . "\n\n";
+            $reference .= '`' . $parameter['name'] . '`: ' . (isset($parameter['description']) ? referenceText($parameter['description']) : 'Resource identifier.') . "\n\n";
         }
         if ($input !== null) {
             $resolved = resolve($input);
-            $reference .= "| Campo em `\$params` | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n";
+            $reference .= "| Field in `\$params` | Type | Required | Description |\n| --- | --- | --- | --- |\n";
             foreach ($resolved['properties'] ?? [] as $field => $prop) {
-                $description = str_replace(["\r", "\n", '|'], ['', ' ', '\\|'], $prop['description'] ?? resolve($prop)['description'] ?? '');
-                $reference .= '| `' . $field . '` | `' . str_replace('|', '\\|', docType($prop, true)) . '` | ' . (in_array($field, $resolved['required'] ?? [], true) ? 'Sim' : 'Não') . ' | ' . $description . " |\n";
+                $description = str_replace(["\r", "\n", '|'], ['', ' ', '\\|'], referenceText($prop['description'] ?? resolve($prop)['description'] ?? ''));
+                $reference .= '| `' . $field . '` | `' . str_replace('|', '\\|', docType($prop, true)) . '` | ' . (in_array($field, $resolved['required'] ?? [], true) ? 'Yes' : 'No') . ' | ' . $description . " |\n";
             }
             $reference .= "\n";
         }
-        $reference .= 'Retorno: ' . implode(', ', array_map(static fn ($status, $name) => '`' . $status . '` ' . ($name === null ? '`null`' : '`' . basename(str_replace('\\', '/', $name)) . '`'), array_keys($descriptor['responses']), $descriptor['responses'])) . ".\n\n";
-        $reference .= $descriptor['idempotency'] ? "Aceita `idempotency_key` em `\$options`.\n\n" : "Não aceita `idempotency_key`.\n\n";
+        $reference .= 'Returns: ' . implode(', ', array_map(static fn ($status, $name) => '`' . $status . '` ' . ($name === null ? '`null`' : '`' . basename(str_replace('\\', '/', $name)) . '`'), array_keys($descriptor['responses']), $descriptor['responses'])) . ".\n\n";
+        $reference .= $descriptor['idempotency'] ? "Accepts `idempotency_key` in `\$options`.\n\n" : "Does not accept `idempotency_key`.\n\n";
     }
     $outputs['src/Service/' . $class . '.php'] = $header . "namespace Raims\\Service;\n\nuse Raims\\RequestOptions;\n\nfinal class $class extends AbstractService\n{\n" . rtrim($body) . "\n}\n";
 }
-$reference .= "## Constantes de valores públicos\n\nUse `Raims\\EnumValues` para os valores nomeados do contrato. Os nomes identificam o schema ou endpoint e o campo de origem; `QUERY` identifica um filtro da URL.\nValores numéricos recebem nomes somente quando o contrato fornece rótulos públicos; os demais continuam documentados no campo.\nAs constantes não alteram os valores enviados à API.\n\n```php\nuse Raims\\EnumValues;\n\n\$params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_PIX];\n```\n\n| Constante em `EnumValues` | Valor | Campo público no contrato |\n| --- | --- | --- |\n";
+$reference .= "## Public value constants\n\nUse `Raims\\EnumValues` for named contract values. Names identify the source schema or endpoint and field; `QUERY` identifies a URL filter.\nNumeric values receive names only when the contract provides public labels; other values remain documented on their fields.\nConstants do not change the values sent to the API.\n\n```php\nuse Raims\\EnumValues;\n\n\$params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_PIX];\n```\n\n| Constant in `EnumValues` | Value | Public contract field |\n| --- | --- | --- |\n";
 foreach ($constants as $name => $definition) {
     $reference .= '| `' . $name . '` | `' . str_replace('|', '\\|', var_export($definition['value'], true)) . '` | `' . $definition['field'] . "` |\n";
 }

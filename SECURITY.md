@@ -1,13 +1,13 @@
-# Segurança
+# Security
 
-Relate vulnerabilidades de forma privada para `security@raims.com`. Inclua a
-versão do SDK, o cenário, o impacto e uma reprodução mínima com dados fictícios.
-Não abra uma issue pública com chaves, segredos, dados pessoais ou acesso a
-recursos de uma conta.
+Report vulnerabilities privately to `security@raims.com`. Include the SDK
+version, scenario, impact, and a minimal reproduction using fictitious data.
+Do not open a public issue containing keys, secrets, personal data, or access
+to account resources.
 
-O SDK deve ser executado no servidor. Chaves de API, segredos de webhook, URLs
-temporárias e conteúdo financeiro precisam dos controles de acesso e de logs
-da aplicação. Mantenha TLS habilitado e use dependências de fontes confiáveis.
+Run the SDK on the server. API keys, webhook secrets, temporary URLs, and
+financial data require the application's access and logging controls. Keep
+TLS enabled and use dependencies from trusted sources.
 
-Ainda não há uma release estável nem um compromisso de suporte por versão.
-A política de versões suportadas será publicada com a primeira distribuição.
+There is no stable release or per-version support commitment yet. The supported
+versions policy will be published with the first distribution.

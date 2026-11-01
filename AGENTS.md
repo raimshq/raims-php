@@ -1,57 +1,63 @@
 # Raims PHP SDK
 
-Leia o README e os guias de contribuição e manutenção antes de alterar o SDK.
-O SDK é um consumidor do contrato público. Não importa código dos hosts Raims.
+Read the README and the contribution and maintenance guides before changing the
+SDK. This SDK consumes only the public contract and does not import code from
+Raims application hosts.
 
-- Não versionar nem publicar TODOs, backlogs ou planos de trabalho internos,
-  independentemente do nome, formato ou diretório. Mantenha o acompanhamento
-  de tarefas em fonte interna, fora do GitHub. Não inclua listas de pendências
-  nem caminhos privados na documentação pública.
-- Descreva o SDK pelos recursos e contratos da Raims. Não use marcas de outras
-  empresas como inspiração, comparação ou referência de design, arquitetura
-  ou implementação em README, guias, comentários, exemplos, nomes próprios
-  do SDK ou textos de commits, pull requests e releases. Antes de concluir e
-  antes de publicar, confira os arquivos alterados e novos e os links da entrega.
-  Preserve avisos de licença, atribuições de código incorporado e identificadores
-  necessários às dependências reais; não atribua autoria exclusiva a código
-  de terceiros.
-- Namespace `Raims`, autoload PSR-4 e PHP 8.2 ou superior em 64 bits.
-- `src/Service`, `src/Model`, `src/Generated/Contract.php` e `docs/reference.md`
-  são gerados por `php scripts/generate.php`. `AbstractService.php` e
-  `SimulationsService.php` são mantidos manualmente.
-- `src/EnumValues.php` também é gerado. Os nomes derivam de valores string ou
-  rótulos numéricos explícitos do contrato público; não manter um mapa manual.
-- Respostas passam pelo validador estrutural gerado antes da hidratação. Preserve
-  campos futuros, tipos das coleções e a distinção entre ausência e null.
-- O transporte reutiliza conexões e deve limpar método, headers, corpo e callbacks
-  entre chamadas. Diagnósticos contêm somente metadados, sem IDs de recurso,
-  query, credencial ou payload, e não alteram resultados ou retries de escrita.
-- A revisão e o hash da fonte pública ficam em `contracts/source.json`.
-  Não use o contrato privado do Dashboard nem endpoints sem publicação confirmada.
-- `contracts/php-api.json` é a base independente dos símbolos públicos do SDK.
-  `composer check-compatibility` somente confere; a atualização exige o comando
-  explícito `composer snapshot-api -- --write` e revisão do diff. A geração do
-  OpenAPI não pode regravar essa base nem silenciar uma incompatibilidade.
-- Exceções intencionais do SDK implementam `ExceptionInterface` e preservam a
-  compatibilidade com SPL. Não encapsule erros nativos da engine ou da aplicação.
-- Preserve nomes JSON, centavos inteiros, Unix segundos, null e omissão.
-  Mapas vazios em entradas usam `(object) []`. Não gerar idempotência nem repetir
-  escritas automaticamente. `202` mantém seu significado de resultado pendente.
-- Novos serviços devem ter uma entrada explícita no gerador. A geração precisa
-  cobrir cada endpoint fixado exatamente uma vez e falhar diante de divergência.
-- Transporte autenticado não baixa URLs externas, não envia arquivos, não segue
-  redirects e não oferece headers arbitrários.
-- Testes, simuladores, dependências de validação e relatórios ficam somente em
-  `C:\server\raims\.tmp\raims-php-sdk`, fora deste repositório. Nunca versioná-los.
-- Confira `composer validate --strict`, `composer check-generated`, lint PHP,
-  cenários de contrato e o pacote de distribuição, conforme `CONTRIBUTING.md`.
-- Preserve o código local sem commit e sem staging até pedido explícito.
-  Repositório público, commit/push, release/Packagist e deploy são etapas distintas.
-- O CI de validação usa os runners CodeBuild autorizados, em pushes do próprio
-  repositório e execuções manuais. Não executar código de forks com acesso ao
-  Toolkit privado. Não criar infraestrutura como parte da validação.
-- O workflow `packagist-release.yml` atualiza o pacote no Packagist após uma
-  release publicada no GitHub. Exige o mesmo commit aprovado nos cinco jobs
-  esperados do CI na AWS: quatro versões PHP e análise de segurança. Push,
-  tag ou validação isolados não autorizam uma release. Confira tag, versão,
-  SHA e disponibilidade no destino; não exponha credenciais nos logs.
+- Keep repository descriptions and all Markdown documentation in English.
+  Preserve public identifiers, contract values, commands, and link destinations.
+- Keep internal TODO lists, backlogs, and work plans out of this public
+  repository and its packages, regardless of their name, format, or directory.
+  Track operational work privately, outside GitHub. Do not include task lists
+  or private paths in public documentation.
+- Describe the SDK through Raims features and contracts. Do not use other
+  companies as design, architecture, or implementation references in the
+  README, guides, comments, examples, SDK component names, commits, pull
+  requests, or releases. Review changed and new files and their links before
+  completing or publishing a change. Preserve required license notices,
+  incorporated-code attribution, and identifiers required by actual
+  dependencies. Do not claim exclusive authorship of third-party code.
+- Use the `Raims` namespace, PSR-4 autoloading, and 64-bit PHP 8.2 or later.
+- `src/Service`, `src/Model`, `src/Generated/Contract.php`, and `docs/reference.md`
+  are generated by `php scripts/generate.php`. `AbstractService.php` and
+  `SimulationsService.php` are maintained manually.
+- `src/EnumValues.php` is also generated. Its names come from string values or
+  explicit numeric labels in the public contract. Do not maintain a manual map.
+- Responses pass through the generated structural validator before hydration.
+  Preserve future fields, collection types, and the distinction between an
+  absent field and null.
+- The transport reuses connections and must reset the method, headers, body,
+  and callbacks between calls. Diagnostics contain only metadata, without
+  resource IDs, queries, credentials, or payloads, and must not affect results
+  or write retries.
+- The public source revision and hash are recorded in `contracts/source.json`.
+  Do not use the private Dashboard contract or endpoints whose publication
+  has not been confirmed.
+- `contracts/php-api.json` is the independent baseline of public SDK symbols.
+  `composer check-compatibility` only checks it. Updates require the explicit
+  `composer snapshot-api -- --write` command and a diff review. OpenAPI
+  generation must not overwrite the baseline or hide an incompatibility.
+- Intentional SDK exceptions implement `ExceptionInterface` and preserve SPL
+  compatibility. Do not wrap native engine errors or application exceptions.
+- Preserve JSON names, integer cents, Unix seconds, null, and omission. Empty
+  input maps use `(object) []`. Do not generate idempotency keys or retry writes
+  automatically. `202` retains its meaning as a pending result.
+- New services need an explicit generator entry. Generation must cover every
+  pinned endpoint exactly once and fail on discrepancies.
+- The authenticated transport does not download external URLs, upload files,
+  follow redirects, or accept arbitrary headers.
+- Tests, simulators, validation dependencies, and reports belong only in
+  `C:\server\raims\.tmp\raims-php-sdk`, outside this repository. Never commit them.
+- Run `composer validate --strict`, `composer check-generated`, PHP lint,
+  contract scenarios, and distribution checks as described in `CONTRIBUTING.md`.
+- Leave local changes uncommitted and unstaged until explicitly requested.
+  Public source publication, commit/push, release/Packagist, and deployment
+  are separate steps.
+- Validation CI uses authorized CodeBuild runners for pushes from this
+  repository and manual runs. Do not run fork code with access to the private
+  Toolkit. Do not create infrastructure as part of validation.
+- `packagist-release.yml` updates the Packagist package after a GitHub release
+  is published. It requires the same commit to have passed all five expected
+  AWS CI jobs: four PHP versions and security analysis. A push, tag, or isolated
+  validation does not authorize a release. Verify the tag, version, SHA, and
+  availability at the destination. Never expose credentials in logs.

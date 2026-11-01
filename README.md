@@ -1,25 +1,26 @@
 # Raims PHP
 
-SDK PHP para facilitar a integração com a API pública da Raims.
+Official PHP SDK for the Raims public API.
 
-Instale o pacote pelo Composer:
+Install the package with Composer:
 
 ```text
 composer require raims/raims-php:^0.1.0
 ```
 
-O pacote está no [Packagist](https://packagist.org/packages/raims/raims-php).
-Consulte a [instalação](docs/installation.md) para requisitos, atualizações
-e uso de um checkout local.
+The package is available on
+[Packagist](https://packagist.org/packages/raims/raims-php). See the
+[installation guide](docs/installation.md) for requirements, updates, and local
+checkout usage.
 
-## Requisitos
+## Requirements
 
-PHP 8.2 ou superior em 64 bits, Composer 2 e extensões `curl`, `json` e `hash`.
-O SDK usa cURL e não exige bibliotecas de terceiros em produção.
+64-bit PHP 8.2 or later, Composer 2, and the `curl`, `json`, and `hash` extensions.
+The SDK uses cURL and requires no third-party libraries in production.
 
-## Primeiro uso
+## Getting started
 
-Depois de instalar o pacote no seu projeto:
+After installing the package in your project:
 
 ```php
 <?php
@@ -30,7 +31,7 @@ use Raims\RaimsClient;
 
 $apiKey = getenv('RAIMS_API_KEY');
 if ($apiKey === false || $apiKey === '') {
-    throw new RuntimeException('Configure RAIMS_API_KEY no servidor.');
+    throw new RuntimeException('Set RAIMS_API_KEY on the server.');
 }
 
 $raims = new RaimsClient($apiKey);
@@ -41,25 +42,25 @@ foreach ($customers as $customer) {
 }
 ```
 
-A URL-base é `https://api.raims.com` tanto para Sandbox quanto para Produção.
-A chave determina a empresa, o ambiente e as permissões. Use o SDK no servidor
-e mantenha as credenciais fora do navegador e do controle de versão.
+The base URL is `https://api.raims.com` for both Sandbox and Production. The key
+determines the company, environment, and permissions. Use the SDK on the server
+and keep credentials out of browsers and version control.
 
-## Criar um cliente e uma cobrança
+## Create a customer and a charge
 
-Com a instância `$raims` do exemplo anterior, cadastre o cliente e use o `id`
-retornado para criar a cobrança. Neste exemplo, `$customerTaxId` é o CPF ou CNPJ
-válido do cliente autorizado pela sua aplicação. `$customerIdempotencyKey` e
-`$chargeIdempotencyKey` são chaves distintas, criadas e persistidas pela aplicação
-antes das requisições para identificar cada intenção.
+Using the `$raims` instance above, create the customer and pass the returned
+`id` when creating the charge. In this example, `$customerTaxId` is the valid
+CPF or CNPJ of the customer authorized by your application.
+`$customerIdempotencyKey` and `$chargeIdempotencyKey` are distinct keys created
+and persisted by the application before the requests to identify each intent.
 
-`$chargeDueDate` é o vencimento escolhido e persistido para o pedido, em segundos
-Unix UTC. Ao repetir uma requisição após perder a resposta, reutilize a mesma
-chave e os mesmos parâmetros, incluindo esse vencimento.
+`$chargeDueDate` is the due date chosen and persisted for the order, in Unix
+seconds UTC. If you retry a request after losing its response, reuse the same
+key and parameters, including this due date.
 
-O valor é um inteiro em centavos; `15000` representa R$ 150,00. Datas da API usam
-Unix segundos UTC. Se o documento já existir na mesma conta e ambiente, a
-requisição atualiza esse cadastro e mantém seu identificador.
+Amounts are integer cents; `15000` represents BRL 150.00. API dates use Unix
+seconds UTC. If the tax ID already exists in the same account and environment,
+the request updates that customer and preserves its identifier.
 
 ```php
 $customer = $raims->customers->create([
@@ -72,7 +73,7 @@ $charge = $raims->charges->create([
     'customer_id' => $customer->id,
     'amount_cents' => 15000,
     'due_date' => $chargeDueDate,
-    'title' => 'Pedido 1234',
+    'title' => 'Order 1234',
 ], [
     'idempotency_key' => $chargeIdempotencyKey,
 ]);
@@ -81,46 +82,46 @@ $status = $charge->getLastResponse()->statusCode;
 $requestId = $charge->getLastResponse()->getRequestId();
 ```
 
-Uma resposta `202` exige acompanhar o recurso. O recebimento da resposta não
-confirma, por si só, pagamento ou conclusão financeira. O SDK não gera chaves
-de idempotência nem repete escritas automaticamente. Leia as
-[regras de idempotência e erros](docs/errors-and-retries.md).
+A `202` response requires you to follow the resource. Receiving the response
+alone does not confirm payment or financial completion. The SDK does not
+generate idempotency keys or retry writes automatically. Read the
+[idempotency and error handling guide](docs/errors-and-retries.md).
 
-## Serviços
+## Services
 
-| Propriedade | Recursos |
+| Property | Resources |
 | --- | --- |
-| `$raims->accounts` | Dados da conta, tarifas e personalização do checkout |
-| `$raims->balances` | Saldo e previsão |
-| `$raims->customers` | Cadastro e consulta de clientes |
-| `$raims->charges` | Cobranças, pagamento, documentos e estornos por cobrança |
-| `$raims->paymentLinks` | Links de pagamento e solicitação de envio por e-mail |
-| `$raims->refunds` | Consulta de estornos e recibos |
-| `$raims->disputes` | Contestações |
-| `$raims->statements` | Extratos |
-| `$raims->withdrawals` | Saques, limites, resumo e configuração automática |
-| `$raims->withdrawalDestinations` | Destinos de saque |
-| `$raims->webhooks` | Cadastro, pausa, saúde, teste e rotação de segredo |
-| `$raims->webhookEventTypes` | Tipos de evento disponíveis |
-| `$raims->simulations->charges` | Simulações de cobrança com chave Sandbox |
-| `$raims->simulations->refunds` | Simulações de estorno com chave Sandbox |
+| `$raims->accounts` | Account details, fees, and checkout customization |
+| `$raims->balances` | Balance and forecast |
+| `$raims->customers` | Customer creation and retrieval |
+| `$raims->charges` | Charges, payments, documents, and refunds for a charge |
+| `$raims->paymentLinks` | Payment links and email delivery requests |
+| `$raims->refunds` | Refunds and receipts |
+| `$raims->disputes` | Disputes |
+| `$raims->statements` | Statements |
+| `$raims->withdrawals` | Withdrawals, limits, summary, and automatic settings |
+| `$raims->withdrawalDestinations` | Withdrawal destinations |
+| `$raims->webhooks` | Registration, pause, health, testing, and secret rotation |
+| `$raims->webhookEventTypes` | Available event types |
+| `$raims->simulations->charges` | Charge simulations with a Sandbox key |
+| `$raims->simulations->refunds` | Refund simulations with a Sandbox key |
 
-`create`, `retrieve`, `update` e `all` seguem o mesmo padrão entre os serviços.
-Consulte a [referência do SDK](docs/reference.md) para os parâmetros e as respostas
-de cada serviço.
+`create`, `retrieve`, `update`, and `all` follow the same pattern across services.
+See the [SDK reference](docs/reference.md) for each service's parameters and
+responses.
 
-## Documentação
+## Documentation
 
-- [Instalação e requisitos](docs/installation.md)
-- [Configuração, respostas, arquivos e atualizações parciais](docs/usage.md)
-- [Paginação](docs/pagination.md)
-- [Erros, idempotência e retries](docs/errors-and-retries.md)
-- [Recebimento e validação de webhooks](docs/webhooks.md)
-- [Referência do SDK](docs/reference.md)
-- [Manutenção](docs/maintenance.md)
-- [Contribuição](CONTRIBUTING.md) e [segurança](SECURITY.md)
-- [Documentação da API](https://docs.raims.com/br/api)
+- [Installation and requirements](docs/installation.md)
+- [Configuration, responses, files, and partial updates](docs/usage.md)
+- [Pagination](docs/pagination.md)
+- [Errors, idempotency, and retries](docs/errors-and-retries.md)
+- [Receiving and verifying webhooks](docs/webhooks.md)
+- [SDK reference](docs/reference.md)
+- [Maintenance](docs/maintenance.md)
+- [Contributing](CONTRIBUTING.md) and [security](SECURITY.md)
+- [API documentation](https://docs.raims.com/br/api)
 
-## Licença
+## License
 
-Distribuído sob a licença [MIT](LICENSE).
+Distributed under the [MIT](LICENSE) license.

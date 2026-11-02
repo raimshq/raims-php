@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: c2385a4db9f85f49844bdaa3e0c83195cbd1b683
+  RAIMS_PHP_TOOLKIT_REF: c0a50d830dc92f9a869e861a235829299e81245b
 
 jobs:
   validatePhp:
@@ -120,7 +120,7 @@ jobs:
       - name: Run the canonical PHP SDK checks
         run: |
           set -euo pipefail
-          cp Raims-PHP/AGENTS.md AGENTS.md
+          cp Developer-Toolkit/internal/public-repositories/workspace/AGENTS.md AGENTS.md
           command -v php
           actual_php_version="$(php -r 'echo PHP_VERSION;')"
           printf 'PHP runtime: %s; expected: %s\n' "$actual_php_version" '${{ matrix.php_version }}'
@@ -197,7 +197,7 @@ jobs:
       - name: Run the canonical security gate
         run: |
           set -euo pipefail
-          cp Raims-PHP/AGENTS.md AGENTS.md
+          cp Developer-Toolkit/internal/public-repositories/workspace/AGENTS.md AGENTS.md
           python Developer-Toolkit/scripts/release-preflight/sdk_security.py \
             --source "$GITHUB_WORKSPACE/Raims-PHP" \
             --workspace "$GITHUB_WORKSPACE" \

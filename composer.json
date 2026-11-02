@@ -31,6 +31,6 @@
         "allow-plugins": false
     },
     "archive": {
-        "exclude": ["/vendor", "/composer.lock", "/.tmp", "/.env", "/.env.*", "/*.log", "/contracts", "/scripts", "/security", "/AGENTS.md", "/TODO.md", "/.github", "/.gitignore", "/.gitattributes", "/.editorconfig"]
+        "exclude": ["/vendor", "/composer.lock", "/.tmp", "/.env", "/.env.*", "/*.log", "/contracts", "/scripts", "/security", "/AGENTS.md", "/TODO.md", "/docs/maintenance.md", "/.github", "/.gitignore", "/.gitattributes", "/.editorconfig"]
     }
 }

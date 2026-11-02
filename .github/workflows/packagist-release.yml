@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: c2385a4db9f85f49844bdaa3e0c83195cbd1b683
+  RAIMS_PHP_TOOLKIT_REF: c0a50d830dc92f9a869e861a235829299e81245b
 
 jobs:
   validateRelease:
@@ -88,7 +88,7 @@ jobs:
       - name: Run canonical PHP and public archive checks
         run: |
           set -euo pipefail
-          cp Raims-PHP/AGENTS.md AGENTS.md
+          cp Developer-Toolkit/internal/public-repositories/workspace/AGENTS.md AGENTS.md
           python Developer-Toolkit/scripts/release-preflight/php_sdk.py --source "$GITHUB_WORKSPACE/Raims-PHP" --workspace "$GITHUB_WORKSPACE" --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --expected-php-version '8.2.35' --prepare-tools
 
       - name: Bind public source files to the approved release

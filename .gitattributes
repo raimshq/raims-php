@@ -19,6 +19,7 @@
 /*.log export-ignore
 /AGENTS.md export-ignore
 /TODO.md export-ignore
+/docs/maintenance.md export-ignore
 /composer.lock export-ignore
 /contracts export-ignore
 /scripts export-ignore

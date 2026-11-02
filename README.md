@@ -118,7 +118,6 @@ responses.
 - [Errors, idempotency, and retries](docs/errors-and-retries.md)
 - [Receiving and verifying webhooks](docs/webhooks.md)
 - [SDK reference](docs/reference.md)
-- [Maintenance](docs/maintenance.md)
 - [Contributing](CONTRIBUTING.md) and [security](SECURITY.md)
 - [API documentation](https://docs.raims.com/br/api)
 

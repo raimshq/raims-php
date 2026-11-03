@@ -246,7 +246,7 @@ def git_archive_files(source, revision):
 
 def bundle(source, report_path, destination, run_id, attempt):
     expected = identity(source, run_id, attempt)
-    toolkit = source.parent / "Developer-Toolkit"
+    toolkit = next((candidate / "Developer-Toolkit" for candidate in (source.parent, source.parent.parent) if (candidate / "Developer-Toolkit/scripts/release-preflight/php_sdk.py").is_file()), source.parent / "Developer-Toolkit")
     require(git(toolkit, "rev-parse", "HEAD") == expected["toolkitRevision"] and git(toolkit, "status", "--porcelain") == "",
             "The validation Toolkit differs from its reviewed immutable revision.")
     report = json.loads(report_path.read_text(encoding="utf-8"))

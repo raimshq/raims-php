@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 // Workspace entry point. The canonical engineering gate lives in the Toolkit.
 $root = dirname(__DIR__);
-$workspace = dirname($root);
+$workspace = is_file(dirname($root) . '/Developer-Toolkit/scripts/release-preflight/php_sdk.py') ? dirname($root) : dirname($root, 2);
 $adapter = $workspace . '/Developer-Toolkit/scripts/release-preflight/php_sdk.py';
 if (!is_file($adapter) || !is_file($workspace . '/AGENTS.md')) {
-    fwrite(STDERR, "composer check requires the Raims engineering workspace and its sibling Developer-Toolkit checkout. No checks were run.\n");
+    fwrite(STDERR, "composer check requires the Raims engineering workspace and its Developer-Toolkit checkout. No checks were run.\n");
     exit(1);
 }
 ini_set('log_errors', '0');

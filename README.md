@@ -5,7 +5,7 @@ Official PHP SDK for the Raims public API.
 Install the package with Composer:
 
 ```text
-composer require raims/raims-php:^0.1.0
+composer require raims/raims-php
 ```
 
 The package is available on

@@ -27,7 +27,7 @@ final class HttpResponse
 
     public function getRequestId(): ?string
     {
-        return $this->getHeader('Request-Id') ?? $this->getHeader('X-Request-Id');
+        return $this->getHeader('Request-Id');
     }
 
     public function __debugInfo(): array

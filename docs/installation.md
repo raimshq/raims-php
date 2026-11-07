@@ -9,13 +9,14 @@ The SDK requires 64-bit PHP 8.2 or later, Composer 2, and the `curl`, `json`, an
 In the directory of the application that will consume the SDK:
 
 ```text
-composer require raims/raims-php:^0.1.0
+composer require raims/raims-php
 ```
 
 The `raims/raims-php` package is distributed through
-[Packagist](https://packagist.org/packages/raims/raims-php). The `^0.1.0`
-constraint accepts updates in the `0.1` series. Keep the application's
-`composer.lock` to reproduce installation of the same version.
+[Packagist](https://packagist.org/packages/raims/raims-php). Composer selects
+the current stable version and records a compatible constraint in the
+application's `composer.json`. Keep `composer.lock` to reproduce the resolved
+version.
 
 Before updating, read the
 [releases](https://github.com/raimshq/raims-php/releases) and test your integration

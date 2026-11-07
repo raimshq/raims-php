@@ -57,7 +57,7 @@ accessors return `null` for missing data.
 `getHttpHeaders()` exposes received headers, including
 `Raims-Rate-Limited-Reason` when present. Prefer logging only the code, status,
 and `Request-Id`. Do not log the complete error, body, or arbitrary headers.
-`getRequestId()` prefers `Request-Id` and accepts `X-Request-Id` as an alias.
+`getRequestId()` returns the `Request-Id` response header.
 
 For `ApiConnectionException`, `getTransportErrorCode()` returns the cURL code
 when available, or `null` for a transport that does not provide this diagnostic.

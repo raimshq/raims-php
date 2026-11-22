@@ -30,13 +30,13 @@ jobs:
         php: ['8.2', '8.3', '8.4', '8.5']
         include:
           - php: '8.2'
-            php_version: '8.2.35'
+            php_version: '8.2.36'
           - php: '8.3'
-            php_version: '8.3.36'
+            php_version: '8.3.37'
           - php: '8.4'
-            php_version: '8.4.27'
+            php_version: '8.4.28'
           - php: '8.5'
-            php_version: '8.5.12'
+            php_version: '8.5.13'
     defaults:
       run:
         shell: bash

@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: ad7ef9f75e3b21104fd13fa5762501c851dcccd9
+  RAIMS_PHP_TOOLKIT_REF: 4dc550a0e55c52dd2c8c8f7662289890ae526a8d
 
 jobs:
   validateRelease:
@@ -61,7 +61,7 @@ jobs:
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
-          php-version: '8.2.35'
+          php-version: '8.2.36'
           extensions: curl, hash, json
           tools: composer:2.11.0
           coverage: none
@@ -89,7 +89,7 @@ jobs:
         run: |
           set -euo pipefail
           cp Developer-Toolkit/internal/public-repositories/workspace/AGENTS.md AGENTS.md
-          python Developer-Toolkit/scripts/release-preflight/php_sdk.py --source "$GITHUB_WORKSPACE/Raims-PHP" --workspace "$GITHUB_WORKSPACE" --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --expected-php-version '8.2.35' --prepare-tools
+          python Developer-Toolkit/scripts/release-preflight/php_sdk.py --source "$GITHUB_WORKSPACE/Raims-PHP" --workspace "$GITHUB_WORKSPACE" --output "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --expected-php-version '8.2.36' --prepare-tools
 
       - name: Bind public source files to the approved release
         env:

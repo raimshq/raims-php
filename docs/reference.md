@@ -5,6 +5,22 @@ See examples and usage conditions in the [HTTP reference](https://docs.raims.com
 
 ## `accounts`
 
+### `retrieveContext`
+
+Retrieve account context.
+
+```php
+$raims->accounts->retrieveContext($options);
+```
+
+`GET /v1/accounts/context` · `GetAccountContext`
+
+Retrieve the public identity, business name, registration status, and environment of the account identified by the key. Use the response timestamp and revision to recognize outdated information. This request does not identify the person who created the key or confirm that a financial operation can be executed.
+
+Returns: `200` `AccountContext`.
+
+Does not accept `idempotency_key`.
+
 ### `retrieveFees`
 
 Get account fees.
@@ -31,7 +47,7 @@ $raims->accounts->retrieveNumber($options);
 
 `GET /v1/accounts/account_number` · `GetAccountNumber`
 
-Retrieve your company's financial account branch and number at Raims. This request requires a Production key and an approved, enabled account.
+Get your company's financial account branch and account number in Raims. The request requires authorized access in Production and an approved, enabled account.
 
 Returns: `200` `AccountNumber`.
 
@@ -47,7 +63,7 @@ $raims->accounts->retrieveCheckoutSettings($options);
 
 `GET /v1/accounts/checkout_settings` · `GetCheckoutSettings`
 
-Retrieve the images, colors, support email, and default payment methods for the company's checkout in the key's environment.
+Check the company's checkout images, colors, support email and default payment methods in the authenticated environment.
 
 Returns: `200` `CheckoutSettings`.
 
@@ -153,7 +169,7 @@ $raims->balances->retrieve($options);
 
 `GET /v1/balances` · `GetBalance`
 
-Retrieve the total, blocked, and available amounts for the company and environment of the API key. Values are in Brazilian real cents. The available balance accounts for holds and does not confirm authorization for a withdrawal or refund.
+Retrieves the total, blocked and available amounts for the authenticated company and environment. Amounts are in Brazilian real cents. The available balance accounts for blocks and does not confirm authorization for a withdrawal or refund.
 
 Returns: `200` `Balance`.
 
@@ -169,7 +185,7 @@ $raims->balances->forecast($params, $options);
 
 `GET /v1/balances/forecast` · `GetBalanceForecast`
 
-Retrieve estimated pending receipts for the period and the projected total balance. These values are estimates and do not indicate funds available for withdrawal.
+Look up forecast receipts for the period and the projected total balance. These values update in the background. Check updated_at to see when the forecast was updated. To check the balance available for withdrawal, use GET /v1/balances.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -195,7 +211,7 @@ Create a charge for an existing customer. Supply the amount in cents. Without a 
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `customer_id` | `string` | Yes | ID of a customer in the company and environment of the API key. Copy the id returned when creating or retrieving the customer. Direct Pix requires a valid CPF/CNPJ. Direct boleto requires a name, valid email address, CPF/CNPJ, and address including CEP and street number; complete those fields on the customer record. |
+| `customer_id` | `string` | Yes | ID of a customer in the authenticated company and environment. Use the id from the customer creation response immediately, or look up the customer by ID. Direct Pix issuance requires a valid CPF/CNPJ. Direct boleto issuance requires a name, valid email, CPF/CNPJ, and address including postal code and street number. |
 | `amount_cents` | `int` | Yes | Charge amount in Brazilian real cents. For example, 10000 represents BRL 100.00. |
 | `payment_method` | `0\|1\|2` | No | Charge payment method. Omit it or send 0 to allow selection in checkout. Without payment_method_types, 1 requests Pix and 2 requests boleto at creation, subject to enabled methods. Boleto uses the customer's address and fills missing fields from the CEP when available. With a custom list, send 0 or omit this field; issuance occurs after the checkout selection. |
 | `due_date` | `int` | Yes | Due date in Unix seconds UTC, at least five minutes in the future. The latest date is today plus ten years, using the São Paulo calendar. |
@@ -223,7 +239,7 @@ $raims->charges->all($params, $options);
 
 `GET /v1/charges` · `ListCharges`
 
-List charges for the company and environment of your API key, with filters and cursor pagination. To move forward, use page.next_after as after while page.has_next is true, keeping the filters and sort order. Status changes may take a few seconds to appear in filters; wait before querying again.
+Lists charges in the authenticated company and environment with filters in the URL and cursor pagination. The status, email, external_reference, due_gte, due_lte, paid_gte, and paid_lte filters can omit recent writes. This also applies to customer_id with amount or date sorting or with a creation period, without identifier. To check a known charge, use GET /v1/charges/{id}.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -231,10 +247,10 @@ List charges for the company and environment of your API key, with filters and c
 | `after` | `string` | No | Copy page.next_after from the previous response to move forward. Keep the same filters and sort order; do not send before as well. Leave it empty to start the list. |
 | `before` | `string` | No | Copy page.previous_before from the previous response to move backward. Keep the same filters and sort order; do not send after as well. Leave it empty if you do not want to go backward. |
 | `identifier` | `string` | No | Filter by the complete charge ID. If there is no match, list is empty. |
-| `customer_id` | `string` | No | Filter by the customer's complete public ID returned when creating or retrieving the customer. The relationship remains unchanged if the name or email changes. It can be combined with other filters; keep the same customer_id when changing pages. A valid ID with no charges in the company and environment of the key returns an empty list. An empty or omitted value does not apply the filter. |
-| `external_reference` | `string` | No | Filter by the charge's current reference in your system, matching the complete value, including case and accents. An empty or omitted value does not apply the filter. It can be combined with other filters; preserve the value when navigating by cursor. After creating or editing a charge, it may take a few seconds for search to reflect the reference. |
+| `customer_id` | `string` | No | Filters by the customer's complete public ID, returned when creating or retrieving the customer. The association remains the same if the name or email changes. Can be combined with other filters; keep the same customer_id when changing pages. A valid ID with no charges in the authenticated company and environment returns an empty list. An empty or omitted value does not apply the filter. |
+| `external_reference` | `string` | No | Filters by the charge's current reference in your system. It matches the complete value, including letter case and accents. New or updated charges can be temporarily missing from the results. An empty or omitted value skips the filter. Keep the value when navigating by cursor. |
 | `email` | `string` | No | Filter by the complete email address recorded on the charge. Editing the customer record does not change that email address. |
-| `status` | `string` | No | Filter by one or more comma-separated codes, such as 0,1. 0 created, 1 awaiting payment, 2 authorized, 3 processing, 4 paid, 5 partially refunded, 6 refunded, 7 cancelled, 8 expired, 9 failed, 10 chargeback, 11 chargeback under review, 12 chargeback lost, and 13 chargeback won. Changes may take a few seconds to appear. |
+| `status` | `string` | No | Filters by one or more comma-separated codes, such as 0,1. 0 created, 1 awaiting payment, 2 authorized, 3 processing, 4 paid, 5 partially refunded, 6 refunded, 7 canceled, 8 expired, 9 failed, 10 chargeback, 11 chargeback under review, 12 chargeback lost, and 13 chargeback won. Search may take time to reflect the current status. |
 | `payment_method` | `string` | No | Filter by the charge's payment method: 1 for Pix and 2 for boleto. To combine them, send 1,2. A charge with an undefined method may switch to Pix or boleto when the Pix code or boleto is generated in checkout. Selecting a method on the page alone does not change the filter. |
 | `created_gte` | `int` | No | Filter charges created at or after this instant, inclusive, in Unix seconds UTC. If created_lte is supplied, this value must be less than or equal to it. |
 | `created_lte` | `int` | No | Filter charges created at or before this instant, inclusive, in Unix seconds UTC. |
@@ -259,7 +275,7 @@ $raims->charges->retrieve($id, $options);
 
 `GET /v1/charges/{id}` · `GetCharge`
 
-Retrieve the details, status, and available payment instructions of a charge in the company and environment of your API key.
+Retrieves a charge's details, status, and available payment instructions for the authenticated company and environment.
 
 `id`: Public charge identifier in Raims, returned when creating or listing charges.
 
@@ -277,7 +293,7 @@ $raims->charges->update($id, $params, $options);
 
 `PATCH /v1/charges/{id}` · `UpdateCharge`
 
-Update the title, description, external reference, and integration data of a charge in the company and environment of your API key. You may update metadata alone even after payment or refund. Changes to other fields remain subject to the charge's state; if any field cannot be changed, no change from the request is applied.
+Updates a charge's title, description, external reference, and integration data for the authenticated company and environment. You can update metadata alone even after payment or refund. Changes to other fields remain subject to the charge's state; if any field cannot be changed, none of the changes in the request are applied.
 
 `id`: Public charge identifier in Raims, returned when creating or listing charges.
 
@@ -302,7 +318,7 @@ $raims->charges->revoke($id, $options);
 
 `DELETE /v1/charges/{id}` · `RevokeCharge`
 
-Revoke an open charge in the company and environment of the API key, preserving its history. Cancellation is simulated in Sandbox. In Production, revocation may await confirmation.
+Revokes an open charge for the authenticated company and environment, preserving its history. In Sandbox, cancellation is simulated. In Production, revocation may await confirmation.
 
 `id`: Public charge identifier in Raims, returned when creating or listing charges.
 
@@ -320,7 +336,7 @@ $raims->charges->retrievePayment($id, $options);
 
 `GET /v1/charges/{id}/payment` · `GetChargePayment`
 
-Retrieve the amount, date, and method of a confirmed charge payment. For Pix receipts, end_to_end_id provides the banking identifier when available. The charge must be paid, partially refunded, or have a won dispute, with the payment date recorded. The request uses the company and environment of your API key.
+Get the amount, date and confirmed payment method for a charge. For Pix receipts, end_to_end_id provides the bank transaction ID when available. The charge must be paid, partially refunded or have a won dispute, with the payment date recorded. The request uses the authenticated company and environment.
 
 `id`: Public charge identifier, returned when creating or listing charges.
 
@@ -441,7 +457,7 @@ $raims->charges->statistics($params, $options);
 
 `GET /v1/charges/statistics` · `GetChargeStatistics`
 
-Retrieve charge counts, amounts, and payment rates to track receipts in your ERP or management system. The request uses the company and environment of your API key. Data may take a few seconds to reflect charge changes.
+Looks up charge counts, amounts and payment rates for the authenticated company and environment. Totals update in the background. To confirm a specific charge, use GET /v1/charges/{id}.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -463,7 +479,7 @@ $raims->customers->create($params, $options);
 
 `POST /v1/customers` · `CreateCustomer`
 
-Create a customer in the company and environment of your API key. If the CPF or CNPJ is already registered, update that customer and keep its identifier. When only the CEP is supplied as the address, street, neighborhood, city, and state may be filled automatically. Returns 201 on creation and 200 on update.
+Creates a customer in the authenticated company and environment. If the CPF or CNPJ is already registered, updates that customer and keeps its identifier. When only the postal code (CEP) is provided as the address, street, neighborhood, city, and state may be filled automatically. Returns 201 when creating and 200 when updating.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -496,7 +512,7 @@ $raims->customers->all($params, $options);
 
 `GET /v1/customers` · `ListCustomers`
 
-List customers in the company and environment of the key according to the supplied filters, with cursor pagination. Send parameters in the URL, without a request body.
+Lists customers in the authenticated company and environment, with filters in the URL and cursor pagination. The name and external_reference filters can omit recently created or updated customers. To check a known customer, use GET /v1/customers/{id}.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -504,10 +520,10 @@ List customers in the company and environment of the key according to the suppli
 | `after` | `string` | No | Copy page.next_after from the previous response to move forward. Use the cursor unchanged, keep the same filters, and do not send before as well. |
 | `before` | `string` | No | Copy page.previous_before from the previous response to go back one page. Keep the same filters and do not send after as well. |
 | `identifier` | `string` | No | Customer's public identifier, with the cus_ prefix. |
-| `name` | `string` | No | Search by customer name, with the newest records first. Leave it empty to ignore this filter. |
+| `name` | `string` | No | Searches by customer name, with the newest records first. New or updated customers can be temporarily missing from the results. After a name change, searching for the old name can still return the customer with the new name. Leave empty to ignore this filter. |
 | `email` | `string` | No | Filter by the customer's complete email address. |
 | `document` | `string` | No | Filter by the customer's complete CPF or CNPJ, with or without periods, slash, hyphen, and spaces. |
-| `external_reference` | `string` | No | Filter by the customer's current reference in your system, matching the complete value, including case and accents. It can be combined with other filters. After creating or editing the customer, search may take a few seconds to reflect the reference. Preserve the value when navigating by cursor. |
+| `external_reference` | `string` | No | Filters by the customer's current reference in your system. It matches the complete value, including letter case and accents. New or updated customers can be temporarily missing from the results. Keep the value when navigating by cursor. |
 
 Returns: `200` `CustomerListResponse`.
 
@@ -523,7 +539,7 @@ $raims->customers->retrieve($id, $options);
 
 `GET /v1/customers/{id}` · `GetCustomer`
 
-Retrieve customer registration details by public identifier in the company and environment of the API key. The request has no body.
+Retrieves a customer's registration details by public ID for the authenticated company and environment. The request has no body.
 
 `id`: Public customer identifier in Raims, returned when creating or listing customers.
 
@@ -575,7 +591,7 @@ $raims->customers->delete($id, $options);
 
 `DELETE /v1/customers/{id}` · `DeleteCustomer`
 
-Delete a customer by public identifier in the company and environment of the API key. Deletion is allowed only when no linked charges remain undeleted, including paid charges. It does not delete charges or refund amounts. Repeating the request for the same deleted record returns the same identifier with deleted: true. The request has no body.
+Deletes a customer by public ID for the authenticated company and environment. Deletion is allowed only when no linked charges remain undeleted, including paid charges. It does not delete charges or refund amounts. Repeating the request for the same customer after deletion returns the same ID with deleted: true. The request has no body.
 
 `id`: Public customer identifier in Raims, returned when creating or listing customers.
 
@@ -593,7 +609,7 @@ $raims->customers->deleteBatch($params, $options);
 
 `DELETE /v1/customers` · `DeleteCustomersBatch`
 
-Delete up to 100 customers in the company and environment of your key in one request. Check each identifier in removed, blocked, or invalid. Undeleted charges prevent customer deletion, including paid charges. Repeated identifiers are processed once; already deleted customers appear in removed. Deleting customers does not delete charges or refund amounts.
+Deletes up to 100 customers for the authenticated company and environment in one request. Check each identifier's result in removed, blocked, or invalid. Charges that have not been deleted prevent customer deletion, including paid charges. Repeated identifiers are processed once; customers already deleted appear in removed. Deleting customers does not delete charges or refund amounts.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -615,7 +631,7 @@ $raims->disputes->all($params, $options);
 
 `GET /v1/disputes` · `ListDisputes`
 
-Retrieve disputes in the company and environment of the key, with filters and cursor pagination.
+View disputes for the authenticated company and environment, with filters and cursor pagination.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -644,7 +660,7 @@ $raims->disputes->retrieve($id, $options);
 
 `GET /v1/disputes/{id}` · `GetDispute`
 
-Retrieve the stage, reasons, and available results of a dispute in the company and environment of the key.
+View the stage, reasons and available results of a dispute in the authenticated company and environment.
 
 `id`: Complete dispute identifier returned by the list, with the dp_ or med_ prefix.
 
@@ -687,7 +703,7 @@ $raims->paymentLinks->all($params, $options);
 
 `GET /v1/payment_links` · `ListPaymentLinks`
 
-List links in the company and environment of the key, in descending order of linked charges. Use charge_id to find a charge link and page.next_after to continue.
+Lists links in the authenticated company and environment, in descending order of their linked charges. Use charge_id to find a charge's link and page.next_after to continue.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -710,7 +726,7 @@ $raims->paymentLinks->retrieve($id, $options);
 
 `GET /v1/payment_links/{id}` · `GetPaymentLink`
 
-Retrieve the URL, configuration, and current availability of the link. is_active indicates whether the link is active; is_payable indicates whether checkout can receive payment now. The link must belong to the company and environment of the key. For amount, due date, customer, and financial status, use GET /v1/charges/{charge_id}.
+Looks up the URL, configuration and current availability of the link. is_active indicates whether the link is active; is_payable indicates whether checkout can accept payment at this time. The link must belong to the authenticated company and environment. For amount, due date, customer and financial status, use GET /v1/charges/{charge_id}.
 
 `id`: Public link identifier, returned when creating or listing links.
 
@@ -775,7 +791,7 @@ $raims->refunds->all($params, $options);
 
 `GET /v1/refunds` · `ListRefunds`
 
-List refund requests for charges in the company and environment of the key, newest first. Use pagination to reconcile refunds without querying each charge. This request does not initiate or repeat refunds.
+List refund requests for charges in the authenticated company and environment, from newest to oldest. Use pagination to reconcile refunds without querying each charge. The query does not initiate or repeat refunds.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -837,7 +853,7 @@ $raims->statements->all($params, $options);
 
 `GET /v1/statements` · `ListStatements`
 
-Retrieve statement entries for the company and environment of your API key. Filter by period, entry type, or reference and navigate the results with the returned cursors. Positive amounts represent inflows or releases; negative amounts represent outflows, fees, or holds. Financial confirmation may take a short time to appear in the statement.
+Lists statement entries for the authenticated company and environment. Filter by period, entry type, or reference and use the returned cursors to move through the results. Positive amounts represent credits or releases. Negative amounts represent debits, fees, or holds. An operation can be confirmed before its entry appears on the statement. Use the statement.created event to track when the entry is recorded.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -864,7 +880,7 @@ $raims->statements->retrieve($id, $options);
 
 `GET /v1/statements/{id}` · `GetStatement`
 
-Retrieve a statement entry by ID, with its amounts and available relationships, in the company and environment of the API key.
+View a statement entry by ID, with its amounts and available links, in the authenticated company and environment.
 
 `id`: Entry identifier returned when retrieving a statement.
 
@@ -902,13 +918,13 @@ $raims->webhooks->create($params, $options);
 
 `POST /v1/webhooks` · `CreateWebhook`
 
-Register the HTTPS address that will receive selected events for the company and environment of your API key. Store the id to manage the destination and the secret_key to validate signatures. Registration queries do not return the secret.
+Register the HTTPS address that will receive the selected events for the authenticated company and environment. Store the id to manage the destination and the secret_key to validate signatures. Queries of the webhook configuration do not return the secret.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
 | `name` | `string` | Yes | Name identifying the destination. |
 | `url` | `string` | Yes | HTTPS URL receiving events. Use the default port 443 and a public address outside Raims. |
-| `events` | `list<'charge.created'\|'charge.paid'\|'charge.canceled'\|'charge.failed'\|'refund.requested'\|'refund.completed'\|'refund.failed'>` | Yes | Event codes this destination should receive. Consult the available event catalog. |
+| `events` | `list<'charge.created'\|'charge.paid'\|'charge.canceled'\|'charge.failed'\|'refund.requested'\|'refund.completed'\|'refund.failed'\|'charge.updated'\|'charge.expired'\|'withdrawal.requested'\|'withdrawal.completed'\|'withdrawal.failed'\|'dispute.opened'\|'dispute.updated'\|'dispute.closed'\|'dispute.funds_debited'\|'balance.hold.created'\|'balance.hold.released'\|'statement.created'\|'ted.received'\|'pix_refund.received'\|'pix.available'\|'pix.issuance_failed'\|'boleto.available'\|'boleto.issuance_failed'\|'boleto.compensated'\|'payment_link.created'\|'payment_link.updated'\|'refund.accepted'\|'account.restored'\|'customer.created'\|'customer.updated'\|'customer.deleted'\|'withdrawal.accepted'\|'charge.fully_refunded'>` | Yes | Event codes this destination should receive. Consult the available event catalog. |
 | `is_active` | `bool` | No | Set whether the destination can receive events after registration. |
 
 Returns: `201` `WebhookCreated`.
@@ -925,7 +941,7 @@ $raims->webhooks->all($params, $options);
 
 `GET /v1/webhooks` · `ListWebhooks`
 
-Retrieve destinations registered in the company and environment of your API key, including disabled destinations. To move forward, copy page.next_after to after. The list does not return signing secrets.
+Query destinations registered in the authenticated company and environment, including disabled ones. To move forward, copy page.next_after to after. The list does not return signing secrets.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -1048,13 +1064,13 @@ $raims->webhooks->rotateSecret($webhookId, $params, $options);
 
 `POST /v1/webhooks/{webhook_id}/rotate_secret` · `RotateWebhookSecret`
 
-Replace the secret used to sign events, preserving the webhook identifier and configuration. Store the returned secret_key and update the receiver during the transition period. Repeating a rotation with a positive period while a transition is active returns the same secret and expiration. To revoke previous secrets, send grace_period_seconds equal to zero: a new signature is generated, including during an active transition. Requests that are already authorized or in progress may arrive with the previous signature.
+Replace the secret used to sign events, keeping the webhook identifier and configuration. Store the returned secret_key and update the receiver during the transition period. Repeating a rotation with a positive period while the transition is active returns the same secret and expiry time. To revoke previous secrets, send grace_period_seconds equal to zero: a new secret is generated, including during an active transition. Requests already authorized or in progress may arrive with the previous signature.
 
 `webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
-| `grace_period_seconds` | `int` | No | Period during which the previous secret can continue signing deliveries. Zero generates a new signature and ends the validity of previous secrets, including during an active transition. Requests already authorized or in progress may arrive with the previous signature. |
+| `grace_period_seconds` | `int` | No | Period during which the previous secret may continue signing deliveries. Zero generates a new secret and ends the validity of previous secrets, including during an active transition. Requests already authorized or in progress may arrive with the previous signature. |
 
 Returns: `200` `WebhookSecretRotation`.
 
@@ -1070,7 +1086,7 @@ $raims->webhooks->test($webhookId, $options);
 
 `POST /v1/webhooks/{webhook_id}/test` · `TestWebhook`
 
-Send webhook.test to check receipt and signature validation for an active webhook. The request has no body. The test makes one HTTP attempt within five minutes and does not change charges, balances, or the destination failure count. Acceptance of the request does not confirm delivery. Check receipt in the receiver logs.
+Request webhook.test to check receipt and signature verification for an active webhook. The request has no body. It schedules one background HTTPS attempt, which can expire without sending after five minutes. The test does not change charges, balances, or the destination's failure count. Check your receiver logs to verify delivery.
 
 `webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
@@ -1090,7 +1106,7 @@ $raims->withdrawalDestinations->all($params, $options);
 
 `GET /v1/withdrawal_destinations` · `ListWithdrawalDestinations`
 
-Retrieve verified Pix destinations owned by your company and identify the default before requesting a withdrawal. This request requires a Production key.
+Retrieve verified Pix destinations owned by the company and identify the default before requesting a withdrawal. The query requires authorized access in Production.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -1112,7 +1128,7 @@ $raims->withdrawalDestinations->retrieve($id, $options);
 
 `GET /v1/withdrawal_destinations/{id}` · `GetWithdrawalDestination`
 
-Retrieve a Pix destination owned by your company using the identifier returned in the list. The response shows the masked key and indicates whether it is the current default. Use a Production key.
+Retrieve a Pix destination owned by the company using the ID received in the listing. The response shows the masked key and indicates whether it is the current default. Use a Production API key.
 
 `id`: Destination identifier returned by the list. Use the complete ID with the wdst_ prefix; a wd_ withdrawal ID belongs to a different resource.
 
@@ -1132,11 +1148,12 @@ $raims->withdrawals->create($params, $options);
 
 `POST /v1/withdrawals` · `CreateWithdrawal`
 
-Request a Pix withdrawal to the company's own default key registered in the Dashboard. The requested amount includes the fee. Store the identifier and track the same withdrawal while its result is pending.
+Request a Pix withdrawal to the company's default key registered in the Dashboard. The requested amount includes the fee. To require the default destination you checked, provide expected_destination_id. Keep the identifier and track the same withdrawal while its result is pending.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
 | `amount_cents` | `int` | Yes | Total amount to withdraw, in Brazilian real cents, including the fee. Consult withdrawal conditions to check the balance, fee, and limits before requesting. |
+| `expected_destination_id` | `string\|null` | No | ID of the company's own destination that must remain selected as default. Copy the id returned by the destinations query. If the destination changes or becomes invalid, the withdrawal is rejected. Omitting this field or sending null uses the current default destination. |
 
 Returns: `200` `Withdrawal`, `202` `Withdrawal`.
 
@@ -1152,7 +1169,7 @@ $raims->withdrawals->all($params, $options);
 
 `GET /v1/withdrawals` · `ListWithdrawals`
 
-Retrieve your company withdrawal history. Use status and period filters to track transfers and check statement outflows. The request uses the environment of your API key.
+Retrieve your company's withdrawal history. Use status and period filters to track transfers and check outgoing statement entries. The query uses the authenticated environment.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -1212,7 +1229,7 @@ $raims->withdrawals->retrieveSummary($options);
 
 `GET /v1/withdrawals/summary` · `GetWithdrawalSummary`
 
-Retrieve the count and total amount of company withdrawals that are pending or processing. This request requires a Production API key and does not change request progress.
+Retrieve the count and total amount of the company's pending or processing withdrawals. The query requires authorized access in Production and does not change the progress of requests.
 
 Returns: `200` `WithdrawalSummary`.
 
@@ -1228,7 +1245,7 @@ $raims->withdrawals->retrieveAutomaticSettings($options);
 
 `GET /v1/withdrawals/automatic_settings` · `GetAutomaticWithdrawalSettings`
 
-Retrieve activation, minimum amount, daily time, and the next scheduled withdrawal attempt for the company. This request requires a Production API key.
+View whether company withdrawals are enabled, the minimum amount, daily time and next scheduled attempt. The query requires authorized access in Production.
 
 Returns: `200` `AutomaticWithdrawalSettings`.
 
@@ -1244,7 +1261,7 @@ $raims->withdrawals->updateAutomaticSettings($params, $options);
 
 `PATCH /v1/withdrawals/automatic_settings` · `UpdateAutomaticWithdrawalSettings`
 
-Enable, disable, or adjust the daily withdrawal attempt for the selected destination owned by your company. Use a Production API key. Omitted fields preserve their current values; saving does not request an immediate withdrawal.
+Enable, disable or adjust the daily withdrawal attempt for the selected company destination. Use a Production API key. Omitted fields preserve their current values; saving does not request an immediate withdrawal.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -1455,6 +1472,15 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 
 | Constant in `EnumValues` | Value | Public contract field |
 | --- | --- | --- |
+| `ACCOUNT_CONTEXT_AMOUNT_UNIT_CENTS` | `'cents'` | `AccountContext.amount_unit` |
+| `ACCOUNT_CONTEXT_BUSINESS_TIMEZONE_AMERICA_SAO_PAULO` | `'America/Sao_Paulo'` | `AccountContext.business_timezone` |
+| `ACCOUNT_CONTEXT_COMPANY_STATUS_ACTIVE` | `'active'` | `AccountContext.company_status` |
+| `ACCOUNT_CONTEXT_COMPANY_STATUS_LIMITED` | `'limited'` | `AccountContext.company_status` |
+| `ACCOUNT_CONTEXT_COMPANY_STATUS_PENDING` | `'pending'` | `AccountContext.company_status` |
+| `ACCOUNT_CONTEXT_CURRENCY_BRL` | `'BRL'` | `AccountContext.currency` |
+| `ACCOUNT_CONTEXT_DATA_ENVIRONMENT_PRODUCTION` | `'production'` | `AccountContext.data_environment` |
+| `ACCOUNT_CONTEXT_DATA_ENVIRONMENT_SANDBOX` | `'sandbox'` | `AccountContext.data_environment` |
+| `ACCOUNT_CONTEXT_TIMESTAMP_UNIT_UNIX_SECONDS` | `'unix_seconds'` | `AccountContext.timestamp_unit` |
 | `BALANCE_FORECAST_PERIOD_LAST_15_DAYS` | `'last_15_days'` | `BalanceForecast.period` |
 | `BALANCE_FORECAST_PERIOD_LAST_30_DAYS` | `'last_30_days'` | `BalanceForecast.period` |
 | `BALANCE_FORECAST_PERIOD_LAST_7_DAYS` | `'last_7_days'` | `BalanceForecast.period` |
@@ -1515,13 +1541,41 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `CREATE_CHECKOUT_LOGO_UPLOAD_REQUEST_CONTENT_TYPE_IMAGE_PNG` | `'image/png'` | `CreateCheckoutLogoUploadRequest.content_type` |
 | `CREATE_PAYMENT_LINK_REQUEST_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `CreatePaymentLinkRequest.payment_method_types` |
 | `CREATE_PAYMENT_LINK_REQUEST_PAYMENT_METHOD_TYPES_PIX` | `1` | `CreatePaymentLinkRequest.payment_method_types` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_ACCOUNT_RESTORED` | `'account.restored'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BALANCE_HOLD_CREATED` | `'balance.hold.created'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BALANCE_HOLD_RELEASED` | `'balance.hold.released'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_AVAILABLE` | `'boleto.available'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_COMPENSATED` | `'boleto.compensated'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_ISSUANCE_FAILED` | `'boleto.issuance_failed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_CANCELED` | `'charge.canceled'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_CREATED` | `'charge.created'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_EXPIRED` | `'charge.expired'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_FAILED` | `'charge.failed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_FULLY_REFUNDED` | `'charge.fully_refunded'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAID` | `'charge.paid'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_UPDATED` | `'charge.updated'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_CREATED` | `'customer.created'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_DELETED` | `'customer.deleted'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_UPDATED` | `'customer.updated'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_CLOSED` | `'dispute.closed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_FUNDS_DEBITED` | `'dispute.funds_debited'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_OPENED` | `'dispute.opened'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_UPDATED` | `'dispute.updated'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_PAYMENT_LINK_CREATED` | `'payment_link.created'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_PAYMENT_LINK_UPDATED` | `'payment_link.updated'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_PIX_AVAILABLE` | `'pix.available'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_PIX_ISSUANCE_FAILED` | `'pix.issuance_failed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_PIX_REFUND_RECEIVED` | `'pix_refund.received'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_ACCEPTED` | `'refund.accepted'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_COMPLETED` | `'refund.completed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_FAILED` | `'refund.failed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_REQUESTED` | `'refund.requested'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_STATEMENT_CREATED` | `'statement.created'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_TED_RECEIVED` | `'ted.received'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_ACCEPTED` | `'withdrawal.accepted'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_COMPLETED` | `'withdrawal.completed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_FAILED` | `'withdrawal.failed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_REQUESTED` | `'withdrawal.requested'` | `CreateWebhookRequest.events` |
 | `CUSTOMER_CREATED_TAX_ID_TYPE_CNPJ` | `'cnpj'` | `CustomerCreated.tax_id_type` |
 | `CUSTOMER_CREATED_TAX_ID_TYPE_CPF` | `'cpf'` | `CustomerCreated.tax_id_type` |
 | `CUSTOMER_LIST_ITEM_TAX_ID_TYPE_CNPJ` | `'cnpj'` | `CustomerListItem.tax_id_type` |
@@ -1625,13 +1679,41 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `WEBHOOK_CREATED_DISABLED_REASON_MANUAL` | `'manual'` | `WebhookCreated.disabled_reason` |
 | `WEBHOOK_DISABLED_REASON_CONTINUOUS_FAILURE` | `'continuous_failure'` | `Webhook.disabled_reason` |
 | `WEBHOOK_DISABLED_REASON_MANUAL` | `'manual'` | `Webhook.disabled_reason` |
+| `WEBHOOK_EVENT_TYPE_CODE_ACCOUNT_RESTORED` | `'account.restored'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BALANCE_HOLD_CREATED` | `'balance.hold.created'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BALANCE_HOLD_RELEASED` | `'balance.hold.released'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_AVAILABLE` | `'boleto.available'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_COMPENSATED` | `'boleto.compensated'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_ISSUANCE_FAILED` | `'boleto.issuance_failed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_CANCELED` | `'charge.canceled'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_CREATED` | `'charge.created'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CHARGE_EXPIRED` | `'charge.expired'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_FAILED` | `'charge.failed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CHARGE_FULLY_REFUNDED` | `'charge.fully_refunded'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAID` | `'charge.paid'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CHARGE_UPDATED` | `'charge.updated'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_CREATED` | `'customer.created'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_DELETED` | `'customer.deleted'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_UPDATED` | `'customer.updated'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_DISPUTE_CLOSED` | `'dispute.closed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_DISPUTE_FUNDS_DEBITED` | `'dispute.funds_debited'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_DISPUTE_OPENED` | `'dispute.opened'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_DISPUTE_UPDATED` | `'dispute.updated'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_PAYMENT_LINK_CREATED` | `'payment_link.created'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_PAYMENT_LINK_UPDATED` | `'payment_link.updated'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_PIX_AVAILABLE` | `'pix.available'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_PIX_ISSUANCE_FAILED` | `'pix.issuance_failed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_PIX_REFUND_RECEIVED` | `'pix_refund.received'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_REFUND_ACCEPTED` | `'refund.accepted'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_COMPLETED` | `'refund.completed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_FAILED` | `'refund.failed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_REQUESTED` | `'refund.requested'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_STATEMENT_CREATED` | `'statement.created'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_TED_RECEIVED` | `'ted.received'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_ACCEPTED` | `'withdrawal.accepted'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_COMPLETED` | `'withdrawal.completed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_FAILED` | `'withdrawal.failed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_REQUESTED` | `'withdrawal.requested'` | `WebhookEventType.code` |
 | `WEBHOOK_HEALTH_STATUS_DISABLED` | `'disabled'` | `WebhookHealth.status` |
 | `WEBHOOK_HEALTH_STATUS_FAILING` | `'failing'` | `WebhookHealth.status` |
 | `WEBHOOK_HEALTH_STATUS_HEALTHY` | `'healthy'` | `WebhookHealth.status` |

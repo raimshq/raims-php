@@ -40,7 +40,7 @@ function referenceText(string $source): string
 // Each published operation has exactly one idiomatic PHP entry point.
 $services = [
     'Accounts' => [
-        'retrieveFees' => 'GetAccountFees', 'retrieveNumber' => 'GetAccountNumber',
+        'retrieveContext' => 'GetAccountContext', 'retrieveFees' => 'GetAccountFees', 'retrieveNumber' => 'GetAccountNumber',
         'retrieveCheckoutSettings' => 'GetCheckoutSettings', 'updateCheckoutSettings' => 'UpdateCheckoutSettings',
         'createCheckoutLogoUpload' => 'CreateCheckoutLogoUpload', 'createCheckoutFaviconUpload' => 'CreateCheckoutFaviconUpload',
         'deleteCheckoutAssetUpload' => 'DeleteCheckoutAssetUpload',
@@ -281,7 +281,14 @@ foreach ($spec['paths'] as $path => $item) {
         if (($op['x-raims-availability'] ?? 'production') !== 'production') {
             throw new RuntimeException('Only published endpoints may enter this SDK.');
         }
-        $parameters = array_map('resolve', array_merge($item['parameters'] ?? [], $op['parameters'] ?? []));
+        if (!in_array(['BearerAuth' => []], $op['security'] ?? $spec['security'] ?? [], true)) {
+            throw new RuntimeException('An operation does not support standalone API key authentication: ' . $id);
+        }
+        $parameters = array_filter(
+            array_map('resolve', array_merge($item['parameters'] ?? [], $op['parameters'] ?? [])),
+            static fn ($p) => $p['in'] !== 'header' || strcasecmp($p['name'], 'X-Raims-Environment') !== 0
+                || ($p['x-raims-security-schemes'] ?? null) !== ['ApplicationOAuth']
+        );
         $responses = [];
         foreach ($op['responses'] as $status => $response) {
             if (!str_starts_with((string) $status, '2')) {

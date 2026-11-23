@@ -13,7 +13,7 @@ final class WithdrawalsService extends AbstractService
     /**
      * Solicitar saque
      *
-     * @param array{amount_cents: int} $params
+     * @param array{amount_cents: int, expected_destination_id?: string|null} $params
      * @param array{api_key?: string, idempotency_key?: string, timeout?: float, max_network_retries?: int}|RequestOptions $options
      * @throws \Raims\Exception\ApiErrorException
      * @throws \Raims\Exception\ApiConnectionException

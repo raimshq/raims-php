@@ -648,6 +648,78 @@
             "methods": [],
             "properties": [],
             "constants": {
+                "ACCOUNT_CONTEXT_AMOUNT_UNIT_CENTS": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "cents"
+                    }
+                },
+                "ACCOUNT_CONTEXT_BUSINESS_TIMEZONE_AMERICA_SAO_PAULO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "America/Sao_Paulo"
+                    }
+                },
+                "ACCOUNT_CONTEXT_COMPANY_STATUS_ACTIVE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "active"
+                    }
+                },
+                "ACCOUNT_CONTEXT_COMPANY_STATUS_LIMITED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "limited"
+                    }
+                },
+                "ACCOUNT_CONTEXT_COMPANY_STATUS_PENDING": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pending"
+                    }
+                },
+                "ACCOUNT_CONTEXT_CURRENCY_BRL": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "BRL"
+                    }
+                },
+                "ACCOUNT_CONTEXT_DATA_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "ACCOUNT_CONTEXT_DATA_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "ACCOUNT_CONTEXT_TIMESTAMP_UNIT_UNIX_SECONDS": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "unix_seconds"
+                    }
+                },
                 "BALANCE_FORECAST_PERIOD_LAST_15_DAYS": {
                     "final": false,
                     "declared_type": null,
@@ -1128,6 +1200,54 @@
                         "value": 1
                     }
                 },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_ACCOUNT_RESTORED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "account.restored"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BALANCE_HOLD_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "balance.hold.created"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BALANCE_HOLD_RELEASED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "balance.hold.released"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_AVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.available"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_COMPENSATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.compensated"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_ISSUANCE_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.issuance_failed"
+                    }
+                },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_CANCELED": {
                     "final": false,
                     "declared_type": null,
@@ -1144,6 +1264,14 @@
                         "value": "charge.created"
                     }
                 },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_EXPIRED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.expired"
+                    }
+                },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_FAILED": {
                     "final": false,
                     "declared_type": null,
@@ -1152,12 +1280,132 @@
                         "value": "charge.failed"
                     }
                 },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_FULLY_REFUNDED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.fully_refunded"
+                    }
+                },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAID": {
                     "final": false,
                     "declared_type": null,
                     "value": {
                         "type": "string",
                         "value": "charge.paid"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.updated"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "customer.created"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_DELETED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "customer.deleted"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "customer.updated"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_CLOSED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.closed"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_FUNDS_DEBITED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.funds_debited"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_OPENED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.opened"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.updated"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_PAYMENT_LINK_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "payment_link.created"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_PAYMENT_LINK_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "payment_link.updated"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_PIX_AVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix.available"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_PIX_ISSUANCE_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix.issuance_failed"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_PIX_REFUND_RECEIVED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix_refund.received"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_ACCEPTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "refund.accepted"
                     }
                 },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_COMPLETED": {
@@ -1182,6 +1430,54 @@
                     "value": {
                         "type": "string",
                         "value": "refund.requested"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_STATEMENT_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "statement.created"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_TED_RECEIVED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "ted.received"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_ACCEPTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.accepted"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_COMPLETED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.completed"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.failed"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_REQUESTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.requested"
                     }
                 },
                 "CUSTOMER_CREATED_TAX_ID_TYPE_CNPJ": {
@@ -2008,6 +2304,54 @@
                         "value": "manual"
                     }
                 },
+                "WEBHOOK_EVENT_TYPE_CODE_ACCOUNT_RESTORED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "account.restored"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_BALANCE_HOLD_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "balance.hold.created"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_BALANCE_HOLD_RELEASED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "balance.hold.released"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_AVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.available"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_COMPENSATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.compensated"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_ISSUANCE_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.issuance_failed"
+                    }
+                },
                 "WEBHOOK_EVENT_TYPE_CODE_CHARGE_CANCELED": {
                     "final": false,
                     "declared_type": null,
@@ -2024,6 +2368,14 @@
                         "value": "charge.created"
                     }
                 },
+                "WEBHOOK_EVENT_TYPE_CODE_CHARGE_EXPIRED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.expired"
+                    }
+                },
                 "WEBHOOK_EVENT_TYPE_CODE_CHARGE_FAILED": {
                     "final": false,
                     "declared_type": null,
@@ -2032,12 +2384,132 @@
                         "value": "charge.failed"
                     }
                 },
+                "WEBHOOK_EVENT_TYPE_CODE_CHARGE_FULLY_REFUNDED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.fully_refunded"
+                    }
+                },
                 "WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAID": {
                     "final": false,
                     "declared_type": null,
                     "value": {
                         "type": "string",
                         "value": "charge.paid"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CHARGE_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.updated"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "customer.created"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_DELETED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "customer.deleted"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "customer.updated"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_DISPUTE_CLOSED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.closed"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_DISPUTE_FUNDS_DEBITED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.funds_debited"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_DISPUTE_OPENED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.opened"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_DISPUTE_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "dispute.updated"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_PAYMENT_LINK_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "payment_link.created"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_PAYMENT_LINK_UPDATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "payment_link.updated"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_PIX_AVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix.available"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_PIX_ISSUANCE_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix.issuance_failed"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_PIX_REFUND_RECEIVED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix_refund.received"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_REFUND_ACCEPTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "refund.accepted"
                     }
                 },
                 "WEBHOOK_EVENT_TYPE_CODE_REFUND_COMPLETED": {
@@ -2062,6 +2534,54 @@
                     "value": {
                         "type": "string",
                         "value": "refund.requested"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_STATEMENT_CREATED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "statement.created"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_TED_RECEIVED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "ted.received"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_ACCEPTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.accepted"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_COMPLETED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.completed"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.failed"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_REQUESTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.requested"
                     }
                 },
                 "WEBHOOK_HEALTH_STATUS_DISABLED": {
@@ -3908,6 +4428,103 @@
             "constants": [],
             "phpdoc": {
                 "properties": [],
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\AccountContext": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "access_revision": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "amount_unit": {
+                        "access": "-read",
+                        "type": "'cents'"
+                    },
+                    "business_timezone": {
+                        "access": "-read",
+                        "type": "'America/Sao_Paulo'"
+                    },
+                    "checked_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "company_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "company_name": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "company_status": {
+                        "access": "-read",
+                        "type": "'pending'|'active'|'limited'"
+                    },
+                    "currency": {
+                        "access": "-read",
+                        "type": "'BRL'"
+                    },
+                    "data_environment": {
+                        "access": "-read",
+                        "type": "'sandbox'|'production'"
+                    },
+                    "timestamp_unit": {
+                        "access": "-read",
+                        "type": "'unix_seconds'"
+                    }
+                },
                 "params": [],
                 "types": []
             }
@@ -8573,7 +9190,7 @@
                 "properties": {
                     "code": {
                         "access": "-read",
-                        "type": "'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'"
+                        "type": "'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'|'charge.updated'|'charge.expired'|'withdrawal.requested'|'withdrawal.completed'|'withdrawal.failed'|'dispute.opened'|'dispute.updated'|'dispute.closed'|'dispute.funds_debited'|'balance.hold.created'|'balance.hold.released'|'statement.created'|'ted.received'|'pix_refund.received'|'pix.available'|'pix.issuance_failed'|'boleto.available'|'boleto.issuance_failed'|'boleto.compensated'|'payment_link.created'|'payment_link.updated'|'refund.accepted'|'account.restored'|'customer.created'|'customer.updated'|'customer.deleted'|'withdrawal.accepted'|'charge.fully_refunded'"
                     }
                 },
                 "params": [],
@@ -10285,7 +10902,7 @@
                     "declared_type": null,
                     "value": {
                         "type": "string",
-                        "value": "0.1.0-dev"
+                        "value": "0.1.2"
                     }
                 }
             },
@@ -10929,6 +11546,33 @@
                     "final": false,
                     "by_reference": false,
                     "return_type": "Raims\\Model\\CheckoutSettings",
+                    "parameters": [
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
+                        },
+                        "types": []
+                    }
+                },
+                "retrieveContext": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\AccountContext",
                     "parameters": [
                         {
                             "name": "options",
@@ -13162,7 +13806,7 @@
                         "properties": [],
                         "params": {
                             "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
-                            "params": "array{name:string,url:string,events:list<'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'>,is_active?:bool}"
+                            "params": "array{name:string,url:string,events:list<'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'|'charge.updated'|'charge.expired'|'withdrawal.requested'|'withdrawal.completed'|'withdrawal.failed'|'dispute.opened'|'dispute.updated'|'dispute.closed'|'dispute.funds_debited'|'balance.hold.created'|'balance.hold.released'|'statement.created'|'ted.received'|'pix_refund.received'|'pix.available'|'pix.issuance_failed'|'boleto.available'|'boleto.issuance_failed'|'boleto.compensated'|'payment_link.created'|'payment_link.updated'|'refund.accepted'|'account.restored'|'customer.created'|'customer.updated'|'customer.deleted'|'withdrawal.accepted'|'charge.fully_refunded'>,is_active?:bool}"
                         },
                         "types": []
                     }
@@ -13661,7 +14305,7 @@
                         "properties": [],
                         "params": {
                             "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
-                            "params": "array{amount_cents:int}"
+                            "params": "array{amount_cents:int,expected_destination_id?:string|null}"
                         },
                         "types": []
                     }

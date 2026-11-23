@@ -9,7 +9,7 @@ namespace Raims\Model;
 /**
  * @extends \Raims\Collection<\Raims\Model\CustomerListItem>
  *
- * @property-read list<\Raims\Model\CustomerListItem> $list Clientes encontrados na empresa e no ambiente da chave.
+ * @property-read list<\Raims\Model\CustomerListItem> $list Clientes encontrados na empresa e no ambiente autenticado.
  * @property-read \Raims\Model\CustomerListPage $page Informações para continuar ou voltar na listagem.
  */
 final class CustomerListResponse extends \Raims\Collection

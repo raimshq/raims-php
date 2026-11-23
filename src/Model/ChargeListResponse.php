@@ -9,7 +9,7 @@ namespace Raims\Model;
 /**
  * @extends \Raims\Collection<\Raims\Model\ChargeListItem>
  *
- * @property-read list<\Raims\Model\ChargeListItem> $list Cobranças encontradas na empresa e no ambiente da chave.
+ * @property-read list<\Raims\Model\ChargeListItem> $list Cobranças encontradas na empresa e no ambiente autenticado.
  * @property-read \Raims\Model\ChargeListPage $page Informações para continuar ou voltar na listagem.
  */
 final class ChargeListResponse extends \Raims\Collection

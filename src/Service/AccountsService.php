@@ -11,6 +11,23 @@ use Raims\RequestOptions;
 final class AccountsService extends AbstractService
 {
     /**
+     * Consultar contexto da conta
+     *
+     * @param array{api_key?: string, idempotency_key?: string, timeout?: float, max_network_retries?: int}|RequestOptions $options
+     * @throws \Raims\Exception\ApiErrorException
+     * @throws \Raims\Exception\ApiConnectionException
+     */
+    public function retrieveContext(#[\SensitiveParameter] array|RequestOptions $options = []): \Raims\Model\AccountContext
+    {
+        $response = $this->requestor->request('GetAccountContext', [], [], $options);
+        if (!$response instanceof \Raims\Model\AccountContext) {
+            throw new \Raims\Exception\UnexpectedResponseException('The endpoint returned an unexpected resource type.', $response?->getLastResponse());
+        }
+
+        return $response;
+    }
+
+    /**
      * Consultar tarifas da conta
      *
      * @param array{api_key?: string, idempotency_key?: string, timeout?: float, max_network_retries?: int}|RequestOptions $options

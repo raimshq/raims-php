@@ -8,7 +8,7 @@ namespace Raims\Generated;
 
 final class Contract
 {
-    public const SHA256 = 'dc456099d6eb25808cd0cbf166ae7d4d8303578c83d1975ec524fe18e15f02af';
+    public const SHA256 = 'df7f6bd91a7a70ca20a5a6af84eee7f3a246250b14238e9c8349d6aa5aa670b9';
 
     public const OPERATIONS = [
         'CompensateSimulationBoleto' => [
@@ -205,6 +205,16 @@ final class Contract
             'idempotency' => true,
             'responses' => [
                 200 => 'Raims\\Model\\Refund',
+            ],
+        ],
+        'GetAccountContext' => [
+            'method' => 'GET',
+            'path' => '/v1/accounts/context',
+            'query' => [],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\AccountContext',
             ],
         ],
         'GetAccountFees' => [
@@ -777,6 +787,64 @@ final class Contract
     ];
 
     public const RESPONSE_SCHEMAS = [
+        'Raims\\Model\\AccountContext' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'company_id',
+                'company_name',
+                'company_status',
+                'data_environment',
+                'checked_at',
+                'access_revision',
+                'currency',
+                'amount_unit',
+                'timestamp_unit',
+                'business_timezone',
+            ],
+            'properties' => [
+                'company_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'company_name' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'company_status' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'data_environment' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'checked_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'access_revision' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'currency' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'amount_unit' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'timestamp_unit' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'business_timezone' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+            ],
+        ],
         'Raims\\Model\\AccountFee' => [
             'type' => 'object',
             'nullable' => false,

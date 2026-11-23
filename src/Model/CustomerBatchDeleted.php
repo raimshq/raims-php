@@ -9,7 +9,7 @@ namespace Raims\Model;
 /**
  * @property-read list<string> $removed IDs dos clientes removidos, incluindo os que já haviam sido removidos.
  * @property-read list<string> $blocked IDs dos clientes com cobranças vinculadas ainda não removidas, inclusive pagas.
- * @property-read list<string|null> $invalid Valores inválidos, de clientes inexistentes ou de clientes que sua chave de API não pode acessar.
+ * @property-read list<string|null> $invalid Valores inválidos, de clientes inexistentes ou de clientes que sua autenticação não permite acessar.
  * @property-read list<\Raims\Model\FieldError> $errors Motivo de cada item não removido, com campo identifiers[índice], código e explicação em inglês. Um lote sem falhas retorna uma lista vazia.
  */
 final class CustomerBatchDeleted extends \Raims\ApiResource

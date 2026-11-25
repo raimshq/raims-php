@@ -12,7 +12,7 @@ namespace Raims\Model;
  * @property-read int $fee_below_threshold_cents Tarifa descontada do valor solicitado quando ele fica abaixo de fee_threshold_amount_cents, em centavos de real.
  * @property-read int $available_amount_cents Saldo disponível para retirada, em centavos de real. A solicitação também precisa respeitar os limites e a tarifa aplicáveis.
  * @property-read bool $destination_configured Indica se há destino Pix próprio cadastrado para o saque. No Sandbox, retorna false.
- * @property-read \Raims\Model\WithdrawalPeriodLimits|null $limits Limites Pix e consumo do período atual, ou null quando não houver limites disponíveis para consulta. No Sandbox, retorna null. Esse valor não significa que o saque esteja livre de limites.
+ * @property-read \Raims\Model\WithdrawalPeriodLimits|null $limits Limites Pix e consumo do período atual para o contexto do destino padrão, interno ou externo. Retorna null quando o contexto não puder ser identificado ou no Sandbox.
  */
 final class WithdrawalLimits extends \Raims\ApiResource
 {

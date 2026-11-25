@@ -16,6 +16,8 @@ use Raims\Service\RefundsService;
 use Raims\Service\SimulationsService;
 use Raims\Service\StatementsService;
 use Raims\Service\WebhookEventTypesService;
+use Raims\Service\WebhookEventsService;
+use Raims\Service\WebhookDeliveriesService;
 use Raims\Service\WebhooksService;
 use Raims\Service\WithdrawalDestinationsService;
 use Raims\Service\WithdrawalsService;
@@ -25,7 +27,7 @@ use Raims\Service\WithdrawalsService;
  */
 final class RaimsClient
 {
-    public const VERSION = '0.1.3';
+    public const VERSION = '1.0.0';
     public const API_BASE = 'https://api.raims.com';
 
     public readonly AccountsService $accounts;
@@ -38,6 +40,8 @@ final class RaimsClient
     public readonly SimulationsService $simulations;
     public readonly StatementsService $statements;
     public readonly WebhookEventTypesService $webhookEventTypes;
+    public readonly WebhookEventsService $webhookEvents;
+    public readonly WebhookDeliveriesService $webhookDeliveries;
     public readonly WebhooksService $webhooks;
     public readonly WithdrawalDestinationsService $withdrawalDestinations;
     public readonly WithdrawalsService $withdrawals;
@@ -69,6 +73,8 @@ final class RaimsClient
         $this->simulations = new SimulationsService($requestor);
         $this->statements = new StatementsService($requestor);
         $this->webhookEventTypes = new WebhookEventTypesService($requestor);
+        $this->webhookEvents = new WebhookEventsService($requestor);
+        $this->webhookDeliveries = new WebhookDeliveriesService($requestor);
         $this->webhooks = new WebhooksService($requestor);
         $this->withdrawalDestinations = new WithdrawalDestinationsService($requestor);
         $this->withdrawals = new WithdrawalsService($requestor);

@@ -8,9 +8,19 @@ namespace Raims\Generated;
 
 final class Contract
 {
-    public const SHA256 = 'df7f6bd91a7a70ca20a5a6af84eee7f3a246250b14238e9c8349d6aa5aa670b9';
+    public const SHA256 = '907609f20b18d9b08d6c748901fb6488b7a386417261e8fef5e99348834fb7f7';
 
     public const OPERATIONS = [
+        'AdvanceWebhookDelivery' => [
+            'method' => 'POST',
+            'path' => '/v1/webhook_deliveries/{delivery_id}/advance',
+            'query' => [],
+            'body' => false,
+            'idempotency' => true,
+            'responses' => [
+                202 => 'Raims\\Model\\WebhookAdvanceAccepted',
+            ],
+        ],
         'CompensateSimulationBoleto' => [
             'method' => 'POST',
             'path' => '/v1/simulations/charges/{id}/compensate_boleto',
@@ -185,6 +195,16 @@ final class Contract
             'idempotency' => true,
             'responses' => [
                 204 => NULL,
+            ],
+        ],
+        'DeliverWebhookEvent' => [
+            'method' => 'POST',
+            'path' => '/v1/webhook_events/{event_id}/deliveries',
+            'query' => [],
+            'body' => true,
+            'idempotency' => true,
+            'responses' => [
+                202 => 'Raims\\Model\\WebhookDeliveryResendAccepted',
             ],
         ],
         'FailSimulationPayment' => [
@@ -411,6 +431,36 @@ final class Contract
                 200 => 'Raims\\Model\\Webhook',
             ],
         ],
+        'GetWebhookDelivery' => [
+            'method' => 'GET',
+            'path' => '/v1/webhook_deliveries/{delivery_id}',
+            'query' => [],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\WebhookDelivery',
+            ],
+        ],
+        'GetWebhookDeliveryAttempt' => [
+            'method' => 'GET',
+            'path' => '/v1/webhook_deliveries/{delivery_id}/attempts/{attempt_id}',
+            'query' => [],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\WebhookAttemptDetail',
+            ],
+        ],
+        'GetWebhookEvent' => [
+            'method' => 'GET',
+            'path' => '/v1/webhook_events/{event_id}',
+            'query' => [],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\WebhookEventDetail',
+            ],
+        ],
         'GetWebhookHealth' => [
             'method' => 'GET',
             'path' => '/v1/webhooks/{webhook_id}/health',
@@ -606,6 +656,40 @@ final class Contract
                 200 => 'Raims\\Model\\StatementListResponse',
             ],
         ],
+        'ListWebhookDeliveries' => [
+            'method' => 'GET',
+            'path' => '/v1/webhook_deliveries',
+            'query' => [
+                'page_size',
+                'after',
+                'before',
+                'webhook_id',
+                'event_type',
+                'event_id',
+                'status',
+                'created_gte',
+                'created_lte',
+            ],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\WebhookDeliveryListResponse',
+            ],
+        ],
+        'ListWebhookDeliveryAttempts' => [
+            'method' => 'GET',
+            'path' => '/v1/webhook_deliveries/{delivery_id}/attempts',
+            'query' => [
+                'page_size',
+                'after',
+                'before',
+            ],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\WebhookAttemptListResponse',
+            ],
+        ],
         'ListWebhookEventTypes' => [
             'method' => 'GET',
             'path' => '/v1/webhook_event_types',
@@ -614,6 +698,24 @@ final class Contract
             'idempotency' => false,
             'responses' => [
                 200 => 'Raims\\Model\\WebhookEventTypeListResponse',
+            ],
+        ],
+        'ListWebhookEvents' => [
+            'method' => 'GET',
+            'path' => '/v1/webhook_events',
+            'query' => [
+                'page_size',
+                'after',
+                'before',
+                'event_type',
+                'resource_id',
+                'created_gte',
+                'created_lte',
+            ],
+            'body' => false,
+            'idempotency' => false,
+            'responses' => [
+                200 => 'Raims\\Model\\WebhookEventListResponse',
             ],
         ],
         'ListWebhooks' => [
@@ -660,6 +762,26 @@ final class Contract
             'idempotency' => false,
             'responses' => [
                 200 => 'Raims\\Model\\WithdrawalListResponse',
+            ],
+        ],
+        'ResendWebhookDeliveries' => [
+            'method' => 'POST',
+            'path' => '/v1/webhook_deliveries/resend',
+            'query' => [],
+            'body' => true,
+            'idempotency' => true,
+            'responses' => [
+                202 => 'Raims\\Model\\WebhookBulkResendAccepted',
+            ],
+        ],
+        'ResendWebhookDelivery' => [
+            'method' => 'POST',
+            'path' => '/v1/webhook_deliveries/{delivery_id}/resend',
+            'query' => [],
+            'body' => false,
+            'idempotency' => true,
+            'responses' => [
+                202 => 'Raims\\Model\\WebhookDeliveryResendAccepted',
             ],
         ],
         'ResolveSimulationScenario' => [
@@ -1095,6 +1217,10 @@ final class Contract
                     'required' => [],
                     'properties' => [],
                 ],
+                'boleto_settlement' => [
+                    'ref' => 'Raims\\Model\\ChargeBoletoSettlement',
+                    'nullable' => false,
+                ],
             ],
         ],
         'Raims\\Model\\ChargeBoletoCompensation' => [
@@ -1145,6 +1271,29 @@ final class Contract
                 'due_date' => [
                     'type' => 'integer',
                     'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\ChargeBoletoSettlement' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'observed_amount_cents',
+                'confirmed_total_cents',
+                'overpayment_cents',
+            ],
+            'properties' => [
+                'observed_amount_cents' => [
+                    'type' => 'integer',
+                    'nullable' => true,
+                ],
+                'confirmed_total_cents' => [
+                    'type' => 'integer',
+                    'nullable' => true,
+                ],
+                'overpayment_cents' => [
+                    'type' => 'integer',
+                    'nullable' => true,
                 ],
             ],
         ],
@@ -2973,6 +3122,232 @@ final class Contract
                 ],
             ],
         ],
+        'Raims\\Model\\WebhookAdvanceAccepted' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'delivery_id',
+            ],
+            'properties' => [
+                'delivery_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookAttempt' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'id',
+                'delivery_id',
+                'attempt_number',
+                'created_at',
+                'status_code',
+                'duration_ms',
+                'destination_ip',
+                'error_code',
+                'endpoint_url',
+                'request_available',
+                'response_body_available',
+                'response_body_truncated',
+            ],
+            'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'delivery_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'attempt_number' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'created_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'status_code' => [
+                    'type' => 'integer',
+                    'nullable' => true,
+                ],
+                'duration_ms' => [
+                    'type' => 'number',
+                    'nullable' => false,
+                ],
+                'destination_ip' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'error_code' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'endpoint_url' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'request_available' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+                'response_body_available' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+                'response_body_truncated' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookAttemptDetail' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'request_body',
+                'response_body',
+                'id',
+                'delivery_id',
+                'attempt_number',
+                'created_at',
+                'status_code',
+                'duration_ms',
+                'destination_ip',
+                'error_code',
+                'endpoint_url',
+                'request_available',
+                'response_body_available',
+                'response_body_truncated',
+            ],
+            'properties' => [
+                'request_body' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'response_body' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'delivery_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'attempt_number' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'created_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'status_code' => [
+                    'type' => 'integer',
+                    'nullable' => true,
+                ],
+                'duration_ms' => [
+                    'type' => 'number',
+                    'nullable' => false,
+                ],
+                'destination_ip' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'error_code' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'endpoint_url' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'request_available' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+                'response_body_available' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+                'response_body_truncated' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookAttemptListResponse' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'list',
+                'page',
+            ],
+            'properties' => [
+                'list' => [
+                    'type' => 'array',
+                    'nullable' => false,
+                    'items' => [
+                        'ref' => 'Raims\\Model\\WebhookAttempt',
+                        'nullable' => false,
+                    ],
+                ],
+                'page' => [
+                    'ref' => 'Raims\\Model\\WebhookDeliveryPage',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookBulkResendAccepted' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'results',
+            ],
+            'properties' => [
+                'results' => [
+                    'type' => 'array',
+                    'nullable' => false,
+                    'items' => [
+                        'ref' => 'Raims\\Model\\WebhookBulkResendItem',
+                        'nullable' => false,
+                    ],
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookBulkResendItem' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'source_delivery_id',
+                'delivery_id',
+                'event_id',
+                'error',
+            ],
+            'properties' => [
+                'source_delivery_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'delivery_id' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'event_id' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'error' => [
+                    'ref' => 'Raims\\Model\\Error',
+                    'nullable' => true,
+                ],
+            ],
+        ],
         'Raims\\Model\\WebhookCreated' => [
             'type' => 'object',
             'nullable' => false,
@@ -3047,6 +3422,230 @@ final class Contract
                 'paused_at' => [
                     'type' => 'integer',
                     'nullable' => true,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookDelivery' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'id',
+                'webhook_id',
+                'event_id',
+                'event_type',
+                'status',
+                'created_at',
+                'event_created_at',
+                'deadline_at',
+                'next_attempt_at',
+                'updated_at',
+            ],
+            'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'webhook_id' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'event_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'event_type' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'status' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'created_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'event_created_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'deadline_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'next_attempt_at' => [
+                    'type' => 'integer',
+                    'nullable' => true,
+                ],
+                'updated_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookDeliveryListResponse' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'list',
+                'page',
+            ],
+            'properties' => [
+                'list' => [
+                    'type' => 'array',
+                    'nullable' => false,
+                    'items' => [
+                        'ref' => 'Raims\\Model\\WebhookDelivery',
+                        'nullable' => false,
+                    ],
+                ],
+                'page' => [
+                    'ref' => 'Raims\\Model\\WebhookDeliveryPage',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookDeliveryPage' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'page_size',
+                'has_next',
+                'has_previous',
+                'next_after',
+                'previous_before',
+            ],
+            'properties' => [
+                'page_size' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'has_next' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+                'has_previous' => [
+                    'type' => 'boolean',
+                    'nullable' => false,
+                ],
+                'next_after' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+                'previous_before' => [
+                    'type' => 'string',
+                    'nullable' => true,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookDeliveryResendAccepted' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'delivery_id',
+                'event_id',
+            ],
+            'properties' => [
+                'delivery_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'event_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookEvent' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'id',
+                'event_type',
+                'created_at',
+                'resource_type',
+                'resource_id',
+            ],
+            'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'event_type' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'created_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'resource_type' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'resource_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookEventDetail' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'payload',
+                'id',
+                'event_type',
+                'created_at',
+                'resource_type',
+                'resource_id',
+            ],
+            'properties' => [
+                'payload' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'event_type' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'created_at' => [
+                    'type' => 'integer',
+                    'nullable' => false,
+                ],
+                'resource_type' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+                'resource_id' => [
+                    'type' => 'string',
+                    'nullable' => false,
+                ],
+            ],
+        ],
+        'Raims\\Model\\WebhookEventListResponse' => [
+            'type' => 'object',
+            'nullable' => false,
+            'required' => [
+                'list',
+                'page',
+            ],
+            'properties' => [
+                'list' => [
+                    'type' => 'array',
+                    'nullable' => false,
+                    'items' => [
+                        'ref' => 'Raims\\Model\\WebhookEvent',
+                        'nullable' => false,
+                    ],
+                ],
+                'page' => [
+                    'ref' => 'Raims\\Model\\WebhookDeliveryPage',
+                    'nullable' => false,
                 ],
             ],
         ],

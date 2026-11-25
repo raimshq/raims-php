@@ -13,7 +13,7 @@ namespace Raims\Model;
  * @property-read \Raims\Model\Error|null $pix_error Motivo da pendência ou da falha de emissão do Pix, ou null. Guarde o ID da cobrança e use a consulta individual para acompanhar. Se a condição persistir, entre em contato com o suporte; não repita a criação para tentar emitir o Pix.
  * @property-read 'not_generated'|'available'|'pending'|'failed' $boleto_status Resultado da emissão do boleto: not_generated quando não há emissão disponível ou solicitada; available quando os dados estão disponíveis; pending enquanto não há resultado confirmado; failed quando não foi possível emitir.
  * @property-read \Raims\Model\Error|null $boleto_error Motivo da pendência ou da falha de emissão do boleto, ou null. Guarde o ID da cobrança e use a consulta individual para acompanhar. Se a condição persistir, entre em contato com o suporte; não repita a criação para tentar emitir o boleto.
- * @property-read 'awaiting_payment'|'compensated'|'settled'|null $boleto_payment_status Andamento do pagamento do boleto: awaiting_payment aguarda pagamento, compensated aguarda liquidação e settled confirma a liquidação. Null quando não há andamento disponível. A compensação ainda não representa crédito disponível.
+ * @property-read 'awaiting_payment'|'compensated'|'partially_settled'|'settled'|null $boleto_payment_status Andamento do pagamento do boleto: awaiting_payment aguarda pagamento, compensated aguarda liquidação e settled confirma a liquidação. Null quando não há andamento disponível. A compensação ainda não representa crédito disponível.
  */
 final class ChargePaymentInformation extends \Raims\ApiResource
 {

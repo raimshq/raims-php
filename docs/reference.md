@@ -900,11 +900,227 @@ $raims->webhookEventTypes->all($options);
 
 `GET /v1/webhook_event_types` · `ListWebhookEventTypes`
 
-Retrieve the codes that may be selected when creating or updating a webhook. The technical webhook.test event is requested through the test endpoint and is not part of the registration event list.
+List the event codes available in the authenticated environment for domains the credential can read. Use the test endpoint for `webhook.test`, which is excluded from subscription selections.
 
 Returns: `200` `WebhookEventTypeListResponse`.
 
 Does not accept `idempotency_key`.
+
+## `webhookEvents`
+
+### `all`
+
+List webhook events.
+
+```php
+$raims->webhookEvents->all($params, $options);
+```
+
+`GET /v1/webhook_events` · `ListWebhookEvents`
+
+List events for the authenticated company and environment in domains the credential can read. Each event appears once regardless of the number of destinations or attempts. Events stay in the history for 30 days from creation. Use filters and cursors to find an event.
+
+| Field in `$params` | Type | Required | Description |
+| --- | --- | --- | --- |
+| `page_size` | `int` | No | Number of events per page. The response indicates whether another page exists and supplies the cursor for it. |
+| `after` | `string` | No | Use the cursor from `page.next_after` to move forward. Keep the filters used for the first page. |
+| `before` | `string` | No | Use the cursor from `page.previous_before` to move backward. Keep the filters used for the first page. |
+| `event_type` | `string` | No | Filter by event name, such as `charge.paid`. |
+| `resource_id` | `string` | No | Filter by the public ID in the event payload's `data.id` field. |
+| `created_gte` | `int` | No | Filter events created at or after this time, in UTC Unix seconds. |
+| `created_lte` | `int` | No | Filter events created at or before this time, in UTC Unix seconds. If you supply `created_gte`, this value must be at least as large. |
+
+Returns: `200` `WebhookEventListResponse`.
+
+Does not accept `idempotency_key`.
+
+### `retrieve`
+
+Retrieve a webhook event.
+
+```php
+$raims->webhookEvents->retrieve($eventId, $options);
+```
+
+`GET /v1/webhook_events/{event_id}` · `GetWebhookEvent`
+
+Retrieve the event by ID. The original payload sent to destinations is returned as JSON text. The event stays in the history for 30 days from its creation. Filter the delivery list by `event_id` to find related deliveries and resends.
+
+`event_id`: Event ID returned in event history or delivery details.
+
+Returns: `200` `WebhookEventDetail`.
+
+Does not accept `idempotency_key`.
+
+### `deliver`
+
+Send an event to a webhook.
+
+```php
+$raims->webhookEvents->deliver($eventId, $params, $options);
+```
+
+`POST /v1/webhook_events/{event_id}/deliveries` · `DeliverWebhookEvent`
+
+Request delivery of the original event to the specified webhook, even if that destination has never received it. Use a key for the same company and environment. The event must be at most 15 days old, have an available body, and be selected by an active webhook. Raims preserves the event body, ID, and creation time. It uses the destination's current URL and secrets without changing financial resources. If the webhook is paused, the delivery waits for it to resume within its own deadline. Acceptance does not confirm receipt or cancel other deliveries. For `webhook.test`, request a new test.
+
+`event_id`: ID of the original event to send to the selected webhook.
+
+| Field in `$params` | Type | Required | Description |
+| --- | --- | --- | --- |
+| `webhook_id` | `string` | Yes | ID of the active webhook subscribed to the event type. Use a webhook in the company and environment of the API key. |
+
+Returns: `202` `WebhookDeliveryResendAccepted`.
+
+Accepts `idempotency_key` in `$options`.
+
+## `webhookDeliveries`
+
+### `all`
+
+List webhook deliveries.
+
+```php
+$raims->webhookDeliveries->all($params, $options);
+```
+
+`GET /v1/webhook_deliveries` · `ListWebhookDeliveries`
+
+Track deliveries for the authenticated company and environment, including pending attempts. Filter by destination, event, status, or when the delivery was created. A page may be incomplete or empty even when more results are available. Use `page.next_after` when `page.has_next` is true or `page.previous_before` when `page.has_previous` is true. Keep the same filters as you paginate. Each delivery stays in the history for 30 days from its `created_at` timestamp.
+
+| Field in `$params` | Type | Required | Description |
+| --- | --- | --- | --- |
+| `page_size` | `int` | No | Records per page. The response reports the effective size in page.page_size. |
+| `after` | `string` | No | To move forward, copy page.next_after from the previous response. Use only after or before. |
+| `before` | `string` | No | To move backward, copy page.previous_before from the previous response. Use only after or before. |
+| `webhook_id` | `string` | No | Filter deliveries for a destination, including deleted destinations whose delivery history is still available. |
+| `event_type` | `string` | No | Filter by the code of the event received by the webhook. |
+| `event_id` | `string` | No | Filter deliveries by event ID. Includes both original deliveries and resends for that event. Keep the same value when using a cursor. |
+| `status` | `'pending'\|'processing'\|'delivered'\|'failed'\|'canceled'` | No | Filter by current delivery status. |
+| `created_gte` | `int` | No | Include deliveries created at or after this time, in UTC Unix seconds. This filter uses the delivery creation time. |
+| `created_lte` | `int` | No | Include deliveries created at or before this time, in UTC Unix seconds. This filter uses the delivery creation time. |
+
+Returns: `200` `WebhookDeliveryListResponse`.
+
+Does not accept `idempotency_key`.
+
+### `retrieve`
+
+Retrieve a delivery.
+
+```php
+$raims->webhookDeliveries->retrieve($deliveryId, $options);
+```
+
+`GET /v1/webhook_deliveries/{delivery_id}` · `GetWebhookDelivery`
+
+Check the delivery status, scheduled time for the next attempt, and delivery deadline, when available. A delivery can have multiple HTTP attempts. The `delivered` status means the receiver returned a 2xx response. Any later processing is separate. A delivery and its attempts stay in the history for 30 days from the delivery's `created_at` timestamp.
+
+`delivery_id`: Delivery ID returned by the list or send request.
+
+Returns: `200` `WebhookDelivery`.
+
+Does not accept `idempotency_key`.
+
+### `allAttempts`
+
+List attempts for a delivery.
+
+```php
+$raims->webhookDeliveries->allAttempts($deliveryId, $params, $options);
+```
+
+`GET /v1/webhook_deliveries/{delivery_id}/attempts` · `ListWebhookDeliveryAttempts`
+
+List the HTTP attempts for a delivery, including the response, duration, and whether the bodies are available. Waiting before the send begins can delay delivery without adding a new attempt. Retrieve the attempt by ID to read its available content. Attempts stay accessible while the delivery remains in the history, for 30 days from its creation.
+
+`delivery_id`: Delivery ID returned by the list or send request.
+
+| Field in `$params` | Type | Required | Description |
+| --- | --- | --- | --- |
+| `page_size` | `int` | No | Records per page. The response reports the effective size in page.page_size. |
+| `after` | `string` | No | To move forward, copy page.next_after from the previous response. Use only after or before. |
+| `before` | `string` | No | To move backward, copy page.previous_before from the previous response. Use only after or before. |
+
+Returns: `200` `WebhookAttemptListResponse`.
+
+Does not accept `idempotency_key`.
+
+### `retrieveAttempt`
+
+Retrieve an attempt.
+
+```php
+$raims->webhookDeliveries->retrieveAttempt($deliveryId, $attemptId, $options);
+```
+
+`GET /v1/webhook_deliveries/{delivery_id}/attempts/{attempt_id}` · `GetWebhookDeliveryAttempt`
+
+Read the result of an attempt, its duration, and its available content. Raims captures the receiver's response body only when diagnostics are enabled. `response_body_truncated` indicates that only part of the response body was captured.
+
+`delivery_id`: Delivery ID returned by the list or send request.
+
+`attempt_id`: Attempt ID returned by the delivery's list of attempts.
+
+Returns: `200` `WebhookAttemptDetail`.
+
+Does not accept `idempotency_key`.
+
+### `advance`
+
+Advance the next attempt.
+
+```php
+$raims->webhookDeliveries->advance($deliveryId, $options);
+```
+
+`POST /v1/webhook_deliveries/{delivery_id}/advance` · `AdvanceWebhookDelivery`
+
+Request the next attempt for a delivery that is waiting for a retry, keeping the same delivery ID. The webhook must be active and unpaused, and the delivery deadline must still be open. Send the request without a body. The response confirms acceptance. Check the delivery to follow its progress. If the delivery is already in progress or has finished when the request is processed, another attempt will not start. To repeat a test delivery, request a new test event.
+
+`delivery_id`: ID of the delivery waiting for another attempt.
+
+Returns: `202` `WebhookAdvanceAccepted`.
+
+Accepts `idempotency_key` in `$options`.
+
+### `resend`
+
+Resend an event.
+
+```php
+$raims->webhookDeliveries->resend($deliveryId, $options);
+```
+
+`POST /v1/webhook_deliveries/{delivery_id}/resend` · `ResendWebhookDelivery`
+
+Request another delivery of the original event to the same webhook. The event must be at most 15 days old, have an available body, and remain selected by an active destination. The response returns a new `delivery_id` and preserves the `event_id` and event bytes. Earlier delivery attempts remain scheduled and the original financial transaction is unaffected. For a test event, request a new test.
+
+`delivery_id`: Delivery ID returned by the list or send request.
+
+Returns: `202` `WebhookDeliveryResendAccepted`.
+
+Accepts `idempotency_key` in `$options`.
+
+### `resendMany`
+
+Resend multiple deliveries.
+
+```php
+$raims->webhookDeliveries->resendMany($params, $options);
+```
+
+`POST /v1/webhook_deliveries/resend` · `ResendWebhookDeliveries`
+
+Request resends for up to 500 deliveries in the authenticated company and environment. Each item is evaluated independently, with a new delivery or an error in `results`, in the order submitted. Deliveries of the same event to the same destination share a single resend in this request. The original event must be at most 15 days old, have available content, and remain selected by an active webhook. The resend preserves the original content and uses the destination's current URL and secret. Financial data and already scheduled attempts are unaffected.
+
+| Field in `$params` | Type | Required | Description |
+| --- | --- | --- | --- |
+| `delivery_ids` | `list<string>` | Yes | Delivery IDs from the history. Repeated IDs or deliveries of the same event to the same destination generate one resend. The result is repeated in the corresponding positions. |
+
+Returns: `202` `WebhookBulkResendAccepted`.
+
+Accepts `idempotency_key` in `$options`.
 
 ## `webhooks`
 
@@ -918,13 +1134,13 @@ $raims->webhooks->create($params, $options);
 
 `POST /v1/webhooks` · `CreateWebhook`
 
-Register the HTTPS address that will receive the selected events for the authenticated company and environment. Store the id to manage the destination and the secret_key to validate signatures. Queries of the webhook configuration do not return the secret.
+Register the HTTPS address that will receive the selected events for the authenticated company and environment. The credential needs read access to the domain of each selected event. Keep the `id` to manage the destination and the `secret_key` to verify signatures. Retrieving the webhook does not return the secret.
 
 | Field in `$params` | Type | Required | Description |
 | --- | --- | --- | --- |
 | `name` | `string` | Yes | Name identifying the destination. |
 | `url` | `string` | Yes | HTTPS URL receiving events. Use the default port 443 and a public address outside Raims. |
-| `events` | `list<'charge.created'\|'charge.paid'\|'charge.canceled'\|'charge.failed'\|'refund.requested'\|'refund.completed'\|'refund.failed'\|'charge.updated'\|'charge.expired'\|'withdrawal.requested'\|'withdrawal.completed'\|'withdrawal.failed'\|'dispute.opened'\|'dispute.updated'\|'dispute.closed'\|'dispute.funds_debited'\|'balance.hold.created'\|'balance.hold.released'\|'statement.created'\|'ted.received'\|'pix_refund.received'\|'pix.available'\|'pix.issuance_failed'\|'boleto.available'\|'boleto.issuance_failed'\|'boleto.compensated'\|'payment_link.created'\|'payment_link.updated'\|'refund.accepted'\|'account.restored'\|'customer.created'\|'customer.updated'\|'customer.deleted'\|'withdrawal.accepted'\|'charge.fully_refunded'>` | Yes | Event codes this destination should receive. Consult the available event catalog. |
+| `events` | `list<'charge.created'\|'charge.paid'\|'charge.canceled'\|'charge.failed'\|'refund.requested'\|'refund.completed'\|'refund.failed'\|'charge.updated'\|'charge.expired'\|'withdrawal.requested'\|'withdrawal.completed'\|'withdrawal.failed'\|'dispute.opened'\|'dispute.updated'\|'dispute.closed'\|'dispute.funds_debited'\|'balance.hold.created'\|'balance.hold.released'\|'statement.created'\|'ted.received'\|'pix_refund.received'\|'charge.payment_instructions_available'\|'charge.payment_instructions_failed'\|'boleto.compensated'\|'payment_link.created'\|'payment_link.updated'\|'refund.accepted'\|'account.restored'\|'customer.created'\|'customer.updated'\|'customer.deleted'\|'withdrawal.accepted'\|'charge.fully_refunded'\|'charge.partially_refunded'\|'withdrawal.destination_changed'\|'boleto.overpayment_received'\|'refund.reconciliation_required'\|'boleto.partial_settlement_detected'\|'withdrawal.automatic_settings_changed'>` | Yes | Event codes this destination should receive. Consult the available event catalog. |
 | `is_active` | `bool` | No | Set whether the destination can receive events after registration. |
 
 Returns: `201` `WebhookCreated`.
@@ -981,7 +1197,7 @@ $raims->webhooks->update($webhookId, $params, $options);
 
 `PATCH /v1/webhooks/{webhook_id}` · `UpdateWebhook`
 
-Change a webhook name, URL, event selection, or activation. Send only fields you want to change; omission preserves a field value. The supplied event selection replaces the previous selection. Fields do not accept null or empty values.
+Change the webhook name, URL, events, or activation status. Send only the fields you want to change. The event selection replaces the previous selection. The credential must have read access to the domain of each event you add. To change the URL or reactivate a destination, it needs that access for all events in the resulting selection. Fields cannot be null or empty.
 
 `webhook_id`: Webhook identifier, returned when registering or listing webhooks.
 
@@ -1481,16 +1697,97 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `ACCOUNT_CONTEXT_DATA_ENVIRONMENT_PRODUCTION` | `'production'` | `AccountContext.data_environment` |
 | `ACCOUNT_CONTEXT_DATA_ENVIRONMENT_SANDBOX` | `'sandbox'` | `AccountContext.data_environment` |
 | `ACCOUNT_CONTEXT_TIMESTAMP_UNIT_UNIX_SECONDS` | `'unix_seconds'` | `AccountContext.timestamp_unit` |
+| `ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `AccountRestoredWebhookEvent.data.payment_method` |
+| `ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `AccountRestoredWebhookEvent.data.payment_method` |
+| `ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `AccountRestoredWebhookEvent.data.payment_method` |
+| `ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `AccountRestoredWebhookEvent.data.payment_method` |
 | `BALANCE_FORECAST_PERIOD_LAST_15_DAYS` | `'last_15_days'` | `BalanceForecast.period` |
 | `BALANCE_FORECAST_PERIOD_LAST_30_DAYS` | `'last_30_days'` | `BalanceForecast.period` |
 | `BALANCE_FORECAST_PERIOD_LAST_7_DAYS` | `'last_7_days'` | `BalanceForecast.period` |
 | `BALANCE_FORECAST_PERIOD_TODAY` | `'today'` | `BalanceForecast.period` |
+| `BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BalanceHoldCreatedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BalanceHoldCreatedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BalanceHoldCreatedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BalanceHoldCreatedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BalanceHoldReleasedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BalanceHoldReleasedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BalanceHoldReleasedWebhookEvent.data.payment_method` |
+| `BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BalanceHoldReleasedWebhookEvent.data.payment_method` |
+| `BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BoletoAvailableWebhookEvent.data.payment_method` |
+| `BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BoletoAvailableWebhookEvent.data.payment_method` |
+| `BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BoletoAvailableWebhookEvent.data.payment_method` |
+| `BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BoletoAvailableWebhookEvent.data.payment_method` |
+| `BOLETO_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `BoletoAvailableWebhookEvent.environment` |
+| `BOLETO_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `BoletoAvailableWebhookEvent.environment` |
+| `BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BoletoCompensatedWebhookEvent.data.payment_method` |
+| `BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BoletoCompensatedWebhookEvent.data.payment_method` |
+| `BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BoletoCompensatedWebhookEvent.data.payment_method` |
+| `BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BoletoCompensatedWebhookEvent.data.payment_method` |
+| `BOLETO_COMPENSATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `BoletoCompensatedWebhookEvent.environment` |
+| `BOLETO_COMPENSATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `BoletoCompensatedWebhookEvent.environment` |
+| `BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BoletoIssuanceFailedWebhookEvent.data.payment_method` |
+| `BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BoletoIssuanceFailedWebhookEvent.data.payment_method` |
+| `BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BoletoIssuanceFailedWebhookEvent.data.payment_method` |
+| `BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BoletoIssuanceFailedWebhookEvent.data.payment_method` |
+| `BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `BoletoIssuanceFailedWebhookEvent.environment` |
+| `BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `BoletoIssuanceFailedWebhookEvent.environment` |
+| `BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BoletoOverpaymentReceivedWebhookEvent.data.payment_method` |
+| `BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BoletoOverpaymentReceivedWebhookEvent.data.payment_method` |
+| `BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BoletoOverpaymentReceivedWebhookEvent.data.payment_method` |
+| `BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BoletoOverpaymentReceivedWebhookEvent.data.payment_method` |
+| `BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `BoletoPartialSettlementDetectedWebhookEvent.data.payment_method` |
+| `BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `BoletoPartialSettlementDetectedWebhookEvent.data.payment_method` |
+| `BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `BoletoPartialSettlementDetectedWebhookEvent.data.payment_method` |
+| `BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `BoletoPartialSettlementDetectedWebhookEvent.data.payment_method` |
+| `CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargeCanceledWebhookEvent.data.payment_method` |
+| `CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargeCanceledWebhookEvent.data.payment_method` |
+| `CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargeCanceledWebhookEvent.data.payment_method` |
+| `CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargeCanceledWebhookEvent.data.payment_method` |
+| `CHARGE_CANCELED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargeCanceledWebhookEvent.environment` |
+| `CHARGE_CANCELED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargeCanceledWebhookEvent.environment` |
 | `CHARGE_CREATED_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `ChargeCreated.payment_method_types` |
 | `CHARGE_CREATED_PAYMENT_METHOD_TYPES_PIX` | `1` | `ChargeCreated.payment_method_types` |
+| `CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargeCreatedWebhookEvent.data.payment_method` |
+| `CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargeCreatedWebhookEvent.data.payment_method` |
+| `CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargeCreatedWebhookEvent.data.payment_method` |
+| `CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargeCreatedWebhookEvent.data.payment_method` |
+| `CHARGE_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargeCreatedWebhookEvent.environment` |
+| `CHARGE_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargeCreatedWebhookEvent.environment` |
+| `CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargeExpiredWebhookEvent.data.payment_method` |
+| `CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargeExpiredWebhookEvent.data.payment_method` |
+| `CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargeExpiredWebhookEvent.data.payment_method` |
+| `CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargeExpiredWebhookEvent.data.payment_method` |
+| `CHARGE_EXPIRED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargeExpiredWebhookEvent.environment` |
+| `CHARGE_EXPIRED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargeExpiredWebhookEvent.environment` |
+| `CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargeFailedWebhookEvent.data.payment_method` |
+| `CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargeFailedWebhookEvent.data.payment_method` |
+| `CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargeFailedWebhookEvent.data.payment_method` |
+| `CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargeFailedWebhookEvent.data.payment_method` |
+| `CHARGE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargeFailedWebhookEvent.environment` |
+| `CHARGE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargeFailedWebhookEvent.environment` |
+| `CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargeFullyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargeFullyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargeFullyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargeFullyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargeFullyRefundedWebhookEvent.environment` |
+| `CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargeFullyRefundedWebhookEvent.environment` |
 | `CHARGE_LIST_ITEM_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `ChargeListItem.payment_method_types` |
 | `CHARGE_LIST_ITEM_PAYMENT_METHOD_TYPES_PIX` | `1` | `ChargeListItem.payment_method_types` |
+| `CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargePaidWebhookEvent.data.payment_method` |
+| `CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargePaidWebhookEvent.data.payment_method` |
+| `CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargePaidWebhookEvent.data.payment_method` |
+| `CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargePaidWebhookEvent.data.payment_method` |
+| `CHARGE_PAID_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargePaidWebhookEvent.environment` |
+| `CHARGE_PAID_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargePaidWebhookEvent.environment` |
+| `CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargePartiallyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargePartiallyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargePartiallyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargePartiallyRefundedWebhookEvent.data.payment_method` |
+| `CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargePartiallyRefundedWebhookEvent.environment` |
+| `CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargePartiallyRefundedWebhookEvent.environment` |
 | `CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_AWAITING_PAYMENT` | `'awaiting_payment'` | `ChargePaymentInformation.boleto_payment_status` |
 | `CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_COMPENSATED` | `'compensated'` | `ChargePaymentInformation.boleto_payment_status` |
+| `CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_PARTIALLY_SETTLED` | `'partially_settled'` | `ChargePaymentInformation.boleto_payment_status` |
 | `CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_SETTLED` | `'settled'` | `ChargePaymentInformation.boleto_payment_status` |
 | `CHARGE_PAYMENT_INFORMATION_BOLETO_STATUS_AVAILABLE` | `'available'` | `ChargePaymentInformation.boleto_status` |
 | `CHARGE_PAYMENT_INFORMATION_BOLETO_STATUS_FAILED` | `'failed'` | `ChargePaymentInformation.boleto_status` |
@@ -1500,6 +1797,18 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `CHARGE_PAYMENT_INFORMATION_PIX_STATUS_FAILED` | `'failed'` | `ChargePaymentInformation.pix_status` |
 | `CHARGE_PAYMENT_INFORMATION_PIX_STATUS_NOT_GENERATED` | `'not_generated'` | `ChargePaymentInformation.pix_status` |
 | `CHARGE_PAYMENT_INFORMATION_PIX_STATUS_PENDING` | `'pending'` | `ChargePaymentInformation.pix_status` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargePaymentInstructionsAvailableWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargePaymentInstructionsAvailableWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargePaymentInstructionsAvailableWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargePaymentInstructionsAvailableWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargePaymentInstructionsAvailableWebhookEvent.environment` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargePaymentInstructionsAvailableWebhookEvent.environment` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargePaymentInstructionsFailedWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargePaymentInstructionsFailedWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargePaymentInstructionsFailedWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargePaymentInstructionsFailedWebhookEvent.data.payment_method` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargePaymentInstructionsFailedWebhookEvent.environment` |
+| `CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargePaymentInstructionsFailedWebhookEvent.environment` |
 | `CHARGE_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `Charge.payment_method_types` |
 | `CHARGE_PAYMENT_METHOD_TYPES_PIX` | `1` | `Charge.payment_method_types` |
 | `CHARGE_SCENARIO_ACTION_BOLETO_ISSUANCE` | `'boleto_issuance'` | `ChargeScenario.action` |
@@ -1521,6 +1830,12 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `CHARGE_STATISTICS_PERIOD_LAST_30_DAYS` | `'last_30_days'` | `ChargeStatistics.period` |
 | `CHARGE_STATISTICS_PERIOD_LAST_7_DAYS` | `'last_7_days'` | `ChargeStatistics.period` |
 | `CHARGE_STATISTICS_PERIOD_TODAY` | `'today'` | `ChargeStatistics.period` |
+| `CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `ChargeUpdatedWebhookEvent.data.payment_method` |
+| `CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `ChargeUpdatedWebhookEvent.data.payment_method` |
+| `CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `ChargeUpdatedWebhookEvent.data.payment_method` |
+| `CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `ChargeUpdatedWebhookEvent.data.payment_method` |
+| `CHARGE_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `ChargeUpdatedWebhookEvent.environment` |
+| `CHARGE_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `ChargeUpdatedWebhookEvent.environment` |
 | `CHECKOUT_ASSET_ERROR_CODE_CHECKOUT_ASSET_INVALID_IMAGE` | `'CHECKOUT_ASSET_INVALID_IMAGE'` | `CheckoutAsset.error_code` |
 | `CHECKOUT_ASSET_ERROR_CODE_CHECKOUT_ASSET_PROCESSING_FAILED` | `'CHECKOUT_ASSET_PROCESSING_FAILED'` | `CheckoutAsset.error_code` |
 | `CHECKOUT_ASSET_ERROR_CODE_CHECKOUT_ASSET_UPLOAD_NOT_FOUND` | `'CHECKOUT_ASSET_UPLOAD_NOT_FOUND'` | `CheckoutAsset.error_code` |
@@ -1544,15 +1859,18 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `CREATE_WEBHOOK_REQUEST_EVENTS_ACCOUNT_RESTORED` | `'account.restored'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_BALANCE_HOLD_CREATED` | `'balance.hold.created'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_BALANCE_HOLD_RELEASED` | `'balance.hold.released'` | `CreateWebhookRequest.events` |
-| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_AVAILABLE` | `'boleto.available'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_COMPENSATED` | `'boleto.compensated'` | `CreateWebhookRequest.events` |
-| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_ISSUANCE_FAILED` | `'boleto.issuance_failed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_OVERPAYMENT_RECEIVED` | `'boleto.overpayment_received'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_PARTIAL_SETTLEMENT_DETECTED` | `'boleto.partial_settlement_detected'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_CANCELED` | `'charge.canceled'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_CREATED` | `'charge.created'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_EXPIRED` | `'charge.expired'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_FAILED` | `'charge.failed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_FULLY_REFUNDED` | `'charge.fully_refunded'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAID` | `'charge.paid'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PARTIALLY_REFUNDED` | `'charge.partially_refunded'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE` | `'charge.payment_instructions_available'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAYMENT_INSTRUCTIONS_FAILED` | `'charge.payment_instructions_failed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_UPDATED` | `'charge.updated'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_CREATED` | `'customer.created'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_CUSTOMER_DELETED` | `'customer.deleted'` | `CreateWebhookRequest.events` |
@@ -1563,23 +1881,50 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `CREATE_WEBHOOK_REQUEST_EVENTS_DISPUTE_UPDATED` | `'dispute.updated'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_PAYMENT_LINK_CREATED` | `'payment_link.created'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_PAYMENT_LINK_UPDATED` | `'payment_link.updated'` | `CreateWebhookRequest.events` |
-| `CREATE_WEBHOOK_REQUEST_EVENTS_PIX_AVAILABLE` | `'pix.available'` | `CreateWebhookRequest.events` |
-| `CREATE_WEBHOOK_REQUEST_EVENTS_PIX_ISSUANCE_FAILED` | `'pix.issuance_failed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_PIX_REFUND_RECEIVED` | `'pix_refund.received'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_ACCEPTED` | `'refund.accepted'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_COMPLETED` | `'refund.completed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_FAILED` | `'refund.failed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_RECONCILIATION_REQUIRED` | `'refund.reconciliation_required'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_REQUESTED` | `'refund.requested'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_STATEMENT_CREATED` | `'statement.created'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_TED_RECEIVED` | `'ted.received'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_ACCEPTED` | `'withdrawal.accepted'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED` | `'withdrawal.automatic_settings_changed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_COMPLETED` | `'withdrawal.completed'` | `CreateWebhookRequest.events` |
+| `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_DESTINATION_CHANGED` | `'withdrawal.destination_changed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_FAILED` | `'withdrawal.failed'` | `CreateWebhookRequest.events` |
 | `CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_REQUESTED` | `'withdrawal.requested'` | `CreateWebhookRequest.events` |
 | `CUSTOMER_CREATED_TAX_ID_TYPE_CNPJ` | `'cnpj'` | `CustomerCreated.tax_id_type` |
 | `CUSTOMER_CREATED_TAX_ID_TYPE_CPF` | `'cpf'` | `CustomerCreated.tax_id_type` |
+| `CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `CustomerCreatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `CustomerCreatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `CustomerCreatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `CustomerCreatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `CustomerCreatedWebhookEvent.environment` |
+| `CUSTOMER_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `CustomerCreatedWebhookEvent.environment` |
+| `CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `CustomerDeletedWebhookEvent.data.payment_method` |
+| `CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `CustomerDeletedWebhookEvent.data.payment_method` |
+| `CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `CustomerDeletedWebhookEvent.data.payment_method` |
+| `CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `CustomerDeletedWebhookEvent.data.payment_method` |
+| `CUSTOMER_DELETED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `CustomerDeletedWebhookEvent.environment` |
+| `CUSTOMER_DELETED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `CustomerDeletedWebhookEvent.environment` |
 | `CUSTOMER_LIST_ITEM_TAX_ID_TYPE_CNPJ` | `'cnpj'` | `CustomerListItem.tax_id_type` |
 | `CUSTOMER_LIST_ITEM_TAX_ID_TYPE_CPF` | `'cpf'` | `CustomerListItem.tax_id_type` |
+| `CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `CustomerUpdatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `CustomerUpdatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `CustomerUpdatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `CustomerUpdatedWebhookEvent.data.payment_method` |
+| `CUSTOMER_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `CustomerUpdatedWebhookEvent.environment` |
+| `CUSTOMER_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `CustomerUpdatedWebhookEvent.environment` |
+| `DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `DisputeClosedWebhookEvent.data.payment_method` |
+| `DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `DisputeClosedWebhookEvent.data.payment_method` |
+| `DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `DisputeClosedWebhookEvent.data.payment_method` |
+| `DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `DisputeClosedWebhookEvent.data.payment_method` |
+| `DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `DisputeFundsDebitedWebhookEvent.data.payment_method` |
+| `DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `DisputeFundsDebitedWebhookEvent.data.payment_method` |
+| `DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `DisputeFundsDebitedWebhookEvent.data.payment_method` |
+| `DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `DisputeFundsDebitedWebhookEvent.data.payment_method` |
 | `DISPUTE_INFRACTION_RESULT_AGREED` | `'agreed'` | `Dispute.infraction_result` |
 | `DISPUTE_INFRACTION_RESULT_DISAGREED` | `'disagreed'` | `Dispute.infraction_result` |
 | `DISPUTE_KIND_CHARGEBACK` | `'chargeback'` | `Dispute.kind` |
@@ -1593,6 +1938,10 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `DISPUTE_LIST_ITEM_STAGE_OPEN` | `'open'` | `DisputeListItem.stage` |
 | `DISPUTE_LIST_ITEM_STAGE_REFUND_IN_ANALYSIS` | `'refund_in_analysis'` | `DisputeListItem.stage` |
 | `DISPUTE_LIST_ITEM_STAGE_REJECTED` | `'rejected'` | `DisputeListItem.stage` |
+| `DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `DisputeOpenedWebhookEvent.data.payment_method` |
+| `DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `DisputeOpenedWebhookEvent.data.payment_method` |
+| `DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `DisputeOpenedWebhookEvent.data.payment_method` |
+| `DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `DisputeOpenedWebhookEvent.data.payment_method` |
 | `DISPUTE_REFUND_RESULT_PARTIALLY_ACCEPTED` | `'partially_accepted'` | `Dispute.refund_result` |
 | `DISPUTE_REFUND_RESULT_REJECTED` | `'rejected'` | `Dispute.refund_result` |
 | `DISPUTE_REFUND_RESULT_TOTALLY_ACCEPTED` | `'totally_accepted'` | `Dispute.refund_result` |
@@ -1603,6 +1952,10 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `DISPUTE_STAGE_OPEN` | `'open'` | `Dispute.stage` |
 | `DISPUTE_STAGE_REFUND_IN_ANALYSIS` | `'refund_in_analysis'` | `Dispute.stage` |
 | `DISPUTE_STAGE_REJECTED` | `'rejected'` | `Dispute.stage` |
+| `DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `DisputeUpdatedWebhookEvent.data.payment_method` |
+| `DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `DisputeUpdatedWebhookEvent.data.payment_method` |
+| `DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `DisputeUpdatedWebhookEvent.data.payment_method` |
+| `DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `DisputeUpdatedWebhookEvent.data.payment_method` |
 | `GET_BALANCE_FORECAST_QUERY_PERIOD_LAST_15_DAYS` | `'last_15_days'` | `GetBalanceForecast.query.period` |
 | `GET_BALANCE_FORECAST_QUERY_PERIOD_LAST_30_DAYS` | `'last_30_days'` | `GetBalanceForecast.query.period` |
 | `GET_BALANCE_FORECAST_QUERY_PERIOD_LAST_7_DAYS` | `'last_7_days'` | `GetBalanceForecast.query.period` |
@@ -1621,8 +1974,19 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `LIST_DISPUTES_QUERY_SORT_ORDER_DESC` | `'desc'` | `ListDisputes.query.sort_order` |
 | `LIST_STATEMENTS_QUERY_SORT_ORDER_ASC` | `'asc'` | `ListStatements.query.sort_order` |
 | `LIST_STATEMENTS_QUERY_SORT_ORDER_DESC` | `'desc'` | `ListStatements.query.sort_order` |
+| `LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_CANCELED` | `'canceled'` | `ListWebhookDeliveries.query.status` |
+| `LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_DELIVERED` | `'delivered'` | `ListWebhookDeliveries.query.status` |
+| `LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_FAILED` | `'failed'` | `ListWebhookDeliveries.query.status` |
+| `LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_PENDING` | `'pending'` | `ListWebhookDeliveries.query.status` |
+| `LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_PROCESSING` | `'processing'` | `ListWebhookDeliveries.query.status` |
 | `LIST_WITHDRAWALS_QUERY_SORT_ORDER_ASC` | `'asc'` | `ListWithdrawals.query.sort_order` |
 | `LIST_WITHDRAWALS_QUERY_SORT_ORDER_DESC` | `'desc'` | `ListWithdrawals.query.sort_order` |
+| `PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `PaymentLinkCreatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `PaymentLinkCreatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `PaymentLinkCreatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `PaymentLinkCreatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `PaymentLinkCreatedWebhookEvent.environment` |
+| `PAYMENT_LINK_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `PaymentLinkCreatedWebhookEvent.environment` |
 | `PAYMENT_LINK_DETAILS_EFFECTIVE_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `PaymentLinkDetails.effective_payment_method_types` |
 | `PAYMENT_LINK_DETAILS_EFFECTIVE_PAYMENT_METHOD_TYPES_PIX` | `1` | `PaymentLinkDetails.effective_payment_method_types` |
 | `PAYMENT_LINK_DETAILS_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `PaymentLinkDetails.payment_method_types` |
@@ -1636,11 +2000,64 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `PAYMENT_LINK_UNAVAILABLE_REASON_CODE_PAYMENT_METHODS_UNAVAILABLE` | `'PAYMENT_METHODS_UNAVAILABLE'` | `PaymentLinkUnavailableReason.code` |
 | `PAYMENT_LINK_UNAVAILABLE_REASON_CODE_PIX_CANCELLATION_PENDING` | `'PIX_CANCELLATION_PENDING'` | `PaymentLinkUnavailableReason.code` |
 | `PAYMENT_LINK_UNAVAILABLE_REASON_CODE_PIX_CANCELLED` | `'PIX_CANCELLED'` | `PaymentLinkUnavailableReason.code` |
+| `PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `PaymentLinkUpdatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `PaymentLinkUpdatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `PaymentLinkUpdatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `PaymentLinkUpdatedWebhookEvent.data.payment_method` |
+| `PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `PaymentLinkUpdatedWebhookEvent.environment` |
+| `PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `PaymentLinkUpdatedWebhookEvent.environment` |
+| `PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `PixAvailableWebhookEvent.data.payment_method` |
+| `PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `PixAvailableWebhookEvent.data.payment_method` |
+| `PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `PixAvailableWebhookEvent.data.payment_method` |
+| `PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `PixAvailableWebhookEvent.data.payment_method` |
+| `PIX_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `PixAvailableWebhookEvent.environment` |
+| `PIX_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `PixAvailableWebhookEvent.environment` |
+| `PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `PixIssuanceFailedWebhookEvent.data.payment_method` |
+| `PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `PixIssuanceFailedWebhookEvent.data.payment_method` |
+| `PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `PixIssuanceFailedWebhookEvent.data.payment_method` |
+| `PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `PixIssuanceFailedWebhookEvent.data.payment_method` |
+| `PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `PixIssuanceFailedWebhookEvent.environment` |
+| `PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `PixIssuanceFailedWebhookEvent.environment` |
+| `PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `PixRefundReceivedWebhookEvent.data.payment_method` |
+| `PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `PixRefundReceivedWebhookEvent.data.payment_method` |
+| `PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `PixRefundReceivedWebhookEvent.data.payment_method` |
+| `PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `PixRefundReceivedWebhookEvent.data.payment_method` |
+| `REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `RefundAcceptedWebhookEvent.data.payment_method` |
+| `REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `RefundAcceptedWebhookEvent.data.payment_method` |
+| `REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `RefundAcceptedWebhookEvent.data.payment_method` |
+| `REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `RefundAcceptedWebhookEvent.data.payment_method` |
+| `REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `RefundCompletedWebhookEvent.data.payment_method` |
+| `REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `RefundCompletedWebhookEvent.data.payment_method` |
+| `REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `RefundCompletedWebhookEvent.data.payment_method` |
+| `REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `RefundCompletedWebhookEvent.data.payment_method` |
+| `REFUND_COMPLETED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `RefundCompletedWebhookEvent.environment` |
+| `REFUND_COMPLETED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `RefundCompletedWebhookEvent.environment` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_FAILURE_REASON_UNAVAILABLE` | `'REFUND_FAILURE_REASON_UNAVAILABLE'` | `RefundFailedWebhookEvent.data.failure_reason_code` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_NOT_SUBMITTED` | `'REFUND_NOT_SUBMITTED'` | `RefundFailedWebhookEvent.data.failure_reason_code` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_PROCESSING_FAILED` | `'REFUND_PROCESSING_FAILED'` | `RefundFailedWebhookEvent.data.failure_reason_code` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_PROCESSING_UNAVAILABLE` | `'REFUND_PROCESSING_UNAVAILABLE'` | `RefundFailedWebhookEvent.data.failure_reason_code` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_REJECTED` | `'REFUND_REJECTED'` | `RefundFailedWebhookEvent.data.failure_reason_code` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `RefundFailedWebhookEvent.data.payment_method` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `RefundFailedWebhookEvent.data.payment_method` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `RefundFailedWebhookEvent.data.payment_method` |
+| `REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `RefundFailedWebhookEvent.data.payment_method` |
+| `REFUND_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `RefundFailedWebhookEvent.environment` |
+| `REFUND_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `RefundFailedWebhookEvent.environment` |
 | `REFUND_FAILURE_REASON_CODE_REFUND_FAILURE_REASON_UNAVAILABLE` | `'REFUND_FAILURE_REASON_UNAVAILABLE'` | `RefundFailureReason.code` |
 | `REFUND_FAILURE_REASON_CODE_REFUND_NOT_SUBMITTED` | `'REFUND_NOT_SUBMITTED'` | `RefundFailureReason.code` |
 | `REFUND_FAILURE_REASON_CODE_REFUND_PROCESSING_FAILED` | `'REFUND_PROCESSING_FAILED'` | `RefundFailureReason.code` |
 | `REFUND_FAILURE_REASON_CODE_REFUND_PROCESSING_UNAVAILABLE` | `'REFUND_PROCESSING_UNAVAILABLE'` | `RefundFailureReason.code` |
 | `REFUND_FAILURE_REASON_CODE_REFUND_REJECTED` | `'REFUND_REJECTED'` | `RefundFailureReason.code` |
+| `REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `RefundReconciliationRequiredWebhookEvent.data.payment_method` |
+| `REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `RefundReconciliationRequiredWebhookEvent.data.payment_method` |
+| `REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `RefundReconciliationRequiredWebhookEvent.data.payment_method` |
+| `REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `RefundReconciliationRequiredWebhookEvent.data.payment_method` |
+| `REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `RefundRequestedWebhookEvent.data.payment_method` |
+| `REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `RefundRequestedWebhookEvent.data.payment_method` |
+| `REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `RefundRequestedWebhookEvent.data.payment_method` |
+| `REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `RefundRequestedWebhookEvent.data.payment_method` |
+| `REFUND_REQUESTED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `RefundRequestedWebhookEvent.environment` |
+| `REFUND_REQUESTED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `RefundRequestedWebhookEvent.environment` |
 | `REFUND_STATUS_ACCEPTED` | `'accepted'` | `Refund.status` |
 | `REFUND_STATUS_COMPLETED` | `'completed'` | `Refund.status` |
 | `REFUND_STATUS_FAILED` | `'failed'` | `Refund.status` |
@@ -1658,6 +2075,12 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `RESOLVE_CHARGE_SCENARIO_REQUEST_ACTION_PIX_ISSUANCE` | `'pix_issuance'` | `ResolveChargeScenarioRequest.action` |
 | `RESOLVE_CHARGE_SCENARIO_REQUEST_OUTCOME_COMPLETED` | `'completed'` | `ResolveChargeScenarioRequest.outcome` |
 | `RESOLVE_CHARGE_SCENARIO_REQUEST_OUTCOME_FAILED` | `'failed'` | `ResolveChargeScenarioRequest.outcome` |
+| `STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `StatementCreatedWebhookEvent.data.payment_method` |
+| `STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `StatementCreatedWebhookEvent.data.payment_method` |
+| `STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `StatementCreatedWebhookEvent.data.payment_method` |
+| `STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `StatementCreatedWebhookEvent.data.payment_method` |
+| `STATEMENT_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `StatementCreatedWebhookEvent.environment` |
+| `STATEMENT_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `StatementCreatedWebhookEvent.environment` |
 | `STATEMENT_REFERENCE_TYPE_AJUSTE` | `4` | `Statement.reference_type` |
 | `STATEMENT_REFERENCE_TYPE_COBRANCA` | `1` | `Statement.reference_type` |
 | `STATEMENT_REFERENCE_TYPE_CONTESTACAO` | `2` | `Statement.reference_type` |
@@ -1673,24 +2096,36 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `STATEMENT_STATEMENT_TYPE_SAQUE` | `4` | `Statement.statement_type` |
 | `STATEMENT_STATEMENT_TYPE_TARIFA` | `2` | `Statement.statement_type` |
 | `STATEMENT_STATEMENT_TYPE_TARIFA_DE_SERVICO` | `3` | `Statement.statement_type` |
+| `TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `TedReceivedWebhookEvent.data.payment_method` |
+| `TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `TedReceivedWebhookEvent.data.payment_method` |
+| `TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `TedReceivedWebhookEvent.data.payment_method` |
+| `TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `TedReceivedWebhookEvent.data.payment_method` |
 | `UPDATE_PAYMENT_LINK_REQUEST_PAYMENT_METHOD_TYPES_BOLETO` | `2` | `UpdatePaymentLinkRequest.payment_method_types` |
 | `UPDATE_PAYMENT_LINK_REQUEST_PAYMENT_METHOD_TYPES_PIX` | `1` | `UpdatePaymentLinkRequest.payment_method_types` |
 | `WEBHOOK_CREATED_DISABLED_REASON_CONTINUOUS_FAILURE` | `'continuous_failure'` | `WebhookCreated.disabled_reason` |
 | `WEBHOOK_CREATED_DISABLED_REASON_MANUAL` | `'manual'` | `WebhookCreated.disabled_reason` |
+| `WEBHOOK_DELIVERY_STATUS_CANCELED` | `'canceled'` | `WebhookDelivery.status` |
+| `WEBHOOK_DELIVERY_STATUS_DELIVERED` | `'delivered'` | `WebhookDelivery.status` |
+| `WEBHOOK_DELIVERY_STATUS_FAILED` | `'failed'` | `WebhookDelivery.status` |
+| `WEBHOOK_DELIVERY_STATUS_PENDING` | `'pending'` | `WebhookDelivery.status` |
+| `WEBHOOK_DELIVERY_STATUS_PROCESSING` | `'processing'` | `WebhookDelivery.status` |
 | `WEBHOOK_DISABLED_REASON_CONTINUOUS_FAILURE` | `'continuous_failure'` | `Webhook.disabled_reason` |
 | `WEBHOOK_DISABLED_REASON_MANUAL` | `'manual'` | `Webhook.disabled_reason` |
 | `WEBHOOK_EVENT_TYPE_CODE_ACCOUNT_RESTORED` | `'account.restored'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_BALANCE_HOLD_CREATED` | `'balance.hold.created'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_BALANCE_HOLD_RELEASED` | `'balance.hold.released'` | `WebhookEventType.code` |
-| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_AVAILABLE` | `'boleto.available'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_BOLETO_COMPENSATED` | `'boleto.compensated'` | `WebhookEventType.code` |
-| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_ISSUANCE_FAILED` | `'boleto.issuance_failed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_OVERPAYMENT_RECEIVED` | `'boleto.overpayment_received'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_BOLETO_PARTIAL_SETTLEMENT_DETECTED` | `'boleto.partial_settlement_detected'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_CANCELED` | `'charge.canceled'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_CREATED` | `'charge.created'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_EXPIRED` | `'charge.expired'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_FAILED` | `'charge.failed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_FULLY_REFUNDED` | `'charge.fully_refunded'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAID` | `'charge.paid'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CHARGE_PARTIALLY_REFUNDED` | `'charge.partially_refunded'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE` | `'charge.payment_instructions_available'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAYMENT_INSTRUCTIONS_FAILED` | `'charge.payment_instructions_failed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CHARGE_UPDATED` | `'charge.updated'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_CREATED` | `'customer.created'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_CUSTOMER_DELETED` | `'customer.deleted'` | `WebhookEventType.code` |
@@ -1701,27 +2136,50 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `WEBHOOK_EVENT_TYPE_CODE_DISPUTE_UPDATED` | `'dispute.updated'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_PAYMENT_LINK_CREATED` | `'payment_link.created'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_PAYMENT_LINK_UPDATED` | `'payment_link.updated'` | `WebhookEventType.code` |
-| `WEBHOOK_EVENT_TYPE_CODE_PIX_AVAILABLE` | `'pix.available'` | `WebhookEventType.code` |
-| `WEBHOOK_EVENT_TYPE_CODE_PIX_ISSUANCE_FAILED` | `'pix.issuance_failed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_PIX_REFUND_RECEIVED` | `'pix_refund.received'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_ACCEPTED` | `'refund.accepted'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_COMPLETED` | `'refund.completed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_FAILED` | `'refund.failed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_REFUND_RECONCILIATION_REQUIRED` | `'refund.reconciliation_required'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_REFUND_REQUESTED` | `'refund.requested'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_STATEMENT_CREATED` | `'statement.created'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_TED_RECEIVED` | `'ted.received'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_ACCEPTED` | `'withdrawal.accepted'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED` | `'withdrawal.automatic_settings_changed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_COMPLETED` | `'withdrawal.completed'` | `WebhookEventType.code` |
+| `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_DESTINATION_CHANGED` | `'withdrawal.destination_changed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_FAILED` | `'withdrawal.failed'` | `WebhookEventType.code` |
 | `WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_REQUESTED` | `'withdrawal.requested'` | `WebhookEventType.code` |
 | `WEBHOOK_HEALTH_STATUS_DISABLED` | `'disabled'` | `WebhookHealth.status` |
 | `WEBHOOK_HEALTH_STATUS_FAILING` | `'failing'` | `WebhookHealth.status` |
 | `WEBHOOK_HEALTH_STATUS_HEALTHY` | `'healthy'` | `WebhookHealth.status` |
 | `WEBHOOK_HEALTH_STATUS_UNKNOWN` | `'unknown'` | `WebhookHealth.status` |
+| `WEBHOOK_TEST_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION` | `'production'` | `WebhookTestWebhookEvent.environment` |
+| `WEBHOOK_TEST_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX` | `'sandbox'` | `WebhookTestWebhookEvent.environment` |
+| `WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `WithdrawalAcceptedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `WithdrawalAcceptedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `WithdrawalAcceptedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `WithdrawalAcceptedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `WithdrawalAutomaticSettingsChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `WithdrawalAutomaticSettingsChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `WithdrawalAutomaticSettingsChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `WithdrawalAutomaticSettingsChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `WithdrawalCompletedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `WithdrawalCompletedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `WithdrawalCompletedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `WithdrawalCompletedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `WithdrawalDestinationChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `WithdrawalDestinationChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `WithdrawalDestinationChangedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `WithdrawalDestinationChangedWebhookEvent.data.payment_method` |
 | `WITHDRAWAL_DESTINATION_KEY_TYPE_CNPJ` | `'CNPJ'` | `WithdrawalDestination.key_type` |
 | `WITHDRAWAL_DESTINATION_KEY_TYPE_EMAIL` | `'EMAIL'` | `WithdrawalDestination.key_type` |
 | `WITHDRAWAL_DESTINATION_KEY_TYPE_EVP` | `'EVP'` | `WithdrawalDestination.key_type` |
 | `WITHDRAWAL_DESTINATION_KEY_TYPE_PHONE` | `'PHONE'` | `WithdrawalDestination.key_type` |
+| `WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `WithdrawalFailedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `WithdrawalFailedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `WithdrawalFailedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `WithdrawalFailedWebhookEvent.data.payment_method` |
 | `WITHDRAWAL_FAILURE_REASON_CODE_ABOVE_MAXIMUM_WITHDRAWAL` | `'ABOVE_MAXIMUM_WITHDRAWAL'` | `WithdrawalFailureReason.code` |
 | `WITHDRAWAL_FAILURE_REASON_CODE_BANK_ACCOUNT_UNAVAILABLE` | `'BANK_ACCOUNT_UNAVAILABLE'` | `WithdrawalFailureReason.code` |
 | `WITHDRAWAL_FAILURE_REASON_CODE_BANK_PROCESSING_FAILURE` | `'BANK_PROCESSING_FAILURE'` | `WithdrawalFailureReason.code` |
@@ -1742,6 +2200,10 @@ $params = ['payment_method' => EnumValues::CREATE_CHARGE_REQUEST_PAYMENT_METHOD_
 | `WITHDRAWAL_PIX_DESTINATION_KEY_TYPE_EMAIL` | `'EMAIL'` | `WithdrawalPixDestination.key_type` |
 | `WITHDRAWAL_PIX_DESTINATION_KEY_TYPE_EVP` | `'EVP'` | `WithdrawalPixDestination.key_type` |
 | `WITHDRAWAL_PIX_DESTINATION_KEY_TYPE_PHONE` | `'PHONE'` | `WithdrawalPixDestination.key_type` |
+| `WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO` | `'boleto'` | `WithdrawalRequestedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD` | `'credit_card'` | `WithdrawalRequestedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT` | `'debit'` | `WithdrawalRequestedWebhookEvent.data.payment_method` |
+| `WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX` | `'pix'` | `WithdrawalRequestedWebhookEvent.data.payment_method` |
 | `WITHDRAWAL_STATUS_CANCELED` | `'CANCELED'` | `Withdrawal.status` |
 | `WITHDRAWAL_STATUS_COMPLETED` | `'COMPLETED'` | `Withdrawal.status` |
 | `WITHDRAWAL_STATUS_FAILED` | `'FAILED'` | `Withdrawal.status` |

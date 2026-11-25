@@ -64,6 +64,12 @@ $services = [
     'Refunds' => ['all' => 'ListRefunds', 'retrieve' => 'GetRefund', 'retrieveReceipt' => 'GetRefundReceipt'],
     'Statements' => ['all' => 'ListStatements', 'retrieve' => 'GetStatement'],
     'WebhookEventTypes' => ['all' => 'ListWebhookEventTypes'],
+    'WebhookEvents' => ['all' => 'ListWebhookEvents', 'retrieve' => 'GetWebhookEvent', 'deliver' => 'DeliverWebhookEvent'],
+    'WebhookDeliveries' => [
+        'all' => 'ListWebhookDeliveries', 'retrieve' => 'GetWebhookDelivery',
+        'allAttempts' => 'ListWebhookDeliveryAttempts', 'retrieveAttempt' => 'GetWebhookDeliveryAttempt',
+        'advance' => 'AdvanceWebhookDelivery', 'resend' => 'ResendWebhookDelivery', 'resendMany' => 'ResendWebhookDeliveries',
+    ],
     'Webhooks' => [
         'create' => 'CreateWebhook', 'all' => 'ListWebhooks', 'retrieve' => 'GetWebhook', 'update' => 'UpdateWebhook',
         'delete' => 'DeleteWebhook', 'retrieveHealth' => 'GetWebhookHealth', 'setPause' => 'SetWebhookPause',
@@ -107,7 +113,21 @@ function modelName(array $schema): ?string
 /** Normalize only compositions whose meaning is represented by this generator. */
 function normalizeSchema(array $schema): array
 {
-    if (isset($schema['oneOf']) || isset($schema['allOf'])) {
+    if (isset($schema['oneOf'])) {
+        $branches = $schema['oneOf'];
+        if (count($schema) !== 1 || count($branches) < 2) {
+            throw new RuntimeException('Only patterned string alternatives can be represented.');
+        }
+        foreach ($branches as $branch) {
+            if (count($branch) !== 2 || ($branch['type'] ?? null) !== 'string' || !is_string($branch['pattern'] ?? null)) {
+                throw new RuntimeException('Only patterned string alternatives can be represented.');
+            }
+        }
+
+        // The PHP type is shared by all alternatives. The pinned schema retains the patterns.
+        return ['type' => 'string'];
+    }
+    if (isset($schema['allOf'])) {
         throw new RuntimeException('Unsupported schema composition. Add explicit generator support before updating the contract.');
     }
     if (!isset($schema['anyOf'])) {
@@ -381,7 +401,7 @@ foreach ($models as $name => $_) {
         if (!in_array($field, $schema['required'] ?? [], true) && !schemaIsNullable($property)) {
             $type .= '|null';
         }
-        $doc[] = ' * @property-read ' . $type . ' $' . $field . ' ' . commentText($property['description'] ?? '');
+        $doc[] = rtrim(' * @property-read ' . $type . ' $' . $field . ' ' . commentText($property['description'] ?? ''));
         if (($nested = modelName($property)) !== null) {
             $fields[$field] = 'Raims\\Model\\' . $nested;
         } elseif (($nested = modelName($property['items'] ?? [])) !== null) {

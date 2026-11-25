@@ -23,10 +23,12 @@ namespace Raims\Model;
  * @property-read list<1|2>|null $payment_method_types Lista de meios configurada para a cobrança, ou null quando ela usa a configuração de checkout herdada. 1 significa Pix e 2 significa boleto. A lista não muda com o meio usado no pagamento nem representa a disponibilidade momentânea do checkout.
  * @property-read string|null $external_reference Referência do pedido ou da cobrança no seu sistema, ou null quando não informada. É independente da referência do cliente e pode ser repetida em outras cobranças.
  * @property-read array<string, string>|\stdClass $metadata Dados de integração associados ao recurso. Retorna {} quando não há valores. Esse mapa não é usado como filtro de busca nem incluído automaticamente nos eventos de webhook.
+ * @property-read \Raims\Model\ChargeBoletoSettlement|null $boleto_settlement
  */
 final class Charge extends \Raims\ApiResource
 {
     protected const FIELD_TYPES = [
         'payment_information' => 'Raims\\Model\\ChargePaymentInformation',
+        'boleto_settlement' => 'Raims\\Model\\ChargeBoletoSettlement',
     ];
 }

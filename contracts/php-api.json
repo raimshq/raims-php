@@ -720,6 +720,38 @@
                         "value": "unix_seconds"
                     }
                 },
+                "ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "ACCOUNT_RESTORED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
                 "BALANCE_FORECAST_PERIOD_LAST_15_DAYS": {
                     "final": false,
                     "declared_type": null,
@@ -752,6 +784,326 @@
                         "value": "today"
                     }
                 },
+                "BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BALANCE_HOLD_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BALANCE_HOLD_RELEASED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BOLETO_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "BOLETO_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "BOLETO_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BOLETO_COMPENSATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "BOLETO_COMPENSATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "BOLETO_COMPENSATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "BOLETO_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BOLETO_OVERPAYMENT_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "BOLETO_PARTIAL_SETTLEMENT_DETECTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_CANCELED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_CANCELED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_CANCELED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
                 "CHARGE_CREATED_PAYMENT_METHOD_TYPES_BOLETO": {
                     "final": false,
                     "declared_type": null,
@@ -766,6 +1118,198 @@
                     "value": {
                         "type": "int",
                         "value": 1
+                    }
+                },
+                "CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_EXPIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_EXPIRED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_EXPIRED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_FULLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
                     }
                 },
                 "CHARGE_LIST_ITEM_PAYMENT_METHOD_TYPES_BOLETO": {
@@ -784,6 +1328,102 @@
                         "value": 1
                     }
                 },
+                "CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_PAID_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_PAID_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_PAID_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_PARTIALLY_REFUNDED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
                 "CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_AWAITING_PAYMENT": {
                     "final": false,
                     "declared_type": null,
@@ -798,6 +1438,14 @@
                     "value": {
                         "type": "string",
                         "value": "compensated"
+                    }
+                },
+                "CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_PARTIALLY_SETTLED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "partially_settled"
                     }
                 },
                 "CHARGE_PAYMENT_INFORMATION_BOLETO_PAYMENT_STATUS_SETTLED": {
@@ -870,6 +1518,102 @@
                     "value": {
                         "type": "string",
                         "value": "pending"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_PAYMENT_INSTRUCTIONS_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
                     }
                 },
                 "CHARGE_PAYMENT_METHOD_TYPES_BOLETO": {
@@ -1038,6 +1782,54 @@
                     "value": {
                         "type": "string",
                         "value": "today"
+                    }
+                },
+                "CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CHARGE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CHARGE_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CHARGE_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
                     }
                 },
                 "CHECKOUT_ASSET_ERROR_CODE_CHECKOUT_ASSET_INVALID_IMAGE": {
@@ -1224,14 +2016,6 @@
                         "value": "balance.hold.released"
                     }
                 },
-                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_AVAILABLE": {
-                    "final": false,
-                    "declared_type": null,
-                    "value": {
-                        "type": "string",
-                        "value": "boleto.available"
-                    }
-                },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_COMPENSATED": {
                     "final": false,
                     "declared_type": null,
@@ -1240,12 +2024,20 @@
                         "value": "boleto.compensated"
                     }
                 },
-                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_ISSUANCE_FAILED": {
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_OVERPAYMENT_RECEIVED": {
                     "final": false,
                     "declared_type": null,
                     "value": {
                         "type": "string",
-                        "value": "boleto.issuance_failed"
+                        "value": "boleto.overpayment_received"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_BOLETO_PARTIAL_SETTLEMENT_DETECTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.partial_settlement_detected"
                     }
                 },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_CANCELED": {
@@ -1294,6 +2086,30 @@
                     "value": {
                         "type": "string",
                         "value": "charge.paid"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PARTIALLY_REFUNDED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.partially_refunded"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.payment_instructions_available"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_PAYMENT_INSTRUCTIONS_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.payment_instructions_failed"
                     }
                 },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_CHARGE_UPDATED": {
@@ -1376,22 +2192,6 @@
                         "value": "payment_link.updated"
                     }
                 },
-                "CREATE_WEBHOOK_REQUEST_EVENTS_PIX_AVAILABLE": {
-                    "final": false,
-                    "declared_type": null,
-                    "value": {
-                        "type": "string",
-                        "value": "pix.available"
-                    }
-                },
-                "CREATE_WEBHOOK_REQUEST_EVENTS_PIX_ISSUANCE_FAILED": {
-                    "final": false,
-                    "declared_type": null,
-                    "value": {
-                        "type": "string",
-                        "value": "pix.issuance_failed"
-                    }
-                },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_PIX_REFUND_RECEIVED": {
                     "final": false,
                     "declared_type": null,
@@ -1422,6 +2222,14 @@
                     "value": {
                         "type": "string",
                         "value": "refund.failed"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_RECONCILIATION_REQUIRED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "refund.reconciliation_required"
                     }
                 },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_REFUND_REQUESTED": {
@@ -1456,12 +2264,28 @@
                         "value": "withdrawal.accepted"
                     }
                 },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.automatic_settings_changed"
+                    }
+                },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_COMPLETED": {
                     "final": false,
                     "declared_type": null,
                     "value": {
                         "type": "string",
                         "value": "withdrawal.completed"
+                    }
+                },
+                "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_DESTINATION_CHANGED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.destination_changed"
                     }
                 },
                 "CREATE_WEBHOOK_REQUEST_EVENTS_WITHDRAWAL_FAILED": {
@@ -1496,6 +2320,102 @@
                         "value": "cpf"
                     }
                 },
+                "CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CUSTOMER_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CUSTOMER_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CUSTOMER_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CUSTOMER_DELETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CUSTOMER_DELETED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CUSTOMER_DELETED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
                 "CUSTOMER_LIST_ITEM_TAX_ID_TYPE_CNPJ": {
                     "final": false,
                     "declared_type": null,
@@ -1510,6 +2430,118 @@
                     "value": {
                         "type": "string",
                         "value": "cpf"
+                    }
+                },
+                "CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "CUSTOMER_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "CUSTOMER_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "CUSTOMER_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "DISPUTE_CLOSED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "DISPUTE_FUNDS_DEBITED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
                     }
                 },
                 "DISPUTE_INFRACTION_RESULT_AGREED": {
@@ -1616,6 +2648,38 @@
                         "value": "rejected"
                     }
                 },
+                "DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "DISPUTE_OPENED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
                 "DISPUTE_REFUND_RESULT_PARTIALLY_ACCEPTED": {
                     "final": false,
                     "declared_type": null,
@@ -1694,6 +2758,38 @@
                     "value": {
                         "type": "string",
                         "value": "rejected"
+                    }
+                },
+                "DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "DISPUTE_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
                     }
                 },
                 "GET_BALANCE_FORECAST_QUERY_PERIOD_LAST_15_DAYS": {
@@ -1840,6 +2936,46 @@
                         "value": "desc"
                     }
                 },
+                "LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_CANCELED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "canceled"
+                    }
+                },
+                "LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_DELIVERED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "delivered"
+                    }
+                },
+                "LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "failed"
+                    }
+                },
+                "LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_PENDING": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pending"
+                    }
+                },
+                "LIST_WEBHOOK_DELIVERIES_QUERY_STATUS_PROCESSING": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "processing"
+                    }
+                },
                 "LIST_WITHDRAWALS_QUERY_SORT_ORDER_ASC": {
                     "final": false,
                     "declared_type": null,
@@ -1854,6 +2990,54 @@
                     "value": {
                         "type": "string",
                         "value": "desc"
+                    }
+                },
+                "PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "PAYMENT_LINK_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "PAYMENT_LINK_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "PAYMENT_LINK_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
                     }
                 },
                 "PAYMENT_LINK_DETAILS_EFFECTIVE_PAYMENT_METHOD_TYPES_BOLETO": {
@@ -1960,6 +3144,350 @@
                         "value": "PIX_CANCELLED"
                     }
                 },
+                "PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "PAYMENT_LINK_UPDATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "PIX_AVAILABLE_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "PIX_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "PIX_AVAILABLE_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "PIX_ISSUANCE_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "PIX_REFUND_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "REFUND_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "REFUND_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "REFUND_COMPLETED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "REFUND_COMPLETED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_FAILURE_REASON_UNAVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "REFUND_FAILURE_REASON_UNAVAILABLE"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_NOT_SUBMITTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "REFUND_NOT_SUBMITTED"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_PROCESSING_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "REFUND_PROCESSING_FAILED"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_PROCESSING_UNAVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "REFUND_PROCESSING_UNAVAILABLE"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_FAILURE_REASON_CODE_REFUND_REJECTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "REFUND_REJECTED"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "REFUND_FAILED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
                 "REFUND_FAILURE_REASON_CODE_REFUND_FAILURE_REASON_UNAVAILABLE": {
                     "final": false,
                     "declared_type": null,
@@ -1998,6 +3526,86 @@
                     "value": {
                         "type": "string",
                         "value": "REFUND_REJECTED"
+                    }
+                },
+                "REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "REFUND_RECONCILIATION_REQUIRED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "REFUND_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "REFUND_REQUESTED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "REFUND_REQUESTED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
                     }
                 },
                 "REFUND_STATUS_ACCEPTED": {
@@ -2136,6 +3744,54 @@
                         "value": "failed"
                     }
                 },
+                "STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "STATEMENT_CREATED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "STATEMENT_CREATED_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "STATEMENT_CREATED_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
                 "STATEMENT_REFERENCE_TYPE_AJUSTE": {
                     "final": false,
                     "declared_type": null,
@@ -2256,6 +3912,38 @@
                         "value": 3
                     }
                 },
+                "TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "TED_RECEIVED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
                 "UPDATE_PAYMENT_LINK_REQUEST_PAYMENT_METHOD_TYPES_BOLETO": {
                     "final": false,
                     "declared_type": null,
@@ -2286,6 +3974,46 @@
                     "value": {
                         "type": "string",
                         "value": "manual"
+                    }
+                },
+                "WEBHOOK_DELIVERY_STATUS_CANCELED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "canceled"
+                    }
+                },
+                "WEBHOOK_DELIVERY_STATUS_DELIVERED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "delivered"
+                    }
+                },
+                "WEBHOOK_DELIVERY_STATUS_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "failed"
+                    }
+                },
+                "WEBHOOK_DELIVERY_STATUS_PENDING": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pending"
+                    }
+                },
+                "WEBHOOK_DELIVERY_STATUS_PROCESSING": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "processing"
                     }
                 },
                 "WEBHOOK_DISABLED_REASON_CONTINUOUS_FAILURE": {
@@ -2328,14 +4056,6 @@
                         "value": "balance.hold.released"
                     }
                 },
-                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_AVAILABLE": {
-                    "final": false,
-                    "declared_type": null,
-                    "value": {
-                        "type": "string",
-                        "value": "boleto.available"
-                    }
-                },
                 "WEBHOOK_EVENT_TYPE_CODE_BOLETO_COMPENSATED": {
                     "final": false,
                     "declared_type": null,
@@ -2344,12 +4064,20 @@
                         "value": "boleto.compensated"
                     }
                 },
-                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_ISSUANCE_FAILED": {
+                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_OVERPAYMENT_RECEIVED": {
                     "final": false,
                     "declared_type": null,
                     "value": {
                         "type": "string",
-                        "value": "boleto.issuance_failed"
+                        "value": "boleto.overpayment_received"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_BOLETO_PARTIAL_SETTLEMENT_DETECTED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto.partial_settlement_detected"
                     }
                 },
                 "WEBHOOK_EVENT_TYPE_CODE_CHARGE_CANCELED": {
@@ -2398,6 +4126,30 @@
                     "value": {
                         "type": "string",
                         "value": "charge.paid"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CHARGE_PARTIALLY_REFUNDED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.partially_refunded"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAYMENT_INSTRUCTIONS_AVAILABLE": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.payment_instructions_available"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_CHARGE_PAYMENT_INSTRUCTIONS_FAILED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "charge.payment_instructions_failed"
                     }
                 },
                 "WEBHOOK_EVENT_TYPE_CODE_CHARGE_UPDATED": {
@@ -2480,22 +4232,6 @@
                         "value": "payment_link.updated"
                     }
                 },
-                "WEBHOOK_EVENT_TYPE_CODE_PIX_AVAILABLE": {
-                    "final": false,
-                    "declared_type": null,
-                    "value": {
-                        "type": "string",
-                        "value": "pix.available"
-                    }
-                },
-                "WEBHOOK_EVENT_TYPE_CODE_PIX_ISSUANCE_FAILED": {
-                    "final": false,
-                    "declared_type": null,
-                    "value": {
-                        "type": "string",
-                        "value": "pix.issuance_failed"
-                    }
-                },
                 "WEBHOOK_EVENT_TYPE_CODE_PIX_REFUND_RECEIVED": {
                     "final": false,
                     "declared_type": null,
@@ -2526,6 +4262,14 @@
                     "value": {
                         "type": "string",
                         "value": "refund.failed"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_REFUND_RECONCILIATION_REQUIRED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "refund.reconciliation_required"
                     }
                 },
                 "WEBHOOK_EVENT_TYPE_CODE_REFUND_REQUESTED": {
@@ -2560,12 +4304,28 @@
                         "value": "withdrawal.accepted"
                     }
                 },
+                "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.automatic_settings_changed"
+                    }
+                },
                 "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_COMPLETED": {
                     "final": false,
                     "declared_type": null,
                     "value": {
                         "type": "string",
                         "value": "withdrawal.completed"
+                    }
+                },
+                "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_DESTINATION_CHANGED": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "withdrawal.destination_changed"
                     }
                 },
                 "WEBHOOK_EVENT_TYPE_CODE_WITHDRAWAL_FAILED": {
@@ -2616,6 +4376,150 @@
                         "value": "unknown"
                     }
                 },
+                "WEBHOOK_TEST_WEBHOOK_EVENT_ENVIRONMENT_PRODUCTION": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "production"
+                    }
+                },
+                "WEBHOOK_TEST_WEBHOOK_EVENT_ENVIRONMENT_SANDBOX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "sandbox"
+                    }
+                },
+                "WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "WITHDRAWAL_ACCEPTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "WITHDRAWAL_AUTOMATIC_SETTINGS_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "WITHDRAWAL_COMPLETED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
+                "WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "WITHDRAWAL_DESTINATION_CHANGED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
+                    }
+                },
                 "WITHDRAWAL_DESTINATION_KEY_TYPE_CNPJ": {
                     "final": false,
                     "declared_type": null,
@@ -2646,6 +4550,38 @@
                     "value": {
                         "type": "string",
                         "value": "PHONE"
+                    }
+                },
+                "WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "WITHDRAWAL_FAILED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
                     }
                 },
                 "WITHDRAWAL_FAILURE_REASON_CODE_ABOVE_MAXIMUM_WITHDRAWAL": {
@@ -2806,6 +4742,38 @@
                     "value": {
                         "type": "string",
                         "value": "PHONE"
+                    }
+                },
+                "WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_BOLETO": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "boleto"
+                    }
+                },
+                "WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_CREDIT_CARD": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "credit_card"
+                    }
+                },
+                "WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_DEBIT": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "debit"
+                    }
+                },
+                "WITHDRAWAL_REQUESTED_WEBHOOK_EVENT_DATA_PAYMENT_METHOD_PIX": {
+                    "final": false,
+                    "declared_type": null,
+                    "value": {
+                        "type": "string",
+                        "value": "pix"
                     }
                 },
                 "WITHDRAWAL_STATUS_CANCELED": {
@@ -5015,6 +6983,10 @@
                         "access": "-read",
                         "type": "int"
                     },
+                    "boleto_settlement": {
+                        "access": "-read",
+                        "type": "\\Raims\\Model\\ChargeBoletoSettlement|null"
+                    },
                     "checkout_payment_method": {
                         "access": "-read",
                         "type": "0|1|2|3|4|null"
@@ -5216,6 +7188,75 @@
                     "line_digits": {
                         "access": "-read",
                         "type": "string"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\ChargeBoletoSettlement": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "confirmed_total_cents": {
+                        "access": "-read",
+                        "type": "int|null"
+                    },
+                    "observed_amount_cents": {
+                        "access": "-read",
+                        "type": "int|null"
+                    },
+                    "overpayment_cents": {
+                        "access": "-read",
+                        "type": "int|null"
                     }
                 },
                 "params": [],
@@ -5657,7 +7698,7 @@
                     },
                     "boleto_payment_status": {
                         "access": "-read",
-                        "type": "'awaiting_payment'|'compensated'|'settled'|null"
+                        "type": "'awaiting_payment'|'compensated'|'partially_settled'|'settled'|null"
                     },
                     "boleto_status": {
                         "access": "-read",
@@ -9027,6 +11068,489 @@
                 "types": []
             }
         },
+        "Raims\\Model\\WebhookAdvanceAccepted": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "delivery_id": {
+                        "access": "-read",
+                        "type": "string"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookAttempt": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "attempt_number": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "created_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "delivery_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "destination_ip": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "duration_ms": {
+                        "access": "-read",
+                        "type": "float"
+                    },
+                    "endpoint_url": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "error_code": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "request_available": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "response_body_available": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "response_body_truncated": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "status_code": {
+                        "access": "-read",
+                        "type": "int|null"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookAttemptDetail": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "attempt_number": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "created_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "delivery_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "destination_ip": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "duration_ms": {
+                        "access": "-read",
+                        "type": "float"
+                    },
+                    "endpoint_url": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "error_code": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "request_available": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "request_body": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "response_body": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "response_body_available": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "response_body_truncated": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "status_code": {
+                        "access": "-read",
+                        "type": "int|null"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookAttemptListResponse": {
+            "kind": "class",
+            "parent": "Raims\\Collection",
+            "interfaces": [
+                "ArrayAccess",
+                "Countable",
+                "IteratorAggregate",
+                "JsonSerializable",
+                "Traversable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "list": {
+                        "access": "-read",
+                        "type": "list<\\Raims\\Model\\WebhookAttempt>"
+                    },
+                    "page": {
+                        "access": "-read",
+                        "type": "\\Raims\\Model\\WebhookDeliveryPage"
+                    }
+                },
+                "params": [],
+                "types": {
+                    "extends": "\\Raims\\Collection<\\Raims\\Model\\WebhookAttempt>"
+                }
+            }
+        },
+        "Raims\\Model\\WebhookBulkResendAccepted": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "results": {
+                        "access": "-read",
+                        "type": "list<\\Raims\\Model\\WebhookBulkResendItem>"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookBulkResendItem": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "delivery_id": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "error": {
+                        "access": "-read",
+                        "type": "\\Raims\\Model\\Error|null"
+                    },
+                    "event_id": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "source_delivery_id": {
+                        "access": "-read",
+                        "type": "string"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
         "Raims\\Model\\WebhookCreated": {
             "kind": "class",
             "parent": "Raims\\ApiResource",
@@ -9136,6 +11660,543 @@
                 "types": []
             }
         },
+        "Raims\\Model\\WebhookDelivery": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "created_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "deadline_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "event_created_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "event_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "event_type": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "next_attempt_at": {
+                        "access": "-read",
+                        "type": "int|null"
+                    },
+                    "status": {
+                        "access": "-read",
+                        "type": "'pending'|'processing'|'delivered'|'failed'|'canceled'"
+                    },
+                    "updated_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "webhook_id": {
+                        "access": "-read",
+                        "type": "string|null"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookDeliveryListResponse": {
+            "kind": "class",
+            "parent": "Raims\\Collection",
+            "interfaces": [
+                "ArrayAccess",
+                "Countable",
+                "IteratorAggregate",
+                "JsonSerializable",
+                "Traversable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "list": {
+                        "access": "-read",
+                        "type": "list<\\Raims\\Model\\WebhookDelivery>"
+                    },
+                    "page": {
+                        "access": "-read",
+                        "type": "\\Raims\\Model\\WebhookDeliveryPage"
+                    }
+                },
+                "params": [],
+                "types": {
+                    "extends": "\\Raims\\Collection<\\Raims\\Model\\WebhookDelivery>"
+                }
+            }
+        },
+        "Raims\\Model\\WebhookDeliveryPage": {
+            "kind": "class",
+            "parent": "Raims\\Pagination",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "has_next": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "has_previous": {
+                        "access": "-read",
+                        "type": "bool"
+                    },
+                    "next_after": {
+                        "access": "-read",
+                        "type": "string|null"
+                    },
+                    "page_size": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "previous_before": {
+                        "access": "-read",
+                        "type": "string|null"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookDeliveryResendAccepted": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "delivery_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "event_id": {
+                        "access": "-read",
+                        "type": "string"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookEvent": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "created_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "event_type": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "resource_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "resource_type": {
+                        "access": "-read",
+                        "type": "string"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookEventDetail": {
+            "kind": "class",
+            "parent": "Raims\\ApiResource",
+            "interfaces": [
+                "ArrayAccess",
+                "JsonSerializable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "created_at": {
+                        "access": "-read",
+                        "type": "int"
+                    },
+                    "event_type": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "payload": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "resource_id": {
+                        "access": "-read",
+                        "type": "string"
+                    },
+                    "resource_type": {
+                        "access": "-read",
+                        "type": "string"
+                    }
+                },
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Model\\WebhookEventListResponse": {
+            "kind": "class",
+            "parent": "Raims\\Collection",
+            "interfaces": [
+                "ArrayAccess",
+                "Countable",
+                "IteratorAggregate",
+                "JsonSerializable",
+                "Traversable"
+            ],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "data",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "response",
+                            "type": "Raims\\HttpClient\\HttpResponse|null",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "type": "null",
+                                "value": null
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": {
+                    "list": {
+                        "access": "-read",
+                        "type": "list<\\Raims\\Model\\WebhookEvent>"
+                    },
+                    "page": {
+                        "access": "-read",
+                        "type": "\\Raims\\Model\\WebhookDeliveryPage"
+                    }
+                },
+                "params": [],
+                "types": {
+                    "extends": "\\Raims\\Collection<\\Raims\\Model\\WebhookEvent>"
+                }
+            }
+        },
         "Raims\\Model\\WebhookEventType": {
             "kind": "class",
             "parent": "Raims\\ApiResource",
@@ -9190,7 +12251,7 @@
                 "properties": {
                     "code": {
                         "access": "-read",
-                        "type": "'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'|'charge.updated'|'charge.expired'|'withdrawal.requested'|'withdrawal.completed'|'withdrawal.failed'|'dispute.opened'|'dispute.updated'|'dispute.closed'|'dispute.funds_debited'|'balance.hold.created'|'balance.hold.released'|'statement.created'|'ted.received'|'pix_refund.received'|'pix.available'|'pix.issuance_failed'|'boleto.available'|'boleto.issuance_failed'|'boleto.compensated'|'payment_link.created'|'payment_link.updated'|'refund.accepted'|'account.restored'|'customer.created'|'customer.updated'|'customer.deleted'|'withdrawal.accepted'|'charge.fully_refunded'"
+                        "type": "'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'|'charge.updated'|'charge.expired'|'withdrawal.requested'|'withdrawal.completed'|'withdrawal.failed'|'dispute.opened'|'dispute.updated'|'dispute.closed'|'dispute.funds_debited'|'balance.hold.created'|'balance.hold.released'|'statement.created'|'ted.received'|'pix_refund.received'|'charge.payment_instructions_available'|'charge.payment_instructions_failed'|'boleto.compensated'|'payment_link.created'|'payment_link.updated'|'refund.accepted'|'account.restored'|'customer.created'|'customer.updated'|'customer.deleted'|'withdrawal.accepted'|'charge.fully_refunded'|'charge.partially_refunded'|'withdrawal.destination_changed'|'boleto.overpayment_received'|'refund.reconciliation_required'|'boleto.partial_settlement_detected'|'withdrawal.automatic_settings_changed'"
                     }
                 },
                 "params": [],
@@ -10843,11 +13904,33 @@
                         "types": []
                     }
                 },
+                "webhookDeliveries": {
+                    "visibility": "public",
+                    "static": false,
+                    "readonly": true,
+                    "type": "Raims\\Service\\WebhookDeliveriesService",
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                },
                 "webhookEventTypes": {
                     "visibility": "public",
                     "static": false,
                     "readonly": true,
                     "type": "Raims\\Service\\WebhookEventTypesService",
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                },
+                "webhookEvents": {
+                    "visibility": "public",
+                    "static": false,
+                    "readonly": true,
+                    "type": "Raims\\Service\\WebhookEventsService",
                     "phpdoc": {
                         "properties": [],
                         "params": [],
@@ -10902,7 +13985,7 @@
                     "declared_type": null,
                     "value": {
                         "type": "string",
-                        "value": "0.1.2"
+                        "value": "1.0.0"
                     }
                 }
             },
@@ -13642,6 +16725,312 @@
                 "types": []
             }
         },
+        "Raims\\Service\\WebhookDeliveriesService": {
+            "kind": "class",
+            "parent": "Raims\\Service\\AbstractService",
+            "interfaces": [],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "requestor",
+                            "type": "Raims\\ApiRequestor",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                },
+                "advance": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookAdvanceAccepted",
+                    "parameters": [
+                        {
+                            "name": "deliveryId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "deliveryId": "string",
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
+                        },
+                        "types": []
+                    }
+                },
+                "all": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookDeliveryListResponse",
+                    "parameters": [
+                        {
+                            "name": "params",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
+                            "params": "array{page_size?:int,after?:string,before?:string,webhook_id?:string,event_type?:string,event_id?:string,status?:'pending'|'processing'|'delivered'|'failed'|'canceled',created_gte?:int,created_lte?:int}"
+                        },
+                        "types": []
+                    }
+                },
+                "allAttempts": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookAttemptListResponse",
+                    "parameters": [
+                        {
+                            "name": "deliveryId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "params",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "deliveryId": "string",
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
+                            "params": "array{page_size?:int,after?:string,before?:string}"
+                        },
+                        "types": []
+                    }
+                },
+                "resend": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookDeliveryResendAccepted",
+                    "parameters": [
+                        {
+                            "name": "deliveryId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "deliveryId": "string",
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
+                        },
+                        "types": []
+                    }
+                },
+                "resendMany": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookBulkResendAccepted",
+                    "parameters": [
+                        {
+                            "name": "params",
+                            "type": "array",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
+                            "params": "array{delivery_ids:list<string>}"
+                        },
+                        "types": []
+                    }
+                },
+                "retrieve": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookDelivery",
+                    "parameters": [
+                        {
+                            "name": "deliveryId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "deliveryId": "string",
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
+                        },
+                        "types": []
+                    }
+                },
+                "retrieveAttempt": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookAttemptDetail",
+                    "parameters": [
+                        {
+                            "name": "deliveryId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "attemptId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "attemptId": "string",
+                            "deliveryId": "string",
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
+                        },
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": [],
+                "params": [],
+                "types": []
+            }
+        },
         "Raims\\Service\\WebhookEventTypesService": {
             "kind": "class",
             "parent": "Raims\\Service\\AbstractService",
@@ -13694,6 +17083,161 @@
                     "phpdoc": {
                         "properties": [],
                         "params": {
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
+                        },
+                        "types": []
+                    }
+                }
+            },
+            "properties": [],
+            "constants": [],
+            "phpdoc": {
+                "properties": [],
+                "params": [],
+                "types": []
+            }
+        },
+        "Raims\\Service\\WebhookEventsService": {
+            "kind": "class",
+            "parent": "Raims\\Service\\AbstractService",
+            "interfaces": [],
+            "abstract": false,
+            "final": true,
+            "readonly": false,
+            "methods": {
+                "__construct": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": null,
+                    "parameters": [
+                        {
+                            "name": "requestor",
+                            "type": "Raims\\ApiRequestor",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": [],
+                        "types": []
+                    }
+                },
+                "all": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookEventListResponse",
+                    "parameters": [
+                        {
+                            "name": "params",
+                            "type": "array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
+                            "params": "array{page_size?:int,after?:string,before?:string,event_type?:string,resource_id?:string,created_gte?:int,created_lte?:int}"
+                        },
+                        "types": []
+                    }
+                },
+                "deliver": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookDeliveryResendAccepted",
+                    "parameters": [
+                        {
+                            "name": "eventId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "params",
+                            "type": "array",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "eventId": "string",
+                            "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
+                            "params": "array{webhook_id:string}"
+                        },
+                        "types": []
+                    }
+                },
+                "retrieve": {
+                    "visibility": "public",
+                    "static": false,
+                    "abstract": false,
+                    "final": false,
+                    "by_reference": false,
+                    "return_type": "Raims\\Model\\WebhookEventDetail",
+                    "parameters": [
+                        {
+                            "name": "eventId",
+                            "type": "string",
+                            "optional": false,
+                            "variadic": false,
+                            "by_reference": false
+                        },
+                        {
+                            "name": "options",
+                            "type": "Raims\\RequestOptions|array",
+                            "optional": true,
+                            "variadic": false,
+                            "by_reference": false,
+                            "default": {
+                                "array": []
+                            }
+                        }
+                    ],
+                    "phpdoc": {
+                        "properties": [],
+                        "params": {
+                            "eventId": "string",
                             "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions"
                         },
                         "types": []
@@ -13806,7 +17350,7 @@
                         "properties": [],
                         "params": {
                             "options": "array{api_key?:string,idempotency_key?:string,timeout?:float,max_network_retries?:int}|RequestOptions",
-                            "params": "array{name:string,url:string,events:list<'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'|'charge.updated'|'charge.expired'|'withdrawal.requested'|'withdrawal.completed'|'withdrawal.failed'|'dispute.opened'|'dispute.updated'|'dispute.closed'|'dispute.funds_debited'|'balance.hold.created'|'balance.hold.released'|'statement.created'|'ted.received'|'pix_refund.received'|'pix.available'|'pix.issuance_failed'|'boleto.available'|'boleto.issuance_failed'|'boleto.compensated'|'payment_link.created'|'payment_link.updated'|'refund.accepted'|'account.restored'|'customer.created'|'customer.updated'|'customer.deleted'|'withdrawal.accepted'|'charge.fully_refunded'>,is_active?:bool}"
+                            "params": "array{name:string,url:string,events:list<'charge.created'|'charge.paid'|'charge.canceled'|'charge.failed'|'refund.requested'|'refund.completed'|'refund.failed'|'charge.updated'|'charge.expired'|'withdrawal.requested'|'withdrawal.completed'|'withdrawal.failed'|'dispute.opened'|'dispute.updated'|'dispute.closed'|'dispute.funds_debited'|'balance.hold.created'|'balance.hold.released'|'statement.created'|'ted.received'|'pix_refund.received'|'charge.payment_instructions_available'|'charge.payment_instructions_failed'|'boleto.compensated'|'payment_link.created'|'payment_link.updated'|'refund.accepted'|'account.restored'|'customer.created'|'customer.updated'|'customer.deleted'|'withdrawal.accepted'|'charge.fully_refunded'|'charge.partially_refunded'|'withdrawal.destination_changed'|'boleto.overpayment_received'|'refund.reconciliation_required'|'boleto.partial_settlement_detected'|'withdrawal.automatic_settings_changed'>,is_active?:bool}"
                         },
                         "types": []
                     }

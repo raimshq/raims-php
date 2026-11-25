@@ -7,14 +7,14 @@ declare(strict_types=1);
 namespace Raims\Model;
 
 /**
- * @property-read int $day_limit_cents Limite diário de saques, em centavos de real. O dia de saque vai das 06:00 às 06:00 do dia seguinte, no horário de São Paulo.
- * @property-read int $night_limit_cents Limite noturno de saques, em centavos de real, das 20:00 às 06:00 do dia seguinte. Esse valor faz parte do limite diário.
+ * @property-read int $day_limit_cents Limite de saques por dia civil, em centavos de real. A nova cota é liberada às 00:01, no horário de São Paulo.
+ * @property-read int $night_limit_cents Limite noturno de saques, em centavos de real. O consumo acumula das 20:00 às 06:00 do dia seguinte, inclusive na virada do dia.
  * @property-read int $period_limit_cents Limite aplicável ao período indicado por period, em centavos de real.
  * @property-read int $period_used_cents Valor que já compromete o limite do período, em centavos de real. Inclui saques ainda em processamento.
  * @property-read int $period_remaining_cents Valor restante no limite do período, em centavos de real. Não representa o saldo da conta.
  * @property-read int $request_maximum_amount_cents Teto informado para uma solicitação, em centavos de real, considerando os limites de saque. O saldo disponível e a tarifa também restringem o valor que pode ser solicitado.
  * @property-read string $period Período vigente: day durante o período diurno ou night das 20:00 às 06:00, no horário de São Paulo.
- * @property-read int $period_ends_at Término do período vigente, em segundos Unix UTC. Consulte novamente após esse instante para conferir as condições atualizadas.
+ * @property-read int $period_ends_at Próxima virada dos limites, em segundos Unix UTC. Consulte novamente após esse instante para conferir as condições atualizadas.
  */
 final class WithdrawalPeriodLimits extends \Raims\ApiResource
 {

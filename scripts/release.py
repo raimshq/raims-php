@@ -26,6 +26,8 @@ REPOSITORY_URL = "https://github.com/" + REPOSITORY
 VERSION = re.compile(r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?")
 SHA = re.compile(r"[0-9a-f]{40}")
 VALIDATION_WORKFLOW = ".github/workflows/validate.yml"
+VALIDATION_EVIDENCE = "validation-evidence.json"
+VALIDATION_HASH_FIELDS = ("validationReportSha256", "composerArchiveSha256", "gitArchiveSha256")
 VALIDATION_JOBS = {
     "validatePhp (8.2)": {"php-sdk-check-8.2"},
     "validatePhp (8.3)": {"php-sdk-check-8.3"},
@@ -244,13 +246,38 @@ def git_archive_files(source, revision):
     return archive_files(process.stdout)
 
 
-def bundle(source, report_path, destination, run_id, attempt):
-    expected = identity(source, run_id, attempt)
+def validation_artifact(expected):
+    run_id = positive_id(expected["validationRunId"])
+    attempt = positive_id(expected["validationRunAttempt"])
+    name = f"raims-php-validation-{run_id}-{attempt}-8.2"
+    query = urllib.parse.urlencode({"name": name, "per_page": 100})
+    inventory = github_api(f"/actions/runs/{run_id}/artifacts?{query}")
+    artifacts = inventory.get("artifacts")
+    require(isinstance(artifacts, list) and type(inventory.get("total_count")) is int
+            and inventory["total_count"] == len(artifacts) <= 1, "The PHP validation artifact inventory is incomplete or ambiguous.")
+    if not artifacts:
+        return ""
+    artifact = artifacts[0]
+    require(isinstance(artifact, dict) and artifact.get("name") == name
+            and type(artifact.get("expired")) is bool, "The PHP validation artifact metadata is invalid.")
+    workflow = artifact.get("workflow_run")
+    require(isinstance(workflow, dict) and workflow.get("id") == int(run_id)
+            and workflow.get("head_sha") == expected["revision"], "The PHP validation artifact belongs to another run or revision.")
+    if artifact["expired"]:
+        return ""
+    require(isinstance(artifact.get("digest"), str) and re.fullmatch(r"sha256:[0-9a-f]{64}", artifact["digest"]),
+            "The PHP validation artifact has no verified archive digest.")
+    return positive_id(artifact.get("id"))
+
+
+def local_validation_evidence(source, report_path, expected, php_version):
     toolkit = next((candidate / "Developer-Toolkit" for candidate in (source.parent, source.parent.parent) if (candidate / "Developer-Toolkit/scripts/release-preflight/php_sdk.py").is_file()), source.parent / "Developer-Toolkit")
     require(git(toolkit, "rev-parse", "HEAD") == expected["toolkitRevision"] and git(toolkit, "status", "--porcelain") == "",
             "The validation Toolkit differs from its reviewed immutable revision.")
     report = json.loads(report_path.read_text(encoding="utf-8"))
     require(report.get("status") == "passed" and report.get("liveApiCalled") is False, "The canonical PHP SDK check did not pass.")
+    require(report.get("expectedPhpVersion") == php_version and report.get("php") == php_version,
+            "The canonical report was produced on another PHP runtime.")
     require(Path(report.get("source", "")).resolve() == source, "The canonical report belongs to another source checkout.")
     require(report.get("toolingSha256") == digest(toolkit / "scripts/release-preflight/php_sdk.py"), "The canonical validator changed after the check.")
     export = report.get("githubArchive", {})
@@ -263,10 +290,58 @@ def bundle(source, report_path, destination, run_id, attempt):
     require(files == archive_files(github_archive.read_bytes()) == git_archive_files(source, expected["revision"]),
             "The approved public source archives differ from the immutable release source.")
     require(export.get("files") == len(files), "The canonical public file count differs from the release export.")
+    return {"publicFiles": files, "validationReportSha256": digest(report_path),
+            "composerArchiveSha256": digest(composer_archive), "gitArchiveSha256": digest(github_archive)}
+
+
+def evidence_identity(expected, php_version):
+    fields = ("repository", "revision", "toolkitRevision", "validationRunId", "validationRunAttempt")
+    return {"schemaVersion": 1, **{key: expected[key] for key in fields}, "phpVersion": php_version}
+
+
+def capture_validation(source, report_path, destination, php_version):
+    require(os.environ.get("GITHUB_REPOSITORY") == REPOSITORY
+            and os.environ.get("GITHUB_EVENT_NAME") in ("push", "workflow_dispatch"), "Unexpected PHP validation event.")
+    revision, toolkit = os.environ.get("GITHUB_SHA", ""), os.environ.get("RAIMS_PHP_TOOLKIT_REF", "")
+    require(SHA.fullmatch(revision) and git(source, "rev-parse", "HEAD") == revision and git(source, "status", "--porcelain") == "",
+            "The validation source does not match the exact clean GitHub checkout.")
+    require(SHA.fullmatch(toolkit), "Pin the reviewed Developer Toolkit commit before validating.")
+    expected = {"repository": REPOSITORY, "revision": revision, "toolkitRevision": toolkit,
+                "validationRunId": positive_id(os.environ.get("GITHUB_RUN_ID")),
+                "validationRunAttempt": positive_id(os.environ.get("GITHUB_RUN_ATTEMPT"))}
+    proof = local_validation_evidence(source, report_path, expected, php_version)
+    destination.mkdir(parents=True, exist_ok=False)
+    (destination / VALIDATION_EVIDENCE).write_text(json.dumps({**evidence_identity(expected, php_version), **proof},
+                                                              sort_keys=True, indent=2) + "\n", encoding="utf-8")
+
+
+def reuse_validation(source, directory, expected, php_version):
+    path = directory / VALIDATION_EVIDENCE
+    require(path.is_file() and not path.is_symlink() and {member.name for member in directory.iterdir()} == {VALIDATION_EVIDENCE},
+            "The PHP validation artifact must contain only its canonical evidence manifest.")
+    require(path.stat().st_size <= 1_000_000, "The PHP validation evidence manifest is too large.")
+    evidence = json.loads(path.read_text(encoding="utf-8"))
+    context = evidence_identity(expected, php_version)
+    require(isinstance(evidence, dict) and set(evidence) == {*context, "publicFiles", *VALIDATION_HASH_FIELDS}
+            and all(evidence.get(key) == value for key, value in context.items()),
+            "The PHP validation evidence belongs to another source, runtime, Toolkit or workflow attempt.")
+    require(evidence["publicFiles"] == git_archive_files(source, expected["revision"]),
+            "The validated public files differ from the immutable release source.")
+    require(all(isinstance(evidence[key], str) and re.fullmatch(r"[0-9a-f]{64}", evidence[key]) for key in VALIDATION_HASH_FIELDS),
+            "A canonical validation evidence checksum is missing.")
+    return {key: evidence[key] for key in ("publicFiles", *VALIDATION_HASH_FIELDS)}
+
+
+def bundle(source, report_path, validation_directory, destination, run_id, attempt, artifact_id, php_version):
+    expected = identity(source, run_id, attempt)
+    if artifact_id:
+        require(validation_artifact(expected) == artifact_id, "The selected PHP validation artifact changed after download.")
+        proof = reuse_validation(source, validation_directory, expected, php_version)
+    else:
+        proof = local_validation_evidence(source, report_path, expected, php_version)
     require(not destination.exists() or not any(destination.iterdir()), "Use an empty release artifact directory.")
     destination.mkdir(parents=True, exist_ok=True)
-    manifest = {"schemaVersion": 1, **expected, "publicFiles": files, "validationReportSha256": digest(report_path),
-                "composerArchiveSha256": digest(composer_archive), "gitArchiveSha256": digest(github_archive)}
+    manifest = {"schemaVersion": 1, **expected, **proof}
     (destination / "release-manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     print("The public PHP source manifest is bound to the release and prior validation.")
 
@@ -281,7 +356,7 @@ def verify(source, directory):
     require(all(manifest.get(key) == value for key, value in expected.items()), "The source manifest belongs to another release or workflow attempt.")
     files = git_archive_files(source, expected["revision"])
     require(manifest.get("publicFiles") == files, "The immutable public files differ from the approved release manifest.")
-    for name in ("validationReportSha256", "composerArchiveSha256", "gitArchiveSha256"):
+    for name in VALIDATION_HASH_FIELDS:
         require(isinstance(manifest.get(name), str) and re.fullmatch(r"[0-9a-f]{64}", manifest[name]), "A canonical release evidence checksum is missing.")
     return expected, files
 
@@ -371,25 +446,36 @@ def confirm(source, directory):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("context", "bundle", "verify", "publish", "confirm"))
+    parser.add_argument("command", choices=("capture-validation", "context", "bundle", "verify", "publish", "confirm"))
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--report", type=Path)
     parser.add_argument("--artifact", type=Path)
     parser.add_argument("--validation-run-id")
     parser.add_argument("--validation-run-attempt")
+    parser.add_argument("--validation-evidence", type=Path)
+    parser.add_argument("--validation-artifact-id", default="")
+    parser.add_argument("--php-version")
     args = parser.parse_args()
     source = args.source.resolve()
-    if args.command == "context":
+    if args.command in ("capture-validation", "bundle"):
+        require(args.report is not None and args.artifact is not None
+                and re.fullmatch(r"8\.2\.[0-9]+", args.php_version or ""), "The canonical PHP 8.2 report and artifact parameters are required.")
+    if args.command == "capture-validation":
+        capture_validation(source, args.report.resolve(), args.artifact.resolve(), args.php_version)
+    elif args.command == "context":
         context = identity(source)
         require(os.environ.get("GITHUB_OUTPUT"), "GitHub outputs are unavailable.")
+        selected = validation_artifact(context)
         with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as stream:
             for field in ("version", "revision", "toolkitRevision", "validationRunId", "validationRunAttempt"):
                 stream.write(field + "=" + str(context[field]) + "\n")
+            stream.write("validationArtifactId=" + selected + "\n")
         print("Published PHP release and prior validation identities verified.")
     elif args.command == "bundle":
-        require(args.report is not None and args.artifact is not None and args.validation_run_id is not None
-                and args.validation_run_attempt is not None, "The canonical report, artifact and prior validation identity are required.")
-        bundle(source, args.report.resolve(), args.artifact.resolve(), args.validation_run_id, args.validation_run_attempt)
+        require(args.validation_evidence is not None and args.validation_run_id is not None and args.validation_run_attempt is not None,
+                "The canonical evidence path and prior validation identity are required.")
+        bundle(source, args.report.resolve(), args.validation_evidence.resolve(), args.artifact.resolve(), args.validation_run_id,
+               args.validation_run_attempt, args.validation_artifact_id, args.php_version)
     else:
         require(args.artifact is not None, "The validated release artifact is required.")
         if args.command == "verify":

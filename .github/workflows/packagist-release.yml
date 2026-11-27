@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: 05c55b00950bc216c3a3bd33e631dc117d9396d4
+  RAIMS_PHP_TOOLKIT_REF: d1257827c06210275b9edb955fb1611fed41b4b5
 
 jobs:
   validateRelease:
@@ -48,7 +48,18 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: python Raims-PHP/scripts/release.py context --source Raims-PHP
 
+      - name: Download public archive evidence from the approved validation attempt
+        if: steps.context.outputs.validationArtifactId != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          artifact-ids: ${{ steps.context.outputs.validationArtifactId }}
+          run-id: ${{ steps.context.outputs.validationRunId }}
+          github-token: ${{ github.token }}
+          path: .tmp/raims-php-sdk/validation-evidence
+          digest-mismatch: error
+
       - name: Prepare PHP tool selection
+        if: steps.context.outputs.validationArtifactId == ''
         run: |
           python - <<'PY'
           import os
@@ -59,6 +70,7 @@ jobs:
           PY
 
       - name: Setup PHP and Composer
+        if: steps.context.outputs.validationArtifactId == ''
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.2.36'
@@ -67,6 +79,7 @@ jobs:
           coverage: none
 
       - name: Create a read-only validation source token
+        if: steps.context.outputs.validationArtifactId == ''
         id: sources
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
@@ -77,6 +90,7 @@ jobs:
           permission-contents: read
 
       - name: Checkout the reviewed validation tooling
+        if: steps.context.outputs.validationArtifactId == ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: raimshq/Raims-Developer-Toolkit
@@ -86,6 +100,7 @@ jobs:
           persist-credentials: false
 
       - name: Run canonical PHP and public archive checks
+        if: steps.context.outputs.validationArtifactId == ''
         run: |
           set -euo pipefail
           cp Developer-Toolkit/internal/public-repositories/workspace/AGENTS.md AGENTS.md
@@ -95,7 +110,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          python Raims-PHP/scripts/release.py bundle --source Raims-PHP --report "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/report.json" --artifact "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/packagist-upload" --validation-run-id '${{ steps.context.outputs.validationRunId }}' --validation-run-attempt '${{ steps.context.outputs.validationRunAttempt }}'
+          python Raims-PHP/scripts/release.py bundle \
+            --source Raims-PHP \
+            --report "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/release-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT/report.json" \
+            --artifact "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/packagist-upload" \
+            --php-version '8.2.36' \
+            --validation-run-id '${{ steps.context.outputs.validationRunId }}' \
+            --validation-run-attempt '${{ steps.context.outputs.validationRunAttempt }}' \
+            --validation-artifact-id '${{ steps.context.outputs.validationArtifactId }}' \
+            --validation-evidence "$GITHUB_WORKSPACE/.tmp/raims-php-sdk/validation-evidence"
 
       - name: Upload the approved public source manifest
         id: upload

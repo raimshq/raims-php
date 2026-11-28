@@ -14,7 +14,7 @@ concurrency:
 
 env:
   PYTHONDONTWRITEBYTECODE: '1'
-  RAIMS_PHP_TOOLKIT_REF: 05c55b00950bc216c3a3bd33e631dc117d9396d4
+  RAIMS_PHP_TOOLKIT_REF: d1257827c06210275b9edb955fb1611fed41b4b5
 
 jobs:
   validatePhp:
@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
           path: Raims-PHP
           persist-credentials: false
 
@@ -132,6 +132,25 @@ jobs:
             --expected-php-version '${{ matrix.php_version }}' \
             --prepare-tools
 
+      - name: Bind the PHP 8.2 public archives to the validation attempt
+        if: matrix.php == '8.2'
+        run: |
+          python Raims-PHP/scripts/release.py capture-validation \
+            --source Raims-PHP \
+            --report ".tmp/raims-php-sdk/validate-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-8.2/report.json" \
+            --artifact ".tmp/raims-php-sdk/validate-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT-8.2/evidence" \
+            --php-version '${{ matrix.php_version }}'
+
+      - name: Preserve the PHP 8.2 public archive evidence
+        if: matrix.php == '8.2'
+        continue-on-error: true
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: raims-php-validation-${{ github.run_id }}-${{ github.run_attempt }}-8.2
+          path: .tmp/raims-php-sdk/validate-${{ github.run_id }}-${{ github.run_attempt }}-8.2/evidence/validation-evidence.json
+          if-no-files-found: error
+          retention-days: 14
+
   securityLinux:
     name: securityLinux
     if: github.repository == 'raimshq/raims-php'
@@ -147,7 +166,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
           path: Raims-PHP
           persist-credentials: false
 
